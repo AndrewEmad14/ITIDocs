@@ -1,0 +1,27 @@
+2.  >`cat` display concatinated files contents For example if we try the command
+    "cat /etc/passwd" it would display the content of all the files in /etc/passwd
+    >`more` it does the same function as cat but instead of displaying all the content in one go
+    it displays the content one screen at a time allowing the user to scroll throught the content
+
+3.  >`rmdir` remove an empty directory
+    >`rm`    can be used to remove a file , -r options removes the directory Recursively meaning 
+    that both files and folders are removed
+    -i prompts a conformation msg for deleting the file
+    -f never prompt conformation
+4.  > mkdir -p  dir1/dir11 && touch file1 && cd dir1 && mkdir dir12
+    >mkdir docs && cd docs && touch mycv
+    a.rm -r dir11
+    b.rm -r dir12
+    the heirarchy is now dir1 only
+    c./home/andrew/docs/mycv   <Absloute path>
+      docs                     <Relative Path>
+
+7. a. `cd ~`
+   b. if the home directory was my previously visited dir then `cd -`
+   c. `cd /home/username`
+   d. `cd ../../username`
+9.head -n 4 /etc/passwd
+10.tail -n 7 /etc/passwd
+11.man -a passwd
+12.man  passwd
+13.man -K passwd
