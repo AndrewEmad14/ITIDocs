@@ -76,7 +76,7 @@ PowerON ==>        BIOS       ==>      BootLoader Menu  ==>   Linux(Kernel)     
 
    interrupts happens because of software 
     system call , divide by zero , accesssing restricted memory
-   
+   interrupts have the highest priority than any task
 <problems with shrinking>
 
 1.if windows 11 close bitlocker
