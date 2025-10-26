@@ -98,9 +98,9 @@ terminal is case senetive in linux
 
 
 !a program that calculates the number of days form jan 1 1970 to the current date that runs in linux!
-                                                                        <due to the day before the exam>
+                                    <due to the day before the exam>
 !what is inactive in /etc/shadow!
-
+<Inactive : The number of days after password expires that account is disabled.>
 %wheel is the default group that has all the root commands
 
 
@@ -109,3 +109,4 @@ ALL = (ALL)  ALL
 
 
 first can run on all hostes
+secon is all groups and third is the commnads
