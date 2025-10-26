@@ -20,12 +20,13 @@ gnu no unix
       "|" : This operator is used to redirect the standard output (stdout) of one command to the standard input (stdin) of another command 
       ">" :  This operator is used to redirect the standard output (stdout) of a command to a file (overwrite)
       ">>" : same as above but it appends
-      history: history of all your commands inthe session
+      history: history of all your commands in the session
       " ` ": used with echo to specify that it is a command
       wc : count new line , words and byte
       man : manual
             >option -K    <search globaly in man>
             >option -l    <List>
+            >option -a    <get all man pages>
 
      cd : change dir
             >".." back to the parent
@@ -33,12 +34,15 @@ gnu no unix
             >"~"  means /home/usr of the current logged in user
      ls: list contents 
             >"R" recursive direcotyr list
-            >"a" all      
+            >"a" all    
+            >"l" long list format  
+            >"f" file type
+            >"-r" recurseive
      pwd : print working directory
      mkdir: make dir
            >any dir that starts with "." hidden
      cat: displays whats in the files
-     more : displays files but with paginagtion
+     more : displays files but with paginagtion one screen at a time
      head: first lines of your files (by default 10)
         >"-n ${whatever number of lines you want}" 
      tail: last lines of your files () 
@@ -47,12 +51,13 @@ gnu no unix
      rmdir: deletes empty dir FOREVER
      rm: deletes files 
         >"r" delete the directory recursevly (files and folders inside are deleted)
+
      
 
 # File System
-    /:      the root  is the start of the file hirearchy
+    /    :  the root  is the start of the file hirearchy
     /etc :  dir for configurations of the system with restricted access
-    /home : List of the usrs directories
+    /home:  List of the usrs directories
     /tmp :  cache files
     /var :  log, tmp
     /lib :  libariers
