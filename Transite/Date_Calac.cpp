@@ -10,10 +10,10 @@ bool is_leap_year(int year){
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 int main(){
-    time_t now = time(NULL);
-    tm* localTime = localtime(&now);
-    char buffer[12];
-    strftime(buffer, sizeof(buffer), "%F", localTime);
+    tm fixedYear = {0}; 
+    fixedYear.tm_year = 72; // 1972
+    fixedYear.tm_mon = 0;    // January
+    fixedYear.tm_mday = 1;   // 1st
     tm linux_Date = {0};
     int year, month, day;
     while(1){
@@ -56,9 +56,9 @@ int main(){
 
         cout<<"Valid date entered: "<< (year) << "-" << (month + 1) << "-" << day << endl;
         cout<<"-------------------------------------"<<endl;
-        cout<<"Current Date: "<< buffer <<endl;
+        cout<<"Linux Date: "<< 1972 << "-" << 1 << "-" << 1 << endl;
         cout<<"-------------------------------------"<<endl;
-        cout<<"time Difference:"<< difftime(mktime(&linux_Date), now)/(60*60*24) << " days" <<endl;
+        cout<<"time Difference:"<< difftime(mktime(&linux_Date), mktime(&fixedYear))/(60*60*24) << " days" <<endl;
         cout<<"type 'q' to quit or 'c' to continue: ";
         char choice;
         cin >> choice;

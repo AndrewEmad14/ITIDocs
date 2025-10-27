@@ -1,0 +1,28 @@
+
+13. mkdir myteam
+    chmod 455 myteam
+14. su - user1
+15. cd /home/andrew/myteam         
+                            > this command wouldnt work because although myteam have an excute 
+                            permision for other users the home dir of andrew gives permission
+                            to the owner only so i cant  enter the user home dir to go to myteam
+                            folder
+16. chmod 631 oldpasswd
+    chmod g-r+wx,o-r+x oldpasswd                    
+                         //if the file is created with the default permisions which is -rwr--r--
+    umask 146
+    the default for a file: u=rw g=r o=r
+    the default for a directory: u=rwx g=xr o=x
+    umask777
+
+17.source dir: u=r    target dir: u=wx
+   file : u=r         target dir: u=wx
+   you dont need any permissions to delete a file
+   to cd to a dir : u=x
+   to ls a dir: u=r
+   to view file content : u=r
+   to modify file content: u=rw
+18.i tried to read the and edit the file through vi , the reading worked but i couldnt edit
+   i was able to succesfully remove the file though
+19.excute permission in a file means that you can run the executable file while in a directory
+    you have to have excute permisions to change to the dir and use ls -l commands

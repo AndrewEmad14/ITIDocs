@@ -38,14 +38,21 @@ gnu no unix
             >"l" long list format  
             >"f" file type
             >"-r" recurseive
+            >"*3" all files in dir 3
+            >"*" all files except hidden files (.)
+            > meta charcters doesnt match hidden files
+
      pwd : print working directory
      mkdir: make dir
            >any dir that starts with "." hidden
+           >-p for creating a dir inside a folder
      cat: displays whats in the files
      more : displays files but with paginagtion one screen at a time
      head: first lines of your files (by default 10)
         >"-n ${whatever number of lines you want}" 
      tail: last lines of your files () 
+              -n last n lines
+              +n from the line 
      touch: update the access and modifications of times of each files to the current time 
             IF the file doesnt exsist it creates said file
      rmdir: deletes empty dir FOREVER

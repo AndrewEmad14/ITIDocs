@@ -74,7 +74,7 @@
 
 # /etc/passwd file
     loginname:x:uid:gid:comment:home-directory:login-shell
-    <username:password:userId:groupId:comments about the user:home-dir:>
+    <username:password:userId:groupId:comments about the user:home-dir:shell>
 # /etc/shadow
     username:encrypted passwd:last
     changed:min:max:warn:inactive:expire:future-use
