@@ -1,4 +1,3 @@
-
 13. mkdir myteam
     chmod 455 myteam
 14. su - user1

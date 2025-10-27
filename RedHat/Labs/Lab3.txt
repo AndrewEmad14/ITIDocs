@@ -1,0 +1,31 @@
+1.
+2.
+    a.move down 1 line : j
+    b.move up 1 line : k
+    c./age
+    d.in command mode press :5
+    e.dd
+     :5
+     dd
+    f.A
+
+3.cat /etc/shells
+4.printenv
+5.man bash
+6.echo $Var
+7.echo $SHELL
+8./etc/profile of sh,ksh,bash and /etc/bash_profile or bash_login
+9.sudo vi /etc/profile          add the following>> date 
+                                                    PS1=Linux:3
+
+
+10.\ tells the bash to ignore the new line that allow the user to continue with his command , for example
+echo hello \
+hi
+hello hi
+the ">" is a continuation prompt represented by the enviorment var PS2 in order to change it we have to change the enviorment
+var 
+        PS2=:              in terminal             //will change it but wont presist at login or a new shell
+        PS2=:              in /etc/profile         //will remain across login but not when you reset the terminal
+        PS2=:              in /etc/bashrc          //will remain when terminal resets
+11.alias ls='ls -l'
