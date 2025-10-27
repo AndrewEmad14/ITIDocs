@@ -1,0 +1,66 @@
+                       			Andrew   Emad
+				       software engineer
+ 
+Education
+------------------------------------------------------
+cairo university
+
+faculty of computers and Artificial intelligence	09/2018-09/2022
+	Bachelor's degree in software engineering
+							GPA:2.9
+	Graduation project:A+
+
+Internships
+-----------------------------------------------------
+ITI intensive program
+iOS Developer Intern
+11/2024-03/2025
+Developed multiple iOS applications utilizing swift,objective-C,UIKIT and SwiftUI frameworks.Executed industry-standard desgin patterns and SOLID principles while integrating core technologies including REST APIs, CORE DATA, and GRAPHQL.BUILT and Launched diverse iOS application like a task management application,sports tracking platform , weather forecasting tool, and a full-featured e-commerce solution.
+
+Projects
+------------------------------------------------------
+E-Commerce Solution
+	Developed a full featured iOS e-commerce platform using SwiftUI and MVVM desgin pattern.implemented graphql for efficient data fetching, swiftData forlocal persistence, and integrated apple pay for secure transactions.Features include product catalog managment, shopping cart functionality and streamlined checkout process
+
+Sports leauges tracking platform 
+	built a sports application using swift and mvp desgin pattern that deliveirs real time leauge matches updates, including live scores, player stats.Utlized RESTful API for real-time data integration, implemented a reminder for theuser to set fo an upcoming match and used CoreData for presisting the user favorite leauges.
+
+Weather forcast app
+	Developed a modern iOS weather application using swiftui that delivers real time weather forecasts and location based updates . integrated restful api services for accurate metorological data while enforcing a clean, intuitive user interface
+
+TO DO LISt
+	Developed a simple and efficient task management app designed to help users organize and treack their daily tasks.Built with OBjecitve-c, this app allows users to add,edit and delete  tasks. USed user Defaults for task persistence , and customizable task categories. Desgined the app for performance and a smooth user experience
+
+Multiplayer Card Game
+
+	Contributed to the development of a real time multiplayer card game featuring a smooth and interacive Swftui interface. Utilized Firebase firesotre for real time game state synchronization and Firebase realtime Database to support for sign in via email, Google, Facebook. Enhnace the user experience with dynamic UI feddback using lottie animation . Followed the MVVM architecture to maintain a clean, modular and scalable codebase
+
+Crypto Manager
+	spearheaded the development of a web based platform that leverages machine learning to predict cryptocurrency values . implemented deep learning and linear regression models using Python while building a responsive frontend interface with vue.js for intuitve data visualization. led a team throuagh all project phases,managing task delegation, code review processes and milestone tracking. Specialized in data collection, feature engineering and model training to enhance prediction accuracy. Technologies: python,vue.js, deeplearning , linear regression
+
+Technical skills
+---------------------------------------------------------------------
+objective c		swift		solid principles	Design patterns		uikit		rxswift		
+
+combine			swiftui		version control		GraphQl			restapi		javascript
+
+sql
+
+
+SOFT Skills
+----------------------------------------------------------------------
+Teamwork		adaptability		communication		time management		problem  solving
+
+Discipline
+
+Courses
+----------------------------------------------------------------------
+Redhat system Administration 18.0
+Redhat openshift 1: Containers and Kubernetes 4.5
+problem solving Training in the american university
+
+Certificates
+-----------------------------------------------------------------------
+ISTQB Certified Tester Foundation Level
+
+App Development with swift Certified USer  
