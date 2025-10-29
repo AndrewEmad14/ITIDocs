@@ -17,9 +17,6 @@ gnu no unix
     command [options] [arguments]
     **each is separted by a space
 # Commands    
-      "|" : This operator is used to redirect the standard output (stdout) of one command to the standard input (stdin) of another command 
-      ">" :  This operator is used to redirect the standard output (stdout) of a command to a file (overwrite)
-      ">>" : same as above but it appends
       history: history of all your commands in the session
       " ` ": used with echo to specify that it is a command
       wc : count new line , words and byte

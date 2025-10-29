@@ -1,0 +1,3 @@
+to sort by meomory :    top -o  
+to delay for 30 secs:   d 30
+timeout 120s top -d 30 -o %MEM

@@ -62,3 +62,5 @@
     sort by meomory
     works only for 2mins and refreshes every 30s
     switching inside the terminal is not the same as loging in
+    ls -R / 2> /dev/null | sort > result &
+    /dev/null if i dont want to create a file for the error

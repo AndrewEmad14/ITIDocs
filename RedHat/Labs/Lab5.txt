@@ -1,0 +1,33 @@
+1.  tar -cvf trial1 /etc/passwd
+    compress -v trial1                                  //Compression= 80.24%
+    uncompress trial1.Z                                 
+    gzip -v trial1.gz                                   //Compression= 87.2%
+    zip  trial1.zip trial1                              //Compression= 87%
+    unzip  trail1.zip
+
+2.zcat
+3.tar -cvf backup_etc /etc
+4.find ~ -atime 2
+5.find /etc -user 0
+6.find ~
+7.find / -name .profile
+8./etc/passwd                               ASCII text
+  /dev/pts/0                                character special (136/0)
+  /dev/sda                                  block special (8/0)
+9./                 128
+  /etc              67240065
+  /etc/hosts        67625392
+10. cp /etc/passwd .
+    diff /etc/passwd passwd                 //nothing
+    cmp /etc/passwd passwd                  //nothing
+    After edit
+    diff /etc/passwd passwd 
+                                            38d37
+                                            < user1:x:1001:1001::/home/user1:/bin/bash
+    cmp /etc/passwd  passwd
+                                            cmp: EOF on passwd after byte 2207, line 37
+11.ln -s /etc/passwd    /boot/passwd_link
+12.ln /etc/passwd       /boot/passwd_link   
+                                            this would not work because its trying to create a 
+                                            hard link between partions
+

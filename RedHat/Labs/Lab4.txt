@@ -3,6 +3,7 @@
 3.cut -d: -f1 /etc/passwd | grep ^g
 4.cut -d: -f1,5 /etc/passwd | grep ^g
 5.sort -t: -k5 /etc/passwd | grep ^g > file0
+6.(ls -R / | sort) 2>error>result &
 7.who | wc -l   or who -q                                            
 8. head -n 10 /etc/passwd|tail -n 4
 9.a)nothing will happen
