@@ -1,0 +1,28 @@
+1.echo `ls /usr/bin` > /tmp/commands.list
+2.wc -w commands.list
+3.cut -d: -f1 /etc/passwd | grep ^g
+4.cut -d: -f1,5 /etc/passwd | grep ^g
+5.sort -t: -k5 /etc/passwd | grep ^g > file0
+7.who | wc -l   or who -q                                            
+8. head -n 10 /etc/passwd|tail -n 4
+9.a)nothing will happen
+  b)missing operand
+  c)1
+10. sleep 100
+11.pgrep sleep
+   kill -STOP 6549
+12.kill -CONT 6549
+13.jobs
+   [1]+  Stopped                 sleep 100
+14.fg 1
+   kill -STOP 6559
+   bg 1
+15.kill 6559
+16. id
+    ps -U 1000
+17.ps -d
+18.pgrep -u 1000
+19.pkill -n -u 1000
+
+
+

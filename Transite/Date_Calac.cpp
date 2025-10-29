@@ -11,7 +11,7 @@ bool is_leap_year(int year){
 }
 int main(){
     tm fixedYear = {0}; 
-    fixedYear.tm_year = 72; // 1972
+    fixedYear.tm_year = 70; // 1972
     fixedYear.tm_mon = 0;    // January
     fixedYear.tm_mday = 1;   // 1st
     tm linux_Date = {0};
@@ -20,7 +20,7 @@ int main(){
         // why 1900? tm_year is defined as years since 1900 so to represent 2023, we need to input 123 , why not 1800?
         // because the tm structure is designed to represent years in a way that is compatible with the C standard library functions, which were established long ago.
         //so 1800 might work in some system like 64 bit system but not in 32 bit system
-        cout<<"Enter year (since 1900): ";
+        cout<<"Enter year: ";
         cin>> year; 
         cout<<"Enter month (1-12): ";
         cin>> month;
@@ -56,7 +56,7 @@ int main(){
 
         cout<<"Valid date entered: "<< (year) << "-" << (month + 1) << "-" << day << endl;
         cout<<"-------------------------------------"<<endl;
-        cout<<"Linux Date: "<< 1972 << "-" << 1 << "-" << 1 << endl;
+        cout<<"Linux Date: "<< 1970 << "-" << 1 << "-" << 1 << endl;
         cout<<"-------------------------------------"<<endl;
         cout<<"time Difference:"<< difftime(mktime(&linux_Date), mktime(&fixedYear))/(60*60*24) << " days" <<endl;
         cout<<"type 'q' to quit or 'c' to continue: ";
