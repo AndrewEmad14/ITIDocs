@@ -21,7 +21,7 @@
 
 # MQTT Broker 
 
-<a light way Pub/Sub services taht creates commnication between client and server>
+<a light way Pub/Sub services that creates commnication between client and server>
 [Mosquito,EMQX,HiveMQ]
 subscribers always send to the broker a msg that tell it its alive
 

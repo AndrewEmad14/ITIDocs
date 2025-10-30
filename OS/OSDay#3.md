@@ -63,10 +63,19 @@ we use assembly for two reasons
 
 # kind of process
 >I/O bound process
+        spends more time doing I/O than computations, many short CPU bursts.
 >Cpu bound process
+        spends more time doing computations; few very long CPU bursts.
 <proper system preformance>
         a mix between the two
+
+# Multi Threading Models
+        Many-to-One Model:Maps many user-level threads to one kernel thread.
+
+        One-to-one Model:Maps each user thread to a kernel thread.
         
+        Many-to-Many Model:Multiplexes many user-level threads to a smaller or equal number of kernel threads.
+
 # OS system Desgin structure
 >simple sturcture
 >layered approach
@@ -80,3 +89,7 @@ we use assembly for two reasons
 >exec : System call used after a fork to replace the process memory space with a new program
 >zombie process: a child process whose parent died or was killed 
 >semaphore or mutex are used to lock a shared resource with the process that is currently uses >until he finishes it
+>A trap is a software generated interrupt caused
+by:
+• Error: division by zero or invalid memory access
+• Request: from a user program to O/S

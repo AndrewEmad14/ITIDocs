@@ -51,6 +51,10 @@
             -n                  // to sort by numbers instead of strings
             -k                  //key (column)
             -t:
+    whereis command or app
+        location of command or app
+    w           
+        who is online
 
 # SIGNALS
     a signal is a message sent to a process to perform a certain action
