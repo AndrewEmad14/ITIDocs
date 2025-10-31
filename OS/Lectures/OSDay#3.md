@@ -73,7 +73,7 @@ we use assembly for two reasons
         Many-to-One Model:Maps many user-level threads to one kernel thread.
 
         One-to-one Model:Maps each user thread to a kernel thread.
-        
+
         Many-to-Many Model:Multiplexes many user-level threads to a smaller or equal number of kernel threads.
 
 # OS system Desgin structure
@@ -81,6 +81,18 @@ we use assembly for two reasons
 >layered approach
 >microservices
 >modular 
+# Scheduling criteria
+        • CPU utilization
+        • Keep the CPU as busy as possible
+        • Throughput
+        • Number of processes that complete their execution per time unit
+        • Turnaround time
+        • Amount of time to execute a particular process
+        • Waiting time
+        • Amount of time a process has been waiting in the ready queue
+        • Response time
+        • Amount of time it takes from when a request was submitted until
+        the first response is produced, not output (for time-sharing environment)
 # FAQ
 >OS reserves memory for instructions and data
 >DMA is hardware mangaed by software
@@ -93,3 +105,5 @@ we use assembly for two reasons
 by:
 • Error: division by zero or invalid memory access
 • Request: from a user program to O/S
+>preemtive:Process release the CPU before it finish execution
+>Dispatcher: the one who dilvers the process to the cpu and switch context
