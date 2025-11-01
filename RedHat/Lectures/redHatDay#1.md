@@ -55,8 +55,8 @@ gnu no unix
      rmdir: deletes empty dir FOREVER
      rm: deletes files 
         >"r" delete the directory recursevly (files and folders inside are deleted)
-
-     
+     uptime: 
+              displays how long the device have been up and running
 
 # File System
     /    :  the root  is the start of the file hirearchy

@@ -1,3 +1,30 @@
-When dealing with round robin
 
+
+PROCESS SCHEDULING ALGORITHMS
+Average waiting time: (Avg WT)
+Waiting time = Starting time – Arrival time
+Avg WT = Total WT of all processes / No of processes
+Average turn around time: (Avg TAT)
+Turn around time = Finished time – Arrival time
+Avg TAT= Total TAT of all processes / No of processes
+Average response time: (Avg RT)
+Response time = First response – Arrival time
+Avg RT= Total RT of all processes / No of processes
+
+
+preempted: process get paused while it is working
+non preempted: process isnt paused
+
+First come first server
+
+shortest job first
+
+Priority
+
+
+Round robin
+
+When dealing with round robin
 arriving time equal Finishtime when the process is preempted and back again
+
+

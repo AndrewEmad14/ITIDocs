@@ -18,7 +18,8 @@
         ls [a-f]*
         ls [a-zA-Z]*
         </Example>
-    cp  options source target                                       //copies a files
+    cp  options source target                                       //copies a files/dir
+        -r                                                          //copies dir recursive
     mv  moves or renames
     useradd
             -u for id
