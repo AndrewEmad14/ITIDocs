@@ -28,3 +28,16 @@ When dealing with round robin
 arriving time equal Finishtime when the process is preempted and back again
 
 
+preemtimve SJF is called shortest remaing time SCHEDULING
+Address binding: the process of mapping an address space with another address space
+
+Rollout Roll in:  swapping technique for freeing up memory temporarily
+in order to perform another task.The current program or program segment is stored
+(rolled out) on disk,and another program is brought into (rolled in) that memory space.
+
+Meomory Management Unit: The runtime mapping form virtual to physical address
+
+Priority is caluclated accesndingly
+
+meduium schduler : MEMORY Management
+long term schduler: Meomry BINDING
