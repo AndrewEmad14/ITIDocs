@@ -44,7 +44,7 @@
     
 <Map>
     Owner[#ownerNationalID,fullName,bankAccount,#FK:officeID,carID,rentAmount,#Fk:modelID,validCarLicense,carStatus] 
-
+    Car[#PK:carID,#FK:officeID,,rentAmount,#Fk:modelID,validCarLicense,carStatus]
     Offices[#officeID,contactNo,address]
 
     Model[#modelID,modelName,brand,modelYear]
@@ -75,7 +75,7 @@
         Patient
             PatientID
             FullName
-            Age
+            Age (drived)
             mobileNumber
             DateOFbirth
             gender
@@ -103,5 +103,60 @@
         Test     M May  May M Branch
         Patient  M Must May M Branch
         Patient  M Must May M Test
-        Employee M Must Must 1 Branch
+        Employee M Must May 1 Branch
         Employee M May  May 1 Manager
+<Map>
+      Employee[#employeeID,fullName,manager,salary, team ,startAndEndTime,FK:#BranchCode,managerID]
+
+      Branch[#BranchCode,addressID,shortName]
+
+      Address[AddressID,city,street,buildingNumber]
+
+      Patient[#PatientID,gender,fullName,dateOFBirth,mobileNumber,chronicDiseases]
+
+      MedicalTest[#TestCode,name,duration,cost]
+      
+      getsTest[PK={FK:#PatientID,FK:#BranchCode,FK:TestCode},dateAndTime]
+
+
+
+ 
+
+
+# Q3
+
+    Noun
+        branches
+            ID
+            address
+            contact number
+        staff
+            manager
+            ID
+            full name
+            age
+            address
+            role
+            joining date 
+            monthly salary
+            date of birth
+        customer
+            code
+            name
+            contact number
+        menu
+            item name
+            unit price
+            category
+        order
+            Id
+            address
+            date&time
+            bill
+        [order items]
+        dilevery
+            national id 
+            contact number
+            names
+            
+
