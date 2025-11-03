@@ -112,12 +112,13 @@ Microsoft sql/oracle/ibm db         closedSource                big projects
             may may     pk second to first OR
                            first to second OR
                            first and second in a table
-            must must   Merge the two tables
+            must must   Merge the two tables if 1 to 1
   
         NOTE: 
             >if you have a multi value attr you have to take it to a seprate table  
             >Preferably dont use two pks , use a pk and 
             a unique value
+
 
 # FAQ
             Customer Relationship Management (CRM)
