@@ -84,7 +84,7 @@
 # /etc/skel 
         creates files that are in the user home dir by default when he is created
 # FAQ
-3 kinds of permisions read, write ,execute rwx for usr group and others
+3 kindsof permisions read, write ,execute rwx for usr group and others
 the first number is for file type (- for file and d for dir)
 the other are 9 characters are for the permisions for each the user, group and other
 the next are the user and the group owners of the file or dir

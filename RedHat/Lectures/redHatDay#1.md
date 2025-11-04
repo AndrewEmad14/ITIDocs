@@ -29,6 +29,7 @@ gnu no unix
             >".." back to the parent
             >"-"  go back to previous dir
             >"~"  means /home/usr of the current logged in user
+            > if writen without any options it will return you to the home dir
      ls: list contents 
             >"R" recursive direcotyr list
             >"a" all    
