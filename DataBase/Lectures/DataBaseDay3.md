@@ -63,3 +63,8 @@
                 dont insert an auto incremeted value
     
     test every action
+
+    USING WHERE OR ON AND JOIN
+        it improves readablity to use on and join 
+        where is implict and it would result in an inner join most of the time
+        in orderer to use another type of join we use JOIN
