@@ -39,6 +39,8 @@
             -v                  //verbose tells you what the terminal put in the archive
             -f                  //creates tape
             -x                  //extracts
+            -z                  //gzip
+            -j                  //bzip2
     compress                    //to compress
             -v                  
     uncompress                  //to uncompress
@@ -59,3 +61,5 @@
     hard link inside a dir who is the parent ? 
 
     tar.Z                       means that the file or folder is compressed
+    $SHELL                      eviroment var that stores the user shell
+    $0                          predefined var that has theh value of the currentshell
