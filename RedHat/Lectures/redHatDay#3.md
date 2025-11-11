@@ -62,6 +62,7 @@ Execute     execute file    cd and ls-l
                         $PWD   
         man bash to get all env vars
         /somthing                   //to search in the man 
+                    /<something>\b
         PATH=$PATH:/whatever dir you want
     >ALIAS  // another name for a comand
              <EXample> alias c=clear</Example>

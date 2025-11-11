@@ -9,7 +9,7 @@
 3.tar -cvf backup_etc /etc
 4.find ~ -atime 2
 5.find /etc -user 0
-6.find ~
+6.find ~ -type d
 7.find / -name .profile
 8./etc/passwd                               ASCII text
   /dev/pts/0                                character special (136/0)

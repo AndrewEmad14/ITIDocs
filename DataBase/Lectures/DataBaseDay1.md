@@ -102,7 +102,7 @@ Microsoft sql/oracle/ibm db         closedSource                big projects
         Emp : Dep
         1 >     1       put fk in the smaller attr table
                         to avoid null attr
-        M       <1      add PK of first to M-side table as FK
+        M       <1      add PK of one to M-side table as FK
 
         M       <M      new table with  FK of both tables
 
@@ -112,13 +112,12 @@ Microsoft sql/oracle/ibm db         closedSource                big projects
             may may     pk second to first OR
                            first to second OR
                            first and second in a table
-            must must   Merge the two tables if 1 to 1
+            must must   Merge the two tables
   
         NOTE: 
             >if you have a multi value attr you have to take it to a seprate table  
             >Preferably dont use two pks , use a pk and 
             a unique value
-
 
 # FAQ
             Customer Relationship Management (CRM)
