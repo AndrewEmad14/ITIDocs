@@ -1,0 +1,821 @@
+• Absolute pathname
+    Start ====> / or    ~ ===>  /home/userlogin or $HOME
+• Relative pathname
+    start ./ or ../ or fileName or folderName
+
+
+/ ===> usr ====> bin 
+pwd ===> current working Directory 
+/home/mina/Desktop/Revision
+
+Absolute Path 
+cd /usr/bin   or cd /usr/bin/ 
+Relative pathname
+cd ../../../../../usr/bin 
+
+Absolute Path 
+cd /home/mina/Documents/
+Relative pathname
+cd ../../Documents/
+
+
+Go to Documents :- 
+====================
+pwd ===> myhome ==> ~ or /home/username 
+cd Documents/ or cd ./Documents/
+
+
+/home/mina/Desktop 
+~/Desktop
+cd $HOME/Desktop/
+
+
+
+
+
+#Important Notes :- 
+#====================
+#RunFile ===>Document/file1.sh ===> NotWork 
+#RunFile ===>./Document/file1.sh ===> NotWork 
+
+Example :- 
+============
+chmod u+x ~/Desktop/mina.sh 
+    mina.sh
+mina.sh: command not found
+    ./mina.sh 
+welocme
+    cat mina.sh 
+echo "welocme"
+    cat ./mina.sh 
+echo "welocme"
+
+
+# Basics Navigation 
+# Current Directory 
+    - print work directory            pwd 
+    -  List Files                     ls 
+    -  long list                      ls -l 
+    -  long list with hidden          ls -la                        
+    -  long list with hidden(without . ..)    ls -lA 
+    - Human Readable size                     ls -lh  
+
+# Navigation Change Directory 
+- cd path 
+- go to home directory 
+cd    or   cd ~  or    cd $HOME   or  cd /home/UserName    or cd Relative?
+- go to parent Directory           cd .. or cd ../
+- go to Previous directory                cd - 
+
+# Directory Operations 
+    - create directory -----------> mkdir dirname 
+        mkdir /home/mina/test
+        mkdir ~/Document/dir{1..3}
+        mkdir /home/mina/Document/file1 /home/mina/Document/dir2 /home/mina/Document/dir3
+        mkdir ~/Document/{dir,data}.txt 
+        mkdir /home/mina/test ~/Desktop/mina
+            #Check Created or No ? 
+            ========================
+            ls -ld ~/test
+            ls -ld ~/Desktop/mina
+            command && statementT || statementF 
+            ls -ld ~/Desktop/minaxx 2>/dev/null >/dev/null  && echo 'Created' || echo 'Not Created'
+            ls -ld ~/Desktop/minaxx >/dev/null 2>&1  && echo 'Created' || echo 
+'Not Created'
+    - create directory with parent ----> mkdir -p parent/child 
+    - Remove Directory Empty       ----->  rmdir pathFolder  (Empty only)
+    - Remove Directory Recursively -----> rm -r dirpath 
+    - Remove All Data in Directory -----> rm -r ~/Music/*
+    - rm -ir ~/Desktop/mina
+        rm: remove directory '/home/mina/Desktop/mina'? y
+    - rm ~/Desktop/minaxx
+        rm: cannot remove '/home/mina/Desktop/minaxx': No such file or directory
+    - rm -f ~/Desktop/minaxx
+
+
+# RemoveFiles  
+    rm file 
+    rm -i file ----> interactive Remove 
+    rm -f ===> Force Remove 
+    rm -r ===> Remove directory 
+
+#create file 
+    1- touch 
+        touch filepath 
+        touch file1 file2 file3 
+        touch ~/Document/file{1..3}
+        touch /home/mina/Document/file1 /home/mina/Document/file2 /home/mina/Document/file3
+        touch ~/Document/{file,data}.txt 
+    2- Redirection 
+        a- create file with data 
+
+            echo "we love linux" >> ls 
+            cat ls 
+            =============================
+            echo "we love linux" >> ls 
+            cat ls 
+            =============================
+            cat > ~/Documents/test   + (Cntrl+D) Saving
+
+        b- create Empty File 
+            >filemina #create file Empty
+
+
+        # Output 
+            1>>  or >> append 
+            1> or > Overwrite 
+
+        # Error 
+            2>> append  
+            2>  overwrite 
+        Notes 
+            /dev/null ===> Trash 
+
+    3- CLI Editor (vi , nano , ......)
+        vi filepath 
+
+Notes 
+    can't create file & folder in same name 
+    mkdir test 
+    touch test
+    ls -l ~/Music/
+        total 4
+        drwxrwxr-x 2 mina mina 4096 Nov 11 15:31 test
+    touch testx
+    mkdir testx
+    mkdir: cannot create directory ‘testx’: File exists
+
+
+
+# move Copy Rename 
+copy 
+    cp source dest          #copy file
+    cp filepath folderpath  #dest must be folder 
+    cp filepath filepath folderpath  #copy manyfile
+    cp ~/Music/ahmed ~/Music/minapasswd 
+    cat ~/Music/minapasswd  #Hello mina
+    cp ~/Music/ahmed /etc/passwd  ~/Music/minapasswd 
+        cp: target '/home/mina/Music/minapasswd' is not a directory
+    cp -r ~/Videos/ ~/Music # copy samename 
+    cp -r ~/Videos/ ~/Music/minapasswd  #Error 
+
+cp  /etc/passwd  ~/Music/filex
+if filex exist file    ===> overwrite filex 
+if filex exist folder  ===> copy inside filex 
+if filex Notexist      ===> copy inside Music & Rename  
+
+cp -r ~/Videos/ ~/Music/RANA
+if RANA exist as  File ====> Error 
+if RANA exist as  Folder ====> copy inside Rana 
+if RANA Not exist        ====> copy inside Music & Rename  
+
+
+copy manyfiles   must   last Argument FolderExist 
+copy manyfolders must   last  Argument FolderExist 
+======================================================================
+move
+mv ===> move&Rename file , folder, 
+    move 
+        move filepath filepath 
+        mv -i ~/Videos/ahmedx ~/Music/minapasswd 
+        mv: overwrite '/home/mina/Music/minapasswd'? y
+    Rename 
+        move filepath filepath 
+        mv ~/Music/ahmed ~/Music/mina
+        mv ~/Music/{ahmed,mina}
+IQ 
+move ===> 3 Argument ==> Move 
+mv   ===> 2 Argument ==> move or Rename 
+
+
+-i ==> Overwrite ? 
+======================================================================
+How Display Data Filter :- 
+    cat  file file 
+
+    less    page through file(page by page) 
+    more    page through file(page by page) 
+    head    First 10 
+    tail    last  10 
+cat -n /etc/passwd #View file with Number of line  
+head -n 2 /etc/passwd  or head -2 /etc/passwd 
+tail -n 2 /etc/passwd  or tail -2 /etc/passwd 
+
+listen file
+tail -f ~/Music/mina #Follow file in Real-Time 
+
+=========================================================================
+Display Number from 3 to 10  
+=================================
+cat -n /etc/passwd | head -10 | tail +3
+cat -n /etc/passwd | head -10 | tail -8  #(10-3+1)
+
+Display Number from 50 to 56  
+=====================================
+cat -n /etc/passwd | head -56 | tail +50
+cat -n /etc/passwd | head -56 | tail -7 #(56-50+1)
+
+
+
+IQ :
+=======
+- Copy 2 file in file 
+    cat file1 file2 >> file 
+
+=====================================================================
+Advanced Listing 
+==================
+ls -l /bin
+    - type of File/Folder 
+    - Permission 
+    - Size of File 
+    - OwnerShip 
+    - Time modification 
+
+
+
+
+
+Information specific Folder 
+    ls -l -d  ~
+    ls -ld  ~
+
+
+Size of Folder :- 
+    du -sh ~
+
+size of files :-
+    du -sh /etc/passwd 
+    ls -l /etc/passwd    
+    ls -lh /home/mina/Desktop/'Python Elbasha'/ExpanDrive_2025.10.31_amd64.deb
+        -rw-rw-r-- 1 mina mina 113M Nov  4 17:22 '/home/mina/Desktop/Python Elbasha/ExpanDrive_2025.10.31_amd64.deb'
+
+Listing all data sorting Size 
+ls -lSh ~/Desktop/
+ls -lSrh ~/Desktop/ #sort size reverse 
+
+ls -lth ~/Desktop #sort by time 
+ls -lthr ~/Desktop #sort by time by reverse 
+
+
+
+wildcart ==> filter 
+*  ==> start , end [zero or many]
+?  ==> No of char [one char]
+[] ==> Character  [One Char inside]
+
+ls ~/Music
+
+
+ls ~/Music/*.txt   ==>/home/mina/Music/file.txt
+ls ~/Music/f*      ==>/home/mina/Music/fmina
+
+
+ls ~/Music/[a-zA-Z]*
+ls ~/Music/[a-z]*
+
+
+
+================================================
+classify 
+==============
+ls -F ~/Music/
+    folder /   executable *    shortcut@
+
+ls -F ~/Music/ | grep '/'    #list all Directory
+ls -l ~/Music/ | grep '^d'   #list all Directory
+
+ls -F ~/Music/ | grep -v '/' #list all files 
+ls -l ~/Music/ | grep '^-'   #list all files 
+
+
+ls -F ~/Music/ | grep '/'
+ls -F ~/Music/ | grep '/' | tr '/' ' ' 
+ls -F ~/Music/ | grep '/' | cut -d '/' -f1
+ls -F ~/Music/ | grep '/' | tr -d '/'
+
+ls -R /   ===> Recursive 
+ls -ltr   ===> reverse 
+================================================
+#Text Processing 
+#=================
+Grep ===> Filter Rows :- 
+
+grep '^mina' /etc/passwd
+    mina:x:1000:1000:mina,,,:/home/mina:/usr/bin/bash
+grep 'bash$' /etc/passwd
+    root:x:0:0:root:/root:/bin/bash
+=============================================
+grep -i 'mina' /etc/passwd #caseSensitive
+grep -r  =====> Recursive Search 
+=============================================
+cut ===> filter columns 
+/etc/passwd ===> 7 col 
+1-loginname ,2- passwd 3- id , 4-primarygroup,5-Comment(fullname)
+6-HomeDirectory ,7-shell
+
+cut -d ":" -f1 /etc/passwd
+cut -d ":" -f1,7 /etc/passwd
+cut -d ":" -f5-7 /etc/passwd
+
+
+/etc/group ===> 4 
+groupname:passwd:id:members
+
+
+Pipline :- 
+    ls | rm 
+    rm: missing operand
+    Try 'rm --help' for more information.
+    
+    ls | wc -l  ===> 11 
+
+    echo "world" | wc -c  #6
+    wc -c <<<"world"
+
+#Max User id 
+sort -n -t ":" -k3 -r /etc/passwd | head -1 
+    #nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+sort -n -t ":" -k3 -r /etc/passwd | head -1 | cut -d ":" -f3
+    #65534
+===========================================================
+#Mounting ====> appeare Disk in FileSystem Mounting 
+/media ===> Automatic Mounting 
+/mnt   ===> manual Mounting 
+
+#Device   ====> /dev/sda1 , ..... /dev/nvme.....
+===========================================================
+# Initialization files 
+
+# Inode - Hard Link VS Soft Link 
+
+# RPM VS YUM 
+
+
+
+
+
+#Notes :- 
+=========
+file ~/Documents/file 
+    /home/mina/Documents/file: Python script, ASCII text executable
+vi ~/Documents/file
+file ~/Documents/file 
+    /home/mina/Documents/file: ASCII text
+
+
+
+
+#Redirection
+
+ls -l /dev/std*
+    lrwxrwxrwx 1 root root 15 Nov 11 09:28 /dev/stderr -> /proc/self/fd/2
+    lrwxrwxrwx 1 root root 15 Nov 11 09:28 /dev/stdin -> /proc/self/fd/0
+    lrwxrwxrwx 1 root root 15 Nov 11 09:28 /dev/stdout -> /proc/self/fd/1    
+
+    + Output 
+        1>>  or >> append 
+        1> or > Overwrite 
+    + Error 
+        2>> append  
+        2>  overwrite 
+    + Input 
+        0< or < 
+    
+
+    # Change default input [from file]
+        tr 'a-z' 'A-Z' /etc/passwd 
+            tr: extra operand ‘/etc/passwd’
+        tr 'a-z' 'A-Z' </etc/passwd
+
+        cat < /etc/passwd
+        
+    # Change End of Document [Input from keyboard]
+    cat << EoF > ~/Documents/test
+        > we love linux
+        > we love mina
+        > EoF
+
+    tr 'a-z' 'A-Z' <<EoF
+
+    # Change default input [from variable or String text]
+
+    tr 'a-z' 'A-Z' <<< $var     ===> WELOCME MINA
+    tr 'a-z' 'A-Z' <<< "Welcom" ===> WELCOM
+
+    cat <<< "welcom we love linux" == echo 
+
+    command1>>command2 ===> command2 FileName :) 
+
+#PIPline 
+command1 | command2 | command3 
+
+
+echo $var | tr 'a-z' 'A-Z'
+    WELOCME MINA
+
+
+
+
+diff compare Two file 
+ diff ~/Music/newpasswd /etc/passwd
+1c1
+< mina
+---
+> root:x:0:0:root:/root:/bin/bash
+
+diff ~/Music/newpasswd /etc/passwd
+0a1
+> root:x:0:0:root:/root:/bin/bash
+
+diff ~/Music/newpasswd /etc/passwd
+1d0
+< mian
+
+#tee==> Standard Output NotChange (Teminal+File)
+echo "Hello mina" | tee ~/Music/file.txt 
+
+============================================================
+ps ==> process status 
+ps ==> current Teminal 
+ps aux ==>  all users 
+ps -ef ==>  all with Parent Process ID  
+ps -u "user" ==> Specific user 
+ps -p 55281 ==> specific Process 
+
+
+#Dynamic Display :- 
+------------------
+    top ===> View Nice Number 
+
+===================================================
+#Jobs :- 
+#=========
+backgroud & stopped Process [Current Terminal]
+JobID Don't Unique 
+PID Must be unique 
+=================================================
+#Process Control 
+#-------------------
+    kill Command ---> send any signal 
+    kill Command By default ---> send Terminate signal  
+    9) SIGKILL 
+    18) SIGCONT
+    19) SIGSTOP
+    15) SIGTERM
+
+#Process foreground 
+    1- stop process 
+        Cntrl+z or kill -SIGSTOP PID or kill -SIGSTOP  %[JobID] 
+    2- Resume Process
+        bg %1 or kill -SIGCONT PID or kill -SIGCONT  %[JobID]
+
+#Run Process in Background 
+    command &
+#Run Process foreground 
+    fg %[jobID]
+====================================================
+pgrep  -la "ProcessName" 
+pgrep -l -u mina  or pgrep -lu mina or pgrep -u mina -l #all process Except mina user 
+pgrep -u -l mina  or -ul mina XXX Error 
+pgrep -l -v "mina" #all process Except mina user
+====================================================
+pkill SIG ProcessName 
+killall ProcessName 
+===================================================
+Control Priority Process 
+===========================
+nice -n 10 sleep 200000 &
+Nice  :: 19 -----> -20 
+renice -n 5 -p 161728 #Increase Priority , Decrease Nice
+    renice: failed to set priority for 161728 (process ID): Permission denied
+sudo renice -n 5 -p 161728 #Increase Priority , Decrease Nice
+    161728 (process ID) old priority 10, new priority 5
+renice -n 15 -p 161728 #Decrease Priority ,  Increase Nice
+    161728 (process ID) old priority 5, new priority 15
+================================================================================
+/etc/passwd
+login-name:x:uid:gid:comment:home-directory:login-shell 
+/etc/group 
+groupname:x:gid:comma-separated list of group members
+/etc/shadow 
+    username:encrypted passwd:last changed:min:max:warn:inactive:
+    expire:future-use
+/etc/gshadow  
+
+useradd username 
+    -m  ==> create home  /home/user 
+    -md ==> create home in specific path 
+    - s ==> shell 
+    - c ==> comment 
+    -g ==> primarygroup
+    -G ==> Secondary Group 
+    -p ===> password (encrypted) don't use it 
+    -u ==> userid 
+
+Type of users 
+    root user                0 
+    Service users           1 - 999 
+    Normal user             1000  ..... [sudoers or No sudoers]
+
+
+
+
+#Add user in sudores 
+   sudo usermod mina -aG wheel 
+    
+
+
+#Userdelete 
+   sudo userdel mina ===> delete 
+   sudo userdel -r mina ==> user with data 
+
+#change password 
+    sudo passwd mina 
+
+
+sudo groupadd groupname 
+sudo groupadd groupname -r ===> Generate Number Group  
+
+sudo groupdel groupname 
+
+
+
+
+
+Command Change shadow  [Policies of Password]
+    passwd 
+    • To change the min number of days between password changes use -n
+    • To change the max number of days between password changes use -x
+    • To change the expiration date for the account use -i
+    • To change the number of days to start warning before a password
+    change will be required use -w
+    • To lock the password use -l
+    • To unlock the password use -u
+    chage 
+    list Information ===> chage -l 
+    -E ====> Expire Account 
+    -M ===> Max (Expire Passwd)
+    -m ===> min 
+    -w ===> Warning
+
+
+Switching User 
+    su   or su - ===> switch root With Password root 
+    su root  or su - root ===> switch root With Password root 
+    sudo -i or sudo -s ===> switch root With Password sudo 
+
+
+
+        su                             vs                                su - 
+    don't Reset all Enviroment                    Reset All Enviroment
+    call user/.bashrc , /etc/bashrc               call user/.bashrc , /etc/bashrc ,user/.profile,/etc/profile  
+
+====================================================================================================================================
+Switch Execute command and Logout :- 
+============================================
+        su - ali -c "cat /etc/passwd;whoami"
+
+pwd 
+    /home/mina/Music
+su - ali 
+wohami
+    ali 
+pwd 
+    /home/ali
+exit  #logout
+
+pwd 
+    /home/mina/Music
+
+su ali 
+wohami
+    ali 
+
+pwd 
+    /home/mina/Music
+
+#======================================================================
+#Every user Must have One PrimaryGroup Only 
+#Every user have zero or one or many Secondary
+
+User ------------> Primary -------> OwnerShip [Owner User - OwnerGroup ]
+touch filey
+ls -l filey 
+    -rw-rw-r-- 1 mina mina 0 Nov 11 19:37 file
+
+    ==============================================
+#Change OwnerShip 
+#=====================
+
+sudo chown user file/folder       ==> userownership 
+sudo chown :group file/folder     ==> group ownership 
+sudo chown user:group file/folder ==> userownership 
+
+sudo chgrp groupName ==> group ownership
+
+OwnerShip ======> Permission 
+
+
+Person ============Access ============>   File/Folder 
+                                            ownership 
+                                        permission rwxrw-r--
+
+if user == userownership :
+        Person ============Access==>file (UserPermission ) rwx 
+elif ali member in OwnerGroup:
+        Person ============>Access==> rw- 
+else 
+        Person ==========>r-- 
+
+
+
+
+          File                               Folder 
+r       read(cat,head,....)                list (ls)
+w       Edit                                Edit 
+        vi ---> rw                        touch file 
+        vi ---> w [:wq!](Overwrit)        rename file 
+        [w only]echo "data" >> file       delete file 
+x       Run                             cd  [(rx)ls -l]  
+
+
+#Mimum Permssion :- 
+               file          Sourcefolder              desnation 
+    copy       r--               --x                     -wx
+    move       ---               -wx                     -wx
+
+#Mimum Permission :- 
+                   file      sourcefile 
+    delete         ---          -wx
+    rename         ---          -wx 
+
+                folder      sourcefile 
+    delete       rwx          -wx
+
+
+Permission :- 
+
+#Chmod 
+    +  add , -  remove , =  overwrite 
+    r w x  
+    4 2 1
+chmod 756 filepath 
+MaxPermission=777 
+
+
+default Max Permission 
+    file 666 rw rw rw [executable by default]
+    folder 777 rwx rwx 
+
+
+default permission 
+#Display 
+    umask -S
+        u=rwx,g=rwx,o=rx
+    umask 
+        0002
+
+
+
+defaulPermission ===> 775
+    umask 002
+    umask -S u=rwx,g=rwx,o=rx
+
+Example :- 
+    umask -S u=rx,g=rw,o=rx
+
+    touch file 
+    ls -l file ?? u=r,g=rw,o=r 
+
+    mkdir dir  
+    ls -ld dir ??  u=rx,g=rw,o=rx
+
+Default Permission File   = umask -x 
+Default Permission Folder = umask
+
+
+
+Information 
+    whoami or id  #current user 
+    who or w      # all Login users all sessions 
+    id user       # user identity information 
+    sudo command  # Run as root 
+    visudo        # Edit sudoers file safely 
+    groups mina   # list all groups 
+
+
+visudo        # Edit sudoers file safely 
+     userame ALL=(ALL)     ALL #Full root Access 
+     %groupname ALL=(ALL)     ALL #Full root Access  
+
+Example  How To Write without Read 
+=================================
+touch ~/fileRead
+vi ~/fileRead [interactive Tool]
+chmod u=w ~/fileRead  
+vi ~/fileRead  [save exit :wq!]
+chmod u=rw ~/fileRead 
+cat ~/fileRead 
+    mina
+    nagy
+    =========================================
+chmod u=w ~/fileRead 
+echo "ahmed" >> ~/fileRead   [Non-interactive]
+chmod u=rw ~/fileRead 
+cat ~/fileRead 
+    mina
+    nagy
+    ahmed
+
+
+
+
+#Search inside man using keyword 
+#========================================
+sudo mandb 
+                ===============================
+man -k "ownership"    [comamndName & Descreption]
+apropos  "ownership"
+    chgrp (1)            - change group ownership
+
+
+                ===============================
+man -f passwd ===> Search Exact command ==> Command Where in Sections ??
+whatis passwd 
+    passwd (5)           - the password file
+    passwd (1ssl)        - OpenSSL application commands
+    passwd (1)           - change user password
+                ==============================
+man man 
+                ==============================
+
+man ===> 9 Section 
+       1   Executable programs or shell commands
+       2   System calls (functions provided by the kernel)
+       3   Library calls (functions within program libraries)
+       4   Special files (usually found in /dev)
+       5   File formats and conventions, e.g. /etc/passwd
+       6   Games
+       7   Miscellaneous (including macro  packages  and  conventions),  e.g.  man(7),
+           groff(7), man-pages(7)
+       8   System administration commands (usually only for root)
+       9   Kernel routines [Non standard]
+                ==============================
+man passwd   ==> Manual passwd command
+                ==============================
+man -s 5 passwd or man 5 passwd ===> Manual passwd file 
+man passwd.5
+man passwd.1
+                ==============================
+man -a passwd ===> all manual pages  
+                ==============================
+
+Information Command :- 
+===========================
+    command --help 
+            ls --help
+            help echo 
+    info ls 
+
+
+
+=======================================================
+
+Archiving  Compress
+
+Indoe  softLink HardLink 
+
+
+
+
+
+=======================================================
+Intialization files , Enviroments variables ,alias 
+
+
+
+Login Terminal  [su - or LoginTerminal]
+    /etc/profile 
+    ~/.profile 
+
+Any Terminal 
+    /etc/bash.bashrc 
+    ~/.bashrc  #alias
+
+
+4 files ======> Login Terminal  or su - 
+
+
+/etc/profile OS-NC-intake46       alias mina="ls"
+/etc/Bash.bashrc Welcome OS Intake 46 
+myprofile OS-NC-intake46
+MinaNagy ~/.bashrc NonLogin or Login Terminal alias mina="ls -l"
+
+
+
+man bash 
+man ksh 
+man zsh 
+===========================================================================
+    

@@ -25,7 +25,7 @@ size modifier [short,long,unsigned]
 # coding rules
 
 >return 0;
-
+>camel Case
 >int main (void){}
 >No magic numbers   like int x=3;
 >ALL vars must be initilazed
@@ -36,7 +36,11 @@ size modifier [short,long,unsigned]
 >            %f      double
 >            %c      char
 >            %s      [char]
-
+when doing a header file
+#ifndef STANDARDTYPE
+#define STANDARDTYPE
+int x;
+#endif
 >typedef short int bit16;      //replacement datatypes
 
 
