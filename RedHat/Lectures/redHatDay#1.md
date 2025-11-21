@@ -7,7 +7,8 @@ recommend watch: >redhat / ubuntu course marhar tech
 richard soulman
 
 gnu no unix
-
+       /bin
+       /sbin       link for /usr/bsbin
 # LINUX components
 >kernel
 >shell 
@@ -29,7 +30,6 @@ gnu no unix
             >".." back to the parent
             >"-"  go back to previous dir
             >"~"  means /home/usr of the current logged in user
-            > if writen without any options it will return you to the home dir
      ls: list contents 
             >"R" recursive direcotyr list
             >"a" all    
@@ -38,6 +38,9 @@ gnu no unix
             >"-r" recurseive
             >"*3" all files in dir 3
             >"*" all files except hidden files (.)
+            >-d info on folders only
+            >-h human readable
+            >-LSh   sort by size
             > meta charcters doesnt match hidden files
 
      pwd : print working directory
@@ -58,7 +61,8 @@ gnu no unix
         >"r" delete the directory recursevly (files and folders inside are deleted)
      uptime: 
               displays how long the device have been up and running
-
+     du   -sh                      //folder size
+     df                            //free space
 # File System
     /    :  the root  is the start of the file hirearchy
     /etc :  dir for configurations of the system with restricted access

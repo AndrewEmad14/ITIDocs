@@ -57,9 +57,11 @@ printf();;  //compiler error becuase printf expects an argument
 c++ lab
 file{
     function(x,y){}
-    textcolor{}
-    sleep()
-    clear()
+    textcolor{} --done
+    sleep()     --done
+    clear()     --done
 
+    check for both windows and linux
 
+KC4@BUI4
 }
