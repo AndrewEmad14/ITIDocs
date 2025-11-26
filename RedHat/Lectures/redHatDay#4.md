@@ -12,7 +12,7 @@
 # Commands
     nice [-n adjustment]    command
     nice -n 20 makewhatis
-    renice [number]  -p [pid]
+    renice [number]  -p [pid] //resets priority
     ps          //processes that are currently running on the cpu
         -l      detailed desc
     pstree  
@@ -68,3 +68,5 @@
     switching inside the terminal is not the same as loging in
     ls -R / 2> /dev/null | sort > result &
     /dev/null if i dont want to create a file for the error
+    nice like priorty the lower the higher it is in prio
+    

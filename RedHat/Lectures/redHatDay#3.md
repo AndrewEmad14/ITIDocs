@@ -58,11 +58,10 @@ Execute     execute file    cd and ls-l
     >enviorment variables           
             the enviorment variables start with a $
                 <Examples>
-                        $HOME           //home dir 
+                        $HOME        :   //home dir 
                         $PWD   
         man bash to get all env vars
         /somthing                   //to search in the man 
-                    /<something>\b
         PATH=$PATH:/whatever dir you want
     >ALIAS  // another name for a comand
              <EXample> alias c=clear</Example>
