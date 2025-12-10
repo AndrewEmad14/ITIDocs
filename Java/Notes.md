@@ -145,6 +145,9 @@
 
 # generics
 
+        Template vs Generic:
+            C++ Templates: Code generation at compile-time
+            Java Generics: Type erasure with compile-time type checking
         a. Unbounded :
             public void printList(List<?> list) { ... }
         b. Upper Bounded :
