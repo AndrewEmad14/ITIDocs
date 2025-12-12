@@ -147,7 +147,17 @@
 
         Template vs Generic:
             C++ Templates: Code generation at compile-time
+                Generate separate code for each type used
+                True parametric polymorphism
+                Code is instantiated at compile-time for each type
             Java Generics: Type erasure with compile-time type checking
+                Use type erasure - generic type info removed at compiletime and replaced with object
+                WHY NOT USED OBJECT AND SCREW GENERIC?
+                generics allows the complier to type check IN COMPILE TIME
+                if we use object the crash will happen in RUNTIME
+                Single compiled class for all type parameters
+                Types are checked at compile-time but erased to Object (or bound) at runtime
+                Must use wrappers ,no primitive types
         a. Unbounded :
             public void printList(List<?> list) { ... }
         b. Upper Bounded :
@@ -186,8 +196,88 @@
                 Object item = list.get(0); // ✅ Can only read as Object
             }
 
+# High order functions ISH
+
+    Stream API (Java 8+)
+    A Stream is not a data structure - it's a pipeline for processing data. Think of it as a conveyor belt where you can:
+
+    Get data from a source (collection, array, etc.)
+    Apply operations (filter, map, sort, etc.)
+    Produce a result (collect, count, find, etc.)
+
+    supports Parrelism
+    Intermediate operations (return a Stream):
+
+        filter(Predicate<T>) - filters elements based on a condition
+        map(Function<T, R>) - transforms each element
+        flatMap(Function<T, Stream<R>>) - flattens nested streams
+        peek(Consumer<T>) - performs action without modifying stream
+        sorted(Comparator<T>) - sorts elements using a comparator
+        distinct() - removes duplicates (uses equals/hashCode)
+        limit(long) - truncates stream
+        skip(long) - skips elements
+
+    Terminal operations (produce a result):
+
+        forEach(Consumer<T>) - performs action on each element
+        forEachOrdered(Consumer<T>) - forEach but maintains order
+        reduce(BinaryOperator<T>) - combines elements into single result
+        collect(Collector<T, A, R>) - collects into collection/map
+        anyMatch(Predicate<T>) - checks if any element matches
+        allMatch(Predicate<T>) - checks if all elements match
+        noneMatch(Predicate<T>) - checks if no elements match
+        findFirst() - finds first element
+        findAny() - finds any element
+        min(Comparator<T>) - finds minimum
+        max(Comparator<T>) - finds maximum
+
+    Collection methods (Java 8+)
+
+        forEach(Consumer<T>) - iterates over collection
+        removeIf(Predicate<T>) - removes elements matching predicate
+        replaceAll(UnaryOperator<T>) - replaces all elements (List)
+
+    Map methods (Java 8+)
+
+        forEach(BiConsumer<K, V>) - iterates over key-value pairs
+        compute(K, BiFunction<K, V, V>) - computes new value
+        computeIfAbsent(K, Function<K, V>) - computes if key absent
+        computeIfPresent(K, BiFunction<K, V, V>) - computes if key present
+        merge(K, V, BiFunction<V, V, V>) - merges values
+        replaceAll(BiFunction<K, V, V>) - replaces all values
+
+    Optional methods (Java 8+)
+
+        map(Function<T, R>) - transforms value if present   return stream
+        flatMap(Function<T, Optional<R>>) - flattens nested Optionals return stream
+        filter(Predicate<T>) - filters based on condition
+        ifPresent(Consumer<T>) - executes if value present
+        ifPresentOrElse(Consumer<T>, Runnable) - executes with fallback
+        or(Supplier<Optional<T>>) - provides alternative Optional
+
+    CompletableFuture methods (Java 8+)
+
+        thenApply(Function<T, R>) - transforms result
+        thenAccept(Consumer<T>) - consumes result
+        thenRun(Runnable) - runs after completion
+        thenCompose(Function<T, CompletableFuture<R>>) - chains futures
+        exceptionally(Function<Throwable, T>) - handles exceptions
+        handle(BiFunction<T, Throwable, R>) - handles both success and failure
+
+    Thread/Executor methods
+
+        execute(Runnable) - executes a task
+        submit(Callable<T>) - submits task for execution
+
+    Arrays utility (Java 8+)
+
+        Arrays.setAll(T[], IntFunction<T>) - sets all elements using function
+        Arrays.parallelSetAll(T[], IntFunction<T>) - parallel version
+        Arrays.sort(T[], Comparator<T>) - sorts with custom comparator
+
 # FAQ
 
+    Data Access Object
     all object are stored by refrence thus they are in the heap
     Serializable:
     an object's state can be converted into a format, like a stream of bytes, so it can be saved or transmitted and later restored to its original state. This process allows objects to be stored in a file or database, sent over a network, or passed between different programming environments
