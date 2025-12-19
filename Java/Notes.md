@@ -60,9 +60,12 @@
 
 # Widening And Narrowing
 
-     Widening Happens implicitly
+    NOTE: this only works on primitave types not on wrappers
+
+    Widening Happens implicitly
     int x=5;
-    doble y=x;
+    double y=x;
+    also works in comparison
     BUT Narrowing you have to cast explicitly
     double x=4.3
     int y=(int)x
@@ -174,7 +177,7 @@
     YOU CANNOT make it static , because interface methods are instance methods by desgin
     YOU CAN make it final to stop other methods from overriding
 
-# Call Back
+# Call Back/Lambda
 
      // 1. Define a callback interface
     interface Callback {
@@ -215,6 +218,29 @@
             });
         }
     }
+
+# Method Reference
+
+    allows you to use method as value
+    refrence::methodeName
+    Example all of these are the same
+
+        File fObj = new File(“.”);
+        File[] directories = fObj.listFiles(new
+        FileFilter(){
+
+        public boolean accept(File file) {
+        return file.isDirectory(); }
+
+        });
+        File fObj = new File(“.”);
+        File[] directories = fObj.listFiles((file)->
+        file.isDirectory();
+
+        );
+
+        File[] directories= new File(".").listFiles(File::isDirectory);
+
 
 # Functional Interface
 
@@ -415,6 +441,8 @@
         Remeber that you cant have say a static instance with a T since this generic is only for the instance
         you will have to use wild cards instead
 
+        T extends Comparable<T>. when u eed to compare
+
 # wild cards and generics
 
         all parameters must be of the same type T
@@ -450,6 +478,8 @@
 
     Stream API (Java 8+)
     A Stream is not a data structure - it's a pipeline for processing data. Think of it as a conveyor belt where you can:
+    Intermediate operations are lazy—they aren’t performed until a
+    terminal operation is invoked.
 
     Get data from a source (collection, array, etc.)
     Apply operations (filter, map, sort, etc.)
@@ -526,6 +556,62 @@
         Arrays.sort(T[], Comparator<T>) - sorts with custom comparator
 
     Note: find any is non deterministic in parrel
+    A parallel stream is a stream that splits its elements into multiple
+    chunks, processing each chunk with a different thread.
+
+# the lazy concept
+
+    List<String> names = Arrays.asList("Alice", "Bob", "Charlie", "David");
+
+    // These intermediate operations DON'T execute yet
+    Stream<String> stream = names.stream()
+        .filter(name -> {
+            System.out.println("Filtering: " + name);
+            return name.length() > 3;
+        })
+        .map(name -> {
+            System.out.println("Mapping: " + name);
+            return name.toUpperCase();
+        });
+
+    System.out.println("Stream created, but nothing printed yet!");
+    System.out.println("Now calling terminal operation...");
+
+    // Terminal operation triggers execution
+    stream.forEach(System.out::println);
+    ```
+
+    **Output:**
+    ```
+    Stream created, but nothing printed yet!
+    Now calling terminal operation...
+    Filtering: Alice
+    Mapping: Alice
+    ALICE
+    Filtering: Bob
+    Filtering: Charlie
+    Mapping: Charlie
+    CHARLIE
+    Filtering: David
+    Mapping: David
+    DAVID
+
+# Parrelism vs Concurency
+
+    Single core CPU switching between tasks:
+
+    Time →
+    Task A: ████░░░░████░░░░████
+    Task B: ░░░░████░░░░████░░░░
+
+    Tasks take turns, but don't run at the same time
+
+    Multi-core CPU running tasks simultaneously:
+
+    Core 1: ████████████████████  Task A
+    Core 2: ████████████████████  Task B
+
+    Both tasks run at the exact same time
 
 # Exceptions
 
@@ -680,6 +766,88 @@
     niether cat nor finally are required
     the close exception doesnt have to throw a checked exception
 
+# iterator
+
+    iterator() is used for naturally ordered data structure
+    Collection<String> c = . . .;
+    Iterator<String> iter = c.iterator();
+    while (iter.hasNext())
+    {
+
+    String element = iter.next();
+    //do something with element
+
+    }
+    listIterator() is used for things like linked list
+    ListIterator<String> iter = staff.listIterator();
+
+    If an iterator finds that its collection has been modified by
+    another iterator or by a method of the collection itself, it throws
+    a ConcurrentModificationException.
+    To avoid concurrent modification exceptions, follow this
+    simple rule:
+    • You can attach as many iterators to a collection as you like, provided that
+    all of them are only readers.
+    • Alternatively, you can attach a single iterator that can both read and write.
+    Map<String, Integer> scores = . . .;
+    int score = scores.getOrDefault(id, 0); // Gets 0 if the id is not present
+
+    Consider using a map for counting how often a word occurs in
+    a file.
+    counts.putIfAbsent(word, 0);
+    counts.put(word, counts.get(word) + 1); // Now we know that get will succeed
+    OR
+    counts.merge(word, 1, Integer::sum);
+
+    Sorting algorithms are part of the standard library for most
+    programming languages, and the Java programming language is no
+    exception.
+    • The sort method in the Collections class sorts a collection that
+    implements the List interface.
+    List<String> staff = new LinkedList<>();
+    fill collection
+    Collections.sort(staff);
+
+    • This method assumes that the list elements implement the
+    Comparable interface. If you want to sort the list in some other way,
+    you can use the sort method of the List interface and pass a
+    Comparator object.
+
+# Threads
+
+    • There are two ways to work with threads?
+
+        • Extending class Thread.
+        • Implementing Runnable Interface.
+    Methods:
+     Class Thread
+         start()
+         run()
+         sleep()
+         suspend()*
+         resume()*
+         stop()*
+     Class Object
+         wait()
+         notify()
+         notifyAll()
+
+    ->Extending the Thread class
+        • Easier to implement
+        • Your class can no longer extend any other class
+        • Each object from an extended Thread is separated from others
+        threads
+    ->Implemening Runnable
+        • Implementing the Runnable interface:
+        • May take more work
+        • Here, you're not really specializing or modifying the thread's
+        behavior. You're just giving the thread something to run.
+        • You can run it in a thread, or pass it to some kind of executor
+        service.
+        • Your class can still extend other class.
+        • An object from an implemented Runnable can be shared among
+        many threads.
+
 # MISC
 
      Data Access Object
@@ -711,3 +879,16 @@
     for example T extends animal or T super animal works with animal
 
     short and byte are promted to int in arthmetic operations
+    you must call next before calling remove in iterator collection
+
+    Every program in Java has at least two threads; the main thread of
+    the program and the garbage collector thread.
+
+    switch case can only work with constant values
+    switch(variable here)
+        case const here:
+
+
+    When you wish for your class to be comparable you have to :
+    1. implent Complarable<YourClassName>
+    2. override compare to method
