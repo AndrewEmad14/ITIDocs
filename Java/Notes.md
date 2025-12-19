@@ -11,6 +11,17 @@
 
     };
 
+# Naming conventions
+
+    the donts
+        cant start with a number
+        one underscore
+        -
+        @
+        .
+        /
+        #
+
 # args[]
 
     args are the arguments that the main function takes , the input is sperated by space delimeter
@@ -514,6 +525,8 @@
         Arrays.parallelSetAll(T[], IntFunction<T>) - parallel version
         Arrays.sort(T[], Comparator<T>) - sorts with custom comparator
 
+    Note: find any is non deterministic in parrel
+
 # Exceptions
 
     RuntimeException
@@ -620,14 +633,59 @@
     exception(s) declared in the method that you are attempting
     to override
 
-# FAQ
+    avilable super options
+    Exception() - no arguments
+    Exception(String message) - with a message
+    Exception(String message, Throwable cause) - with message and cause
+    Exception(Throwable cause) - with just a cause
 
-    Data Access Object
+    Runtime Exceptions
+        Null and Reference Issues:
+
+        NullPointerException - attempting to use a null reference
+        ClassCastException - invalid casting between types
+
+        Array Issues:
+
+        ArrayIndexOutOfBoundsException - accessing invalid array index
+        NegativeArraySizeException - creating array with negative size
+
+        Arithmetic Issues:
+
+        ArithmeticException - illegal arithmetic operation (e.g., division by zero)
+
+        Illegal Arguments:
+
+        IllegalArgumentException - method receives inappropriate argument
+        NumberFormatException - failed string-to-number conversion (subclass of IllegalArgumentException)
+        IllegalStateException - method called at inappropriate time
+
+        Unsupported Operations:
+
+        UnsupportedOperationException - requested operation not supported
+
+        Security:
+
+        SecurityException - security manager denies access
+
+        Concurrency:
+
+        IllegalMonitorStateException - illegal monitor operation
+        ConcurrentModificationException - concurrent modification detected
+
+# try resoursces implements closable
+
+    the closing happends in reverse order
+    the close() checked exception is supressed
+    niether cat nor finally are required
+    the close exception doesnt have to throw a checked exception
+
+# MISC
+
+     Data Access Object
     all object are stored by refrence thus they are in the heap
     Serializable:
     an object's state can be converted into a format, like a stream of bytes, so it can be saved or transmitted and later restored to its original state. This process allows objects to be stored in a file or database, sent over a network, or passed between different programming environments
-
-# MISC
 
     java was created by sun with a team that consitsts of james goseling
 
@@ -644,3 +702,12 @@
     Machine before any objects are made.
 
     char in java is 2 byte
+
+    uniary operators return the same data type
+
+    intUniaryOperator is a prebuilt interface that takes an integer
+
+    super and extend works with the origin class
+    for example T extends animal or T super animal works with animal
+
+    short and byte are promted to int in arthmetic operations
