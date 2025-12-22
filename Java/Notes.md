@@ -241,7 +241,6 @@
 
         File[] directories= new File(".").listFiles(File::isDirectory);
 
-
 # Functional Interface
 
     These interfaces are  called Single Abstract Method

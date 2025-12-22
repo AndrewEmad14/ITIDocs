@@ -1,25 +1,25 @@
 # day 3
 
-#ifndef STANDARDTYPE
-#define STANDARDTYPE
-int x;
-#endif
+    #ifndef STANDARDTYPE
+    #define STANDARDTYPE
+    int x;
+    #endif
 
->not preprocess realted
-#Asem
-#PRAGMA
+    >not preprocess realted
+    #Asem
+    #PRAGMA
 # size modifiers
-float
-    doesnt have size modifiers
-int 
-    have short or long long
-double
-    have long
+    float
+        doesnt have size modifiers
+    int 
+        have short or long long
+    double
+        have long
 
 # sign modifier
 
-float and double doesnt have signed and unsigned
->BEWARE OF OVERFLOWS
+    float and double doesnt have signed and unsigned
+    >BEWARE OF OVERFLOWS
             overflows are logical error that appears in runtime
                                 ex: unsigned char a=-12;
 
@@ -37,31 +37,29 @@ float and double doesnt have signed and unsigned
         explicit casting
 
 # FAQ
-Lenter?
-an equation that turns any number into the 
-why is break hated
+    Lenter?
+    why is break hated
+    if(1){
 
-if(1){
+    }
+    printf("welcome")
+    else{
 
-}
-printf("welcome")
-else{
+    }
 
-}
+    the else cant find its if
 
-the else cant find its if
-
-printf();;  //compiler error becuase printf expects an argument
+    printf();;  //compiler error becuase printf expects an argument
 
 
-c++ lab
-file{
-    function(x,y){}
-    textcolor{} --done
-    sleep()     --done
-    clear()     --done
+    c++ lab
+    file{
+        function(x,y){}
+        textcolor{} --done
+        sleep()     --done
+        clear()     --done
 
-    check for both windows and linux
+        check for both windows and linux
 
-KC4@BUI4
-}
+    KC4@BUI4
+    }
