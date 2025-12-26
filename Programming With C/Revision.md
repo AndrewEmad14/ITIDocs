@@ -390,16 +390,62 @@
     struct Student {
     char name[50];
     int age;
-    };
 
-    With typedef:
+    };
     struct Student s1;
+    With typedef:
+
     typedef struct {
     char name[50];
     int age;
     } Student;
     Student s1;
     // No need to write 'struct' keyword
+
+    you canot have an instance form struct inside sturct but you can have a struct pointer
+    inside sturct
+
+    typedef struct Student Student;
+
+    // Definition
+    struct Student {
+        char name[50];
+        int age;
+        Student *s;  // Now you can use "Student" directly
+    };
+    Student s1;
+
+# Union
+
+    A union in C (and C++) is a special data type that stores different data types
+    in the same memory location. At any time, only one member is active
+    all members share the same starting memory address.
+    example:
+        #include <stdio.h>
+
+        union Data {
+            int i;
+            float f;
+            char str[20];
+        };
+
+        int main() {
+            union Data d;
+
+            d.i = 10;
+            printf("d.i = %d\n", d.i);        // OK
+
+            d.f = 220.5f;
+            printf("d.f = %f\n", d.f);        // OK
+            // But now d.i is corrupted!
+            printf("d.i = %d\n", d.i);        // Garbage!
+
+            strcpy(d.str, "Hello");
+            printf("d.str = %s\n", d.str);    // OK
+            // d.f and d.i are now garbage
+
+            return 0;
+        }
 
 # funciton
 
@@ -433,11 +479,18 @@
                     }
                     return arr;  // valid — heap memory persists
                 }
+    TLDR: to return many values you can:
+    Method 1: Use a global array (not recommended for reusability)
+    Method 2: Pass pointer to caller’s buffer (most common, safe)
+    Method 3: Return pointer to static array (shared state — dangerous in multithreaded code)
+    Method 4: Wrap array in struct → return struct by value (safe, fixed size)
+    Method 5: Allocate on heap with malloc, return pointer (caller must free)
 
 # pointers
 
     Null pointer
-         int* p = nullptr;
+         int* p = nullptr; //pointer points at address 0x0
+
     Dangling pointer
     int* dangling() {
         int x = 10;
@@ -454,6 +507,109 @@
     free(p);
     printf("%d", *p);  // ❌ p is now dangling!
 
+    Wild Pointer
+    int* p;  // ❌ Wild pointer! (unless static/global)
+    *p = 42; // ❌ Write to random memory → crash or corruption
+
+    Void pointer is a genric pointer that you have to cast each time you want to acces it
+        #include <stdio.h>
+
+        int main() {
+            int i = 10;
+            double d = 3.14;
+            char c = 'A';
+
+            void* ptr;
+
+            ptr = &i;
+            printf("int: %d\n", *(int*)ptr);
+
+            ptr = &d;
+            printf("double: %f\n", *(double*)ptr);
+
+            ptr = &c;
+            printf("char: %c\n", *(char*)ptr);
+
+            return 0;
+        }
+    const int is same as int const
+    int* ptr                     //normal pointer
+    int const* ptr = &x             //pointer pointing to a constant
+    ptr=&y         //correct
+    *ptr=5          //incorrect
+    int *const ptr =&x             //constant pointer poining at a variable
+    ptr=&y           //incorrect
+    *ptr=4          //correct
+    You can also have int const * const ptr;
+
+# default arguments
+
+    Default Arguments Must Be at the End Only
+    if you defined one on the left then all the right ones have to have default arguments
+
+    example:
+    void fun(int x = 10, int y); //❌Wrong
+    //Because x(right parameter) does not have a default, but y does.
+    void fun(int x , int y= 10); //✔Correct
+    works only in declaration not in calls
+    fun(x=10,y) //❌Wrong
+    When a function is declared multiple times (header + source), default args must appear only once.
+    default args are written in the header only , or decleration not implementation
+    Default argument selection is compile-time; evaluation of its expression is run-time.
+
+
+    default argument is fixed at compile time, if the expression is dynamic.
+    Compile-time: Which default argument applies is decided.
+    Run-time: The actual expression (if any) is evaluated.
+
+    default function arenot part of the function signuture
+    class Base {
+    public:
+    virtual void show(int x = 10) { cout << "Base: " << x << endl; }
+    };
+    class Derived : public Base {
+    public:
+    void show(int x = 20) override { cout << "Derived: " << x << endl; }
+    };
+    Derived d;
+    Base* pb = &d;
+    d.show(); // static type: Derived -> default is 20; dynamic call: Derived::show -> prints "Derived: 20"
+    // Uses Derived's default: prints "Derived: 20"
+    pb->show(); // static type: Base* -> default is 10; dynamic call: Derived::show -> prints "Derived: 10"
+    // Virtual dispatch to Derived::show, BUT default chosen as Base's: prints "Derived: 10"
+    Base* ptr = new Derived();
+    ptr->show(); // // Derived: 10
+    ptr->show(20); // Derived: 20
+
+# Refrence vs pointers
+
+    Pointers store the memory address of a variable.
+    Pointers can be null, meaning they may not point to any object.
+    Pointers can be reassigned to point to different objects or changed.
+    You use the * operator to declare a pointer and the & operator to get the address of a variarble
+
+    A reference is an alias for an existing object—another name bound to the same memory.
+    Once initialized, a reference must refer to something and cannot be reseated.
+    References are always initialized.
+    cant be null
+    cant be reassigned
+    References are typically implemented under the hood as pointers, but with safer syntax.
+    int a = 10;
+    int& r = a; // r is a reference to
+    ar = 20; // modifies 'a'
+    std::cout << a << "\n"; // 20Show more lines
+
+    cannot bind constant values to refernces unless the ref itself is constant
+    const int& ref =4;
+    or 
+    int&& ref =4                    //used in move
+# Polymorphism
+    static polymorphism : OVERLOADING
+        void add( int x=10 , int y=10){cout<<"Int : "<<x+y<<endl;}
+        void add( float x=10 , float y=10){cout<<"Float : "<<x+y<<endl;}
+        add(10,20);// Int : 30
+        add(10.5,20.4);//Error:: call of overloaded ‘add(double, double)’ is ambiguous
+                        //use 10.4f for float  
 # Side Notes
 
     you can use typedef to define pointers or functions
@@ -470,11 +626,16 @@
         printf("%d", op(5, 3)); // Output: 8
         return 0;
         }
-
-    same number of [][][] same number of ***
+    typedef int * ptr;
+    #define int* ptr2
+    main() {
+        ptr p, p1; // p,p1 --> pointer to int
+        ptr2 p2, p3; //p2 --> pointer p3 ---> integer
+    }
+        same number of [][][] same number of ***
 
     pointer have the same size but the differnce is in the size of the jump
-
+    fraction literals are by default double
 # notes problems
 
     in 3-notes unsigned char
