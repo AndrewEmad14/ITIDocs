@@ -12,16 +12,16 @@
 
 # git log
 
-            show log
+            show commit log
 
-# git restore
+# git restore (unstaging or undo)
 
     Used to undo changes in the working directory or unstage files, without changing commit history.
     Examples:
     git restore file.txt           ← undo local file changes
     git restore --staged file.txt  ← remove a file from staging
 
-# git reset --soft.     (unstaging)
+# git reset --soft. (unstaging) BUT i am editing the commit history
 
     Moves HEAD to a previous commit and keeps all changes staged.
     Useful when you want to undo a commit but immediately recommit the same changes.
@@ -45,6 +45,33 @@
     This does not rewrite history and is safe for shared or public branches.
     git revert <commit>
 
+
+    some caveates:
+    if you revert a commit instead of the head , it may result in a conflict since it will see that you are trying to revert two things
+    for example
+    hello andrew
+    commit A
+    hello seif
+    commit B
+    hello david
+    commit C
+    revert commit B
+        //reverts works by reversing the commit
+        //it will try to reverse B
+        // andrew->seif to reverse it seif -> andrew
+        // but wait the head is currently point ing at david
+        //where is the seif so i could change him?
+        //the conflict in here would be like this
+        >>>>>head
+        hello david
+        ===========
+        hello seif
+        hello andrew
+        >>>>>revert form commit number
+        you will have to decide how to resolve the conflict
+        commit it
+        and the enter revert continue
+
 # git commit
 
             -am             add . + message#
@@ -52,3 +79,44 @@
 # git rm \*.log
 
     remove log files
+
+# git rebase
+
+    git rebase is a command used to integrate changes from one branch into another by moving or combining a sequence of commits to a new base commit
+    git checkout feature-branch
+    git rebase main
+    This replays all commits from feature-branch on top of the latest main branch.
+    Example:
+    # You're working locally
+        git checkout feature
+        git commit -m "WIP"
+        git commit -m "Fix bug"
+
+        # Later, update from main and rebase (all local)
+        git fetch origin
+        git rebase origin/main   # ← still local only!
+
+        # Then push (if never pushed before, or if you own the branch)
+        git push origin feature
+
+# git merge
+
+    merge your changes locally
+    it creates a commit automatically if there are no conflicts
+    if there conflicts
+    resolve conflict
+    git add .
+    git commit
+
+# git fetch
+
+    fetch chnages for the remote repo but it doesnt merge
+
+# git pull
+
+    pull and merge changes in your branch
+    now if  you have local commits AND the remote has new commits
+    git asks you to specify the type of merge
+    git pull --rebase=false (merge):
+    git pull --rebase=true (rebase):
+    git pull --ff-only (fast-forward only):
