@@ -99,8 +99,15 @@
         # Then push (if never pushed before, or if you own the branch)
         git push origin feature
 
+    dont use rebase in public commits because it can cause problems to other collaborators (you will have a new history while they will have the old history resulting in a conflict)
+
+
+    -i lets you enter interactive mode
+    HEAD~n                              //last n commits
+
 # git merge
 
+    --squash
     merge your changes locally
     it creates a commit automatically if there are no conflicts
     if there conflicts
@@ -120,3 +127,127 @@
     git pull --rebase=false (merge):
     git pull --rebase=true (rebase):
     git pull --ff-only (fast-forward only):
+
+# forking
+
+    clonnig vs forking
+        CLONNING
+        create local copy of your repo , link it to the remote repo
+        you can push if you have right accesss
+
+        FORKING
+        create Remote copy of your repo , it lives on github
+        you can push and pull as you like since it is a copy
+
+# GIT CONVENTIONS QUICK REFERENCE
+
+## BRANCH NAMING CONVENTIONS
+
+    feature/description          # New features
+    bugfix/description          # Bug fixes
+    fix/description             # Alternative to bugfix
+    hotfix/description          # Urgent production fixes
+    release/version             # Release preparation
+    chore/description           # Maintenance tasks
+    docs/description            # Documentation only
+    test/description            # Testing
+    refactor/description        # Code refactoring
+
+# With ticket numbers
+
+    feature/JIRA-123-description
+    bugfix/GH-456-description
+
+# Branch naming rules
+
+    - Use lowercase
+    - Use hyphens (not underscores or spaces)
+    - Be descriptive but concise
+    - No special characters
+
+# Examples
+
+    feature/user-authentication
+    bugfix/login-redirect-error
+    hotfix/security-patch
+    release/v1.2.0
+    chore/update-dependencies
+    docs/api-guide
+
+## COMMIT MESSAGE CONVENTIONS
+
+    feat: new feature
+    fix: bug fix
+    docs: documentation changes
+    style: code formatting (no logic change)
+    refactor: code restructuring (no feature/fix)
+    test: adding/updating tests
+    chore: maintenance tasks
+    perf: performance improvements
+    build: build system changes
+    ci: CI/CD changes
+    revert: reverting previous commit
+
+# With scope
+
+    feat(auth): add OAuth support
+    fix(api): handle null response
+    style(header): adjust spacing
+
+# With breaking changes
+
+    feat!: remove deprecated endpoints
+
+# Commit message rules
+
+    - Use imperative mood: "add" not "added"
+    - Don't capitalize first letter after type
+    - No period at end
+    - Keep subject under 50-72 characters
+    - Explain WHY in body, not just WHAT
+
+# Simple examples
+
+    git commit -m "feat: add user authentication"
+    git commit -m "fix: resolve login redirect issue"
+    git commit -m "docs: update README"
+    git commit -m "refactor: simplify error handling"
+    git commit -m "test: add unit tests for auth"
+
+# With body
+
+    git commit -m "feat: add email notifications" -m "- Send welcome email
+    - Add password reset template
+    - Configure SMTP settings"
+
+# With issue reference
+
+    git commit -m "fix: resolve timeout issue
+
+    Closes #123"
+
+# ANTI-PATTERNS (DON'T DO THIS)
+
+    ❌ "fixed stuff"
+    ❌ "updates"
+    ❌ "WIP"
+    ❌ "Final fix"
+    ❌ feature/My_New_Feature
+    ❌ feature/new feature (spaces)
+
+# git reflog
+
+    git keeps all of your history changes in reflog
+
+# git stach
+
+    git stash               Save changes temporarily
+    git stash save "msg"    Save with description
+    git stash list          View all stashes
+    git stash pop           Apply and remove latest stash
+    git stash apply         Apply but keep stash
+    git stash drop          Delete latest stash
+    git stash clear         Delete all stashes
+    git stash show -p       View stash contents
+    git stash -u            Include untracked files
+    git stash branch name   Create branch from stash
