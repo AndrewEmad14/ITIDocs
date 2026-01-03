@@ -610,6 +610,71 @@
         add(10,20);// Int : 30
         add(10.5,20.4);//Error:: call of overloaded ‘add(double, double)’ is ambiguous
                         //use 10.4f for float  
+    Dynamic polymorphism : OVERRIDING
+        the method that gets executed is determined at runtime
+
+    class Animal {
+    virtual void speak() {
+        System.out.println("Animal makes a sound");
+    }
+    }
+
+    class Dog extends Animal {
+        @Override
+        void speak() {
+            System.out.println("Dog barks");
+        }
+    }
+
+    public class Main {
+        public static void main(String[] args) {
+            Animal a = new Dog();  // base reference, child object
+            a.speak();             // calls Dog's speak()
+        }
+    }
+
+    @Override is used to tell the compiler and readers that a method is meant to override a superclass method. It’s not required, but it’s highly recommended.
+    that way if you try to override a function that shouldnt be overridden it will result in a compiler error
+
+     C++ uses static binding by default.
+    Without VIRTUAL, the method call is decided at compile time, based on the pointer type, not the object type
+    so Animal *a=new Dog();
+    will call the animal function not the dogs
+    virtual void speak() final {
+    cout << "Animal sound" << endl;
+    }
+    use final to prevent a function from being overriden
+     virtual void speak() final {
+        cout << "Animal sound" << endl;
+    }
+    use final to preven a class from being inherited
+    class Animal final
+   
+# abstract class
+    an abstract class is a class that cannot be instantiated and is used as a base class for other classes.
+    class Animal {
+    public:
+        virtual void speak() = 0;  // pure virtual function
+    };
+    virtual fun()=0         //thats a pure virtual function that should be implemented 
+                        from the drived classes
+  
+
+# multiple inheritence and the diamond problem
+    class A {
+    public:
+        int x;
+    };
+
+    class B : public A {};
+    class C : public A {};
+    class D : public B, public C {};  // diamond
+    D contains two copies of A, so x is ambiguous.
+
+    Solution 
+    class B : virtual public A {};
+    class C : virtual public A {};
+    class D : public B, public C {};
 # Side Notes
 
     you can use typedef to define pointers or functions

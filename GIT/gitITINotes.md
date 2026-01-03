@@ -237,7 +237,8 @@
 
 # git reflog
 
-    git keeps all of your history changes in reflog
+    git keeps all of your head changes in reflog
+    useful if you want to undo a hard reset
 
 # git stach
 
@@ -251,3 +252,23 @@
     git stash show -p       View stash contents
     git stash -u            Include untracked files
     git stash branch name   Create branch from stash
+
+# git cherry-pick
+    git cherry-pick abc1234     Copy one commit
+    git cherry-pick abc def     Copy multiple commits
+    git cherry-pick abc..xyz    Copy range of commits
+    git cherry-pick -x abc      Copy with reference note
+    git cherry-pick -e abc      Copy and edit message
+    git cherry-pick -n abc      Copy but don't commit
+    git cherry-pick --continue  Continue after conflict
+    git cherry-pick --abort     Cancel cherry-pick
+    git cherry-pick -m 1 abc    Cherry-pick merge commit
+
+
+# git archive
+
+    archives your local files into an archive format without the .git 
+# git config 
+        alias.<name>"<command>"
+
+        or vi ~/.gitconfig
