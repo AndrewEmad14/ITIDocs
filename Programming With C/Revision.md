@@ -13,17 +13,27 @@
     helps in avoiding magic numbers
     for example
         #define MAX 50
-        #define p(A,B) A>B?A:B              //this is a macro
+        #define p(A,B) A>B?A:B              //this is a macro notice that you cant check data types
 
 # Data types
 
-    interger types
+    NOTE: has Diffrent size on Different Machines
+    Specifies: size variable, range of values , operations
+    Primitive
+        int    char    float    double    void
+    Drived
+        Array   pointer     function
+    User Defined
+        enum
+        struct
+        union
     size modifiers
-        short
-        long
+        short       //integer
+        long        //integer,double
     sign modifiers
-        signed
-        unsigned
+        signed          //char , integer
+        unsigned        //char,integer
+
     int     4 bytes    25  00000000    00000000    00000000     00011001   Stored in 2’s complement for negatives
     short   2 bytes    25  00000000  00011001 Smaller range
     long    8 bytes 25000... 00011001  (64 bits)Larger range
@@ -601,15 +611,17 @@
 
     cannot bind constant values to refernces unless the ref itself is constant
     const int& ref =4;
-    or 
+    or
     int&& ref =4                    //used in move
+
 # Polymorphism
+
     static polymorphism : OVERLOADING
         void add( int x=10 , int y=10){cout<<"Int : "<<x+y<<endl;}
         void add( float x=10 , float y=10){cout<<"Float : "<<x+y<<endl;}
         add(10,20);// Int : 30
         add(10.5,20.4);//Error:: call of overloaded ‘add(double, double)’ is ambiguous
-                        //use 10.4f for float  
+                        //use 10.4f for float
     Dynamic polymorphism : OVERRIDING
         the method that gets executed is determined at runtime
 
@@ -649,18 +661,19 @@
     }
     use final to preven a class from being inherited
     class Animal final
-   
+
 # abstract class
+
     an abstract class is a class that cannot be instantiated and is used as a base class for other classes.
     class Animal {
     public:
         virtual void speak() = 0;  // pure virtual function
     };
-    virtual fun()=0         //thats a pure virtual function that should be implemented 
+    virtual fun()=0         //thats a pure virtual function that should be implemented
                         from the drived classes
-  
 
 # multiple inheritence and the diamond problem
+
     class A {
     public:
         int x;
@@ -671,10 +684,11 @@
     class D : public B, public C {};  // diamond
     D contains two copies of A, so x is ambiguous.
 
-    Solution 
+    Solution
     class B : virtual public A {};
     class C : virtual public A {};
     class D : public B, public C {};
+
 # Side Notes
 
     you can use typedef to define pointers or functions
@@ -701,6 +715,7 @@
 
     pointer have the same size but the differnce is in the size of the jump
     fraction literals are by default double
+
 # notes problems
 
     in 3-notes unsigned char
@@ -709,3 +724,6 @@
     // When i = 0, i-- wraps to 255
     // Condition i >= 255 is always true
     }
+
+    typedef is used to make a generic fixed data size of type to solve the change in the data type accross machines
+    typedef long int u16
