@@ -5,7 +5,7 @@
     doubly linked list
     Stack
     Queue / circular Queue / Priority Queue
-    Tree
+    Tree bst , aval , redblacktree
     HashTable
     min heap max heap
     set
@@ -400,3 +400,401 @@
             outerCurrent = nextNode;
         }
     }
+
+# binary search Tree
+    class Node
+    {
+    public:
+        int data;
+        Node *left;
+        Node *right;
+        Node(int data)
+        {
+            this->data = data;
+            left = NULL;
+            right = NULL;
+        }
+        ~Node()
+        {
+        }
+    };
+    class Tree{
+        Node *Tree;
+        public:
+           void add(int data)
+            {
+                // Create Node
+                Node *newNode = new Node(data); // newNode->data=data;
+                // Build Connections
+                // Tree Empty No Root
+                if (root == NULL)
+                {
+                    root = newNode;
+                }
+                // Tree Empty Not Empty
+                else
+                {
+                    Node *current = root; // Jump
+                    Node *parent = NULL;  // Jump-1
+                    while (current != NULL)
+                    {
+                        parent = current; // root
+                        if (data > current->data)
+                        {
+                            current = current->right; //
+                        }
+                        else
+                        {
+                            current = current->left; //
+                        }
+                    }
+                 
+                    if (data > parent->data)
+                    {
+                        parent->right = newNode;
+                    }
+                    else
+                    {
+                        parent->left = newNode;
+                    }
+                }
+            }
+            void removeNode(int data)
+            {
+                // Step 1: Find the node to delete
+                Node *current = getNodeByData(data);
+                if (current == NULL) {
+                    return; // Node not found
+                }
+                
+                // Step 2: Handle root deletion separately
+                if (current == root) {
+                    root = handleRootDeletion(root);
+                    delete current;
+                    return;
+                }
+                
+                // Step 3: Handle non-root deletion
+                Node *parent = getParent(current);
+                Node *replacement = getReplacementNode(current);
+                
+                // Link parent to replacement node
+                if (current->data > parent->data) {
+                    parent->right = replacement;
+                } else {
+                    parent->left = replacement;
+                }
+                
+                delete current;
+            }
+
+            private:
+                // Helper: Get replacement node for deletion
+                Node* getReplacementNode(Node *node)
+                {
+                    // Case 1: Leaf node (no children)
+                    if (node->left == NULL && node->right == NULL) {
+                        return NULL;
+                    }
+                    
+                    // Case 2: Only right child
+                    if (node->left == NULL) {
+                        return node->right;
+                    }
+                    
+                    // Case 3: Only left child
+                    if (node->right == NULL) {
+                        return node->left;
+                    }
+                    
+                    // Case 4: Two children
+                    // Strategy: Use left subtree as replacement,
+                    // attach right subtree to rightmost node of left subtree
+                    Node *leftSubtree = node->left;
+                    Node *rightmost = getMaxRight(leftSubtree);
+                    rightmost->right = node->right;
+                    
+                    return leftSubtree;
+                }
+                
+                // Helper: Handle root deletion
+                Node* handleRootDeletion(Node *root)
+                {
+                    // Case 1: Root is only node
+                    if (root->left == NULL && root->right == NULL) {
+                        return NULL;
+                    }
+                    
+                    // Case 2: Root has only right child
+                    if (root->left == NULL) {
+                        return root->right;
+                    }
+                    
+                    // Case 3: Root has only left child
+                    if (root->right == NULL) {
+                        return root->left;
+                    }
+                    
+                    // Case 4: Root has two children
+                    // Use left subtree as new root,
+                    // attach right subtree to rightmost of left subtree
+                    Node *newRoot = root->left;
+                    Node *rightmost = getMaxRight(newRoot);
+                    rightmost->right = root->right;
+                    
+                    return newRoot;
+                }
+                 Node *getMaxRight(Node *current)
+                {
+                    if (current == NULL)
+                    {
+                        return NULL;
+                    }
+                    while (current->right != NULL)
+                    {
+                        current = current->right;
+                    }
+                    return current;
+                }
+                //inorder traversal
+                void LDRRecursive(Node *node)
+                {
+                    if (node == NULL) {
+                        return;
+                    }
+                    
+                    // L: Traverse left subtree
+                    LDRRecursive(node->left);
+                    
+                    // D: Process current node (print data)
+                    cout << node->data << " ";
+                    
+                    // R: Traverse right subtree
+                    LDRRecursive(node->right);
+                }
+                //preorder
+                void DLRRecursive(Node *node) 
+                { 
+                    if (node == NULL) { 
+                        return; 
+                    } 
+                    
+                    // D: Process current node (print data) 
+                    cout << node->data << " "; 
+                    
+                    // L: Traverse left subtree 
+                    DLRRecursive(node->left);  
+                    
+                    // R: Traverse right subtree 
+                    DLRRecursive(node->right); 
+                }
+                //postorder
+                void LRDRecursive(Node *node) 
+                { 
+                    if (node == NULL) { 
+                        return; 
+                    } 
+                    
+                
+                    
+                    // L: Traverse left subtree 
+                    LRDRecursive(node->left);  
+                    
+                    // R: Traverse right subtree 
+                    LRDRecursive(node->right);
+                // D: Process current node (print data) 
+                    cout << node->data << " "; 
+                }
+                void BFS()
+                {
+                    if (root == NULL) {
+                        return;
+                    }
+                    
+                    queue<Node*> q;
+                    q.push(root);
+                    
+                    cout << "BFS (Level-order): ";
+                    
+                    while (!q.empty()) {
+                        // Get front node
+                        Node *current = q.front();
+                        q.pop();
+                        
+                        // Process current node
+                        cout << current->data << " ";
+                        
+                        // Add left child to queue
+                        if (current->left != NULL) {
+                            q.push(current->left);
+                        }
+                        
+                        // Add right child to queue
+                        if (current->right != NULL) {
+                            q.push(current->right);
+                        }
+                    }
+                    
+                    cout << endl;
+                }
+                
+                Node *getParent(Node *current)
+                {
+                    // Node * current =getNodeByData(data);
+                    // current = root;
+                    if (current == root)
+                    {
+                        return NULL;
+                    }
+                    if (current != NULL)
+                    {
+                        Node *parent = root;
+                        while (parent != NULL)
+                        {
+                            if (parent->left == current || parent->right == current)
+                            {
+                                return parent;
+                            }
+                            else
+                            {
+                                // JUMP
+                                if (current->data > parent->data)
+                                {
+                                    parent = parent->right;
+                                }
+                                else
+                                {
+                                    parent = parent->left;
+                                }
+                            }
+                        }
+                    }
+                    return NULL;
+                }
+
+
+
+    };
+# hashtable
+    class Node {
+    public :
+    int key ;
+    Node * next;
+    Node(int key){
+        this->key=key;
+        next=NULL;
+    }
+    };
+    class HashTable{
+        int size;
+        // Dynamic Array of Pointers Nodes
+        Node ** table;
+        public :
+        HashTable( int size ){
+            this->size=size;
+            //Create Array of Pointers
+            table = new Node* [size];
+            for(int i=0; i<size; i++){
+                table[i]=NULL;
+            }
+        }
+        // Key(data)====>HashFunction ====> index
+        int hashFunction(int key ){
+            int index = key %size;
+            return index ;
+
+    }
+    void insert(int key){
+        //1- Calculate Index
+            int index= hashFunction(key);
+        // 2- Create New Node
+            Node *newNode=new Node(key);
+        // 3- next of Me --> Point of Prev
+            newNode->next = table[index];
+        // 4- Pointer[index] (Head) point of me
+            table[index]= newNode;
+    }
+    bool search(int key ){
+        //1- Calculate Index
+            int index= hashFunction(key);
+        Node * current = table[index];
+        while(current!=NULL){
+            if (current->key == key){
+                return true;
+            }
+            current=current->next;
+        }
+        return false;
+    }
+    void display( ){
+        //1- Calculate Index
+        for(int i=0; i<size; i++){
+            Node * current = table[i];
+            cout<<"index "<< i <<" : "; // Index
+            while(current!=NULL){
+                cout << current->key<<" --> ";
+                current=current->next;
+            }
+            cout <<endl;
+          }
+
+    }
+
+    ~ HashTable(){
+        //Wait :)
+         for(int i=0; i<size; i++){
+            Node * current = table[i];
+            while(current!=NULL){
+                Node * temp = current;
+                current=current->next;
+                delete temp;
+            }
+            cout <<endl;
+          }
+        delete [] table;
+    }
+
+    };
+# merge sort 
+    void merge(int arr[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    // Temporary arrays
+    int L[n1], R[n2];
+
+    // Copy data to temp arrays
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    // Merge the temp arrays back into arr[]
+    int i = 0, j = 0, k = left;
+
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j])
+            arr[k++] = L[i++];
+        else
+            arr[k++] = R[j++];
+    }
+
+    // Copy remaining elements
+    while (i < n1)
+        arr[k++] = L[i++];
+
+    while (j < n2)
+        arr[k++] = R[j++];
+    }
+
+
+    void mergeSort(int arr[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+    }
+
