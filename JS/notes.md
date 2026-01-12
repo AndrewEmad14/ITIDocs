@@ -6,15 +6,31 @@ functions are objcts
 
 hello + undefined = helloundefined
 
+getbyclassName can be used when we add elemetns dyynamically since it returns a collection 
 
+querySelectorAll returns a node list and doesnt append
 
 from creates a new array with the elements of the array passes shallow copied
 
-
+event object
+this === e.target
 array.from() //shallow copy values and returns a new array
+
+transpiler ??
+the new js and the frameworks transforms the new script into the native one
 
 zzz=300 //global variable
 
+babel
+
+
+let is also hoisted but restiricts access to the variable until initiliazed
+
+template literal : `${variable}`
+
+in the arrow function , its this is taken from the prev scope not the this of the caller
+
+... //search  // it uses polling not looping
 if while for isnt considered scope
 var z = 10;
 var z. // this is nt an update z is equal to 10
