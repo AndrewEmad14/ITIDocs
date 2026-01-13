@@ -23,6 +23,24 @@ zzz=300 //global variable
 
 babel
 
+switch uses triple equal
+
+e.key gets you key value
+e.code get you physical key value
+
+destructring 
+let x=[1,2];
+let [first,second] = x
+console.log(first,second) //1 2
+// swap
+let first = 1;
+let second =2;
+[first,second] = [second,first];
+console.log(first,second) //2 1
+
+property object and how does classes work etc
+
+array.at().  supports negative index
 
 let is also hoisted but restiricts access to the variable until initiliazed
 
@@ -30,7 +48,7 @@ template literal : `${variable}`
 
 in the arrow function , its this is taken from the prev scope not the this of the caller
 
-... //search  // it uses polling not looping
+... //search  // it uses polling not looping spread
 if while for isnt considered scope
 var z = 10;
 var z. // this is nt an update z is equal to 10

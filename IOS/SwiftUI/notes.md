@@ -39,7 +39,7 @@
         set { set(newValue) }
     }
 
-}
+    }  
 
 # TextField
 
