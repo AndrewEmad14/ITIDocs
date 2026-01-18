@@ -1212,3 +1212,30 @@ byte b = 20;
 // byte c = a + b; // ❌ Error: Result is int
 int c = a + b;     // ✅ Correct
 ```
+
+# FileReader vs FileInput stream
+
+file reader reads characters and handle encoding automatically
+
+file input stream reads raw bytes 
+
+
+
+
+#   Maven
+Maven is an open source build automation and project managment tool that simplfies testing, building packaging and managing depedencies defined in a pom.xml file
+
+any api you add to the dependance you must specify its implementation
+
+api are interfaces
+whie the implemetation is the concrete implementation to that interface
+
+installing mvn 
+    sudo apt install mvn
+
+creating java project
+    ctrl+shift+p
+    create java prject
+to load dependencies after changing files
+        1.maven clean install
+        2.ctrl+shift+p Developer:reload window

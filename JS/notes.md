@@ -1,77 +1,255 @@
-date start from sundaty and ends at saturday
+# Variables 
+var myName = "andrew";
+myName = 30;
+myName = true;
+myname = null;
+myname = undefiend;
 
-getyear vs getfull year
+//printing on the console : console.log();
+ console.log(x);//undefined (because of hoisting)
 
-functions are objcts 
+ Cooersion === implicit casting
+ 
+ Examples
+ zzz = 10;      //global var variabe  
+ var x = 50; 
+ var y = 6;
+ var str = "menna";
+ var str2 = "shata";
+ var x = 10;
+ var y = "20";
+  console.log(x-y); // try to cast y to number 
+ console.log(str-str2);// NOT a Number failed to cast to int
+ console.log(str+x);//integer is cast to string
+ console.log(x+false);//booean true 1 false 0 is cast to int
+ console.log(x+undefined);//Not A Number
+ console.log(typeof NaN);//number
+ console.log(typeof x);//number
 
-hello + undefined = helloundefined
-
-getbyclassName can be used when we add elemetns dyynamically since it returns a collection 
-
-querySelectorAll returns a node list and doesnt append
-
-from creates a new array with the elements of the array passes shallow copied
-
-event object
-this === e.target
-array.from() //shallow copy values and returns a new array
-
-transpiler ??
-the new js and the frameworks transforms the new script into the native one
-
-zzz=300 //global variable
-
-babel
-
-switch uses triple equal
-
-e.key gets you key value
-e.code get you physical key value
-
-destructring 
-let x=[1,2];
-let [first,second] = x
-console.log(first,second) //1 2
-// swap
-let first = 1;
-let second =2;
-[first,second] = [second,first];
-console.log(first,second) //2 1
-
-property object and how does classes work etc
-
-array.at().  supports negative index
-
-let is also hoisted but restiricts access to the variable until initiliazed
-
-template literal : `${variable}`
-
-in the arrow function , its this is taken from the prev scope not the this of the caller
-
-... //search  // it uses polling not looping spread
-if while for isnt considered scope
-var z = 10;
-var z. // this is nt an update z is equal to 10
-
-hoisting only happens to var
-
-ways to handle events in js
-
-finish the desgin first
-
-submit reloads the page by default
-
-textContent vs createTextNode + append. 
-first overwrites , second appends
-query selector returns an element object representing the first element in the document that matches the specified set of CSS selectors, or null is returned if there are no matches.
-
-If you need a list of all elements matching the specified selectors, you should use querySelectorAll() instead.
+// console.log(3<2<1);//false<1  0<1
 
 
-for variable in object
-each of the variables is treated as a string object
-for variable of object
-each of the variables is treated as values instead
+// var x = "menna";
+// var age = 30;
+
+//  console.log(x=="menna" && age<20);//true&&false
+// console.log(age!="30");//== false doesnt check on the type
+// console.log(age!=="30");//=== checks on the type
+
+
+Falsey Values
+| Value | Description |
+| :--- | :--- |
+| `false` | The boolean keyword false. |
+| `0` | The number zero (including 0.0). |
+| `-0` | Negative zero. |
+| `0n` | BigInt zero (used for large integers). |
+| `""` | An empty string (length of 0). |
+| `null` | The intentional absence of any object value. |
+| `undefined` | A variable that has been declared but not assigned a value. |
+| `NaN` | "Not-a-Number" (the result of invalid math). |
+
+
+Hoisting: your code is taken  on the top of your scope
+
+# JavaScript Variable Declarations: var vs let vs const
+
+## Scope
+
+**var**
+- Function-scoped or globally-scoped
+- Not block-scoped (ignores `{}` blocks like if, for, while)
+- Accessible throughout the entire function or global context
+
+**let**
+- Block-scoped
+- Only accessible within the nearest enclosing block `{}`
+- Creates a new scope in if statements, loops, and any code block
+
+**const**
+- Block-scoped
+- Same scoping rules as `let`
+- Only accessible within the nearest enclosing block `{}`
+
+## Reassignment
+
+**var**
+- Can be reassigned
+- Value can be changed at any time
+
+**let**
+- Can be reassigned
+- Value can be changed at any time
+
+**const**
+- Cannot be reassigned
+- Must be initialized at declaration
+- Note: For objects and arrays, the reference cannot change, but properties/elements can be modified
+
+## Redeclaration
+
+**var**
+- Can be redeclared in the same scope
+- No error thrown when declaring the same variable twice
+
+**let**
+- Cannot be redeclared in the same scope
+- Throws a SyntaxError if you try to redeclare
+
+**const**
+- Cannot be redeclared in the same scope
+- Throws a SyntaxError if you try to redeclare
+
+## Hoisting
+
+**var**
+- Hoisted to the top of its scope
+- Initialized with `undefined`
+- Can be accessed before declaration (returns `undefined`)
+
+**let**
+- Hoisted to the top of its block
+- Not initialized (remains in "Temporal Dead Zone")
+- Cannot be accessed before declaration (throws ReferenceError)
+
+**const**
+- Hoisted to the top of its block
+- Not initialized (remains in "Temporal Dead Zone")
+- Cannot be accessed before declaration (throws ReferenceError)
+
+
+proof that the let and const 
+
+let x= 5;
+{
+  console.log(x); //cannot access
+  let x;
+}
+## Quick Reference Table
+
+| Feature | var | let | const |
+|---------|-----|-----|-------|
+| Scope | Function/Global | Block | Block |
+| Reassign | ✅ Yes | ✅ Yes | ❌ No |
+| Redeclare | ✅ Yes | ❌ No | ❌ No |
+| Hoisting | Yes (initialized) | Yes (not initialized) | Yes (not initialized) |
+
+## Best Practices
+
+- Use `const` by default
+- Use `let` when you need to reassign
+- Avoid `var` in modern JavaScript (ES6+)
+
+
+## JavaScript Primitive Data Types
+
+JavaScript has **7 primitive data types**:
+
+1. **String**
+   - Represents text
+   - Example:
+     ```js
+     "Hello"
+     ```
+
+2. **Number**
+   - Represents integers and floating-point numbers
+   - Example:
+     ```js
+     42
+     3.14
+     ```
+
+3. **BigInt**
+   - Represents integers larger than `Number.MAX_SAFE_INTEGER`
+   - Example:
+     ```js
+     9007199254740991n
+     ```
+
+4. **Boolean**
+   - Represents logical values
+   - Example:
+     ```js
+     true
+     false
+     ```
+
+5. **Undefined**
+   - A variable declared but not assigned a value
+   - Example:
+     ```js
+     let x;
+     ```
+
+6. **Null**
+   - Represents an intentional absence of value
+   - Example:
+     ```js
+     null
+     ```
+
+7. **Symbol**
+   - Represents a unique and immutable identifier
+   - Example:
+     ```js
+     Symbol("id")
+     ```
+
+### Notes
+- Primitive values are **immutable**
+- They are compared **by value**
+- `typeof null === "object"` (this is a historical bug)
+
+
+# Dialouge Boxes
+  1.Prompt 
+  2.Alert
+  3.Confirm
+
+# number checkers
+  isNaN() // check if it is a not a number 
+  isFinite() // checks if it is a number(not NaN) AND not Infinity
+
+  Note that those are unreliable because coerison can happen in the parpmeters ,use Number.isNaN or is finite for more reliabe results
+
+# print var with string
+  template literal interpolation (or string interpolation)
+        `hello$${x}`
+  old string concationation
+        "hello" + x
+
+
+# switch
+  switch can be used with variables
+  switch can be:
+    numbers
+	•	strings
+	•	booleans
+	•	objects
+	•	functions
+  switch uses strict equality
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # JavaScript Event Listener 
 
 ## 1. addEventListener() - The Standard Method
@@ -328,3 +506,115 @@ element.addEventListener('click', (e) => {
 ## Events That Don't Bubble
 
 Some events don't bubble: `focus`, `blur`, `load`, `unload`, `scroll` (in some cases). Use their bubbling equivalents like `focusin`/`focusout` if needed.
+
+
+
+
+
+
+
+
+
+
+
+not using corse or https error in. web
+type = module
+export keyword
+
+sync must all finish and then the async code will execute
+
+call back hell
+  callback(){
+    let x;
+      callback(){
+        x=5
+        callback(){
+          x+=1
+        }
+      }
+  }
+  //code back expands horizontly
+ajax is concept to request without refresh
+
+  promises sperate the declration from the usage
+
+what are classes actually in javascript
+
+import export native code
+
+default in exporting classes
+
+date start from sundaty and ends at saturday
+
+getyear vs getfull year
+
+functions are objcts 
+
+hello + undefined = helloundefined
+
+getbyclassName can be used when we add elemetns dyynamically since it returns a collection 
+
+querySelectorAll returns a node list and doesnt append
+
+from creates a new array with the elements of the array passes shallow copied
+
+event object
+this === e.target
+array.from() //shallow copy values and returns a new array
+
+transpiler ??
+the new js and the frameworks transforms the new script into the native one
+
+zzz=300 //global variable
+
+babel
+
+switch uses triple equal
+
+e.key gets you key value
+e.code get you physical key value
+
+destructring 
+let x=[1,2];
+let [first,second] = x
+console.log(first,second) //1 2
+// swap
+let first = 1;
+let second =2;
+[first,second] = [second,first];
+console.log(first,second) //2 1
+
+property object and how does classes work etc
+
+array.at().  supports negative index
+
+let is also hoisted but restiricts access to the variable until initiliazed
+
+template literal : `${variable}`
+
+in the arrow function , its this is taken from the prev scope not the this of the caller
+
+... //search  // it uses polling not looping spread
+if while for isnt considered scope
+var z = 10;
+var z. // this is nt an update z is equal to 10
+
+hoisting only happens to var
+
+ways to handle events in js
+
+finish the desgin first
+
+submit reloads the page by default
+
+textContent vs createTextNode + append. 
+first overwrites , second appends
+query selector returns an element object representing the first element in the document that matches the specified set of CSS selectors, or null is returned if there are no matches.
+
+If you need a list of all elements matching the specified selectors, you should use querySelectorAll() instead.
+
+
+for variable in object
+each of the variables is treated as a string object
+for variable of object
+each of the variables is treated as values instead

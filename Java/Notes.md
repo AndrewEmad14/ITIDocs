@@ -891,3 +891,6 @@
     When you wish for your class to be comparable you have to :
     1. implent Complarable<YourClassName>
     2. override compare to method
+
+
+anonymus class , anonymus function
