@@ -1,5 +1,39 @@
 # Snake & Ladder Game - Project Structure & Naming Conventions
 
+## Quick Summary Table
+
+| Element | Convention | Example |
+|---------|-----------|---------|
+| Files & Folders | kebab-case | `game-logic/`, `player.js` |
+| Variables | camelCase | `playerCount`, `currentTurn` |
+| Constants | UPPER_SNAKE_CASE | `MAX_PLAYERS`, `BOARD_SIZE` |
+| Functions | camelCase (verb prefix) | `rollDice()`, `movePlayer()` |
+| Classes | PascalCase | `Player`, `GameBoard` |
+| CSS Classes | BEM / kebab-case | `.game-board__cell--active` |
+| HTML IDs | camelCase | `gameBoard`, `rollDiceBtn` |
+| Data Attributes | kebab-case | `data-player-id`, `data-position` |
+
+---
+
+## Additional Best Practices
+
+1. **Comments**: Use JSDoc-style comments for functions
+```javascript
+/**
+ * Moves player to new position and handles snakes/ladders
+ * @param {Object} player - Player object
+ * @param {number} steps - Number of steps to move
+ * @returns {number} Final position after snakes/ladders
+ */
+function movePlayer(player, steps) { }
+```
+
+
+
+
+
+
+
 ## Project File Structure
 
 ```
