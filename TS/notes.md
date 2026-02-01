@@ -30,6 +30,14 @@
 # Type Tooling
   That means TypeScript can be leveraged for editing code too, and the core type-checker can provide error messages and code completion as you type in the editor.
 # Typscript command
+  ## tsc --init
+    creates tsconfig.json
+  ## npm init -y
+    initliazes npm and automatically answer yes for all questions
+  ## npm install
+    install the npm modules from the package.json and creates a package-lock file
+  ## node your-convert.js file
+    to run the file
   ### tsc your-file.ts
   it outputs a your-file.js with the converted type checked code
   even if typescript found errors
@@ -344,6 +352,7 @@ it merges interfaces with the same name
 
 
 # Literal Inference
+
   When you initialize a variable with an object, TypeScript assumes that the properties of that object might change values later. For example, if you wrote code like this:
     const obj = { counter: 0 };
     if (someCondition) {
@@ -366,3 +375,63 @@ it merges interfaces with the same name
 
   const req = { url: "https://example.com", method: "GET" } as const;
   handleRequest(req.url, req.method);
+
+
+  # const vs read ony
+  ### const 
+    stops the reassigment of a variable 
+    if the the variable happens to be an object then it will change its properties normally 
+    Ex:
+    const name = "John";
+    name = "Jane"; // Error: Cannot assign to 'name' because it is a constant
+
+    const obj = { age: 30 };
+    obj = { age: 25 }; // Error: Cannot reassign the object
+
+    obj.age = 25; // This is allowed - you're modifying the object's properties
+
+  ### readonly
+    stops the reassigments of properties of an object
+    Ex:
+    interface User {
+    readonly name: string;
+    age: number;
+  }
+
+  const user: User = { name: "John", age: 30 };
+  user.name = "Jane"; // Error: Cannot assign to 'name' because it is a read-only property
+  user.age = 25; // This is allowed
+
+
+# decorators
+    A Decorator is a special kind of declaration that can be attached to a class declaration, method, accessor, property, or parameter. Decorators use the form @expression, where expression must evaluate to a function that will be called at runtime with information about the decorated declaration.
+
+    @decorator
+    class player{}
+    decorator(player)
+  ## decorator composition
+    multiple decorators can be applied like
+    @f @g x
+    
+    or
+    @f
+    @g
+    x
+    equvilant to f(g(x))
+
+  ## Example
+    function Frozen(constructor: Function) {
+      Object.freeze(constructor);
+      Object.freeze(constructor.prototype);
+    }
+
+    @Frozen
+    class IceCream {
+      flavor: string;
+      constructor(flavor: string) {
+        this.flavor = flavor;
+      }
+    }
+
+console.log(Object.isFrozen(IceCream));//true
+

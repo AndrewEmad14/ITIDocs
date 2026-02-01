@@ -35,12 +35,13 @@ JavaScript provides three ways to declare variables, each with different charact
 
 ```javascript
 var myName = "andrew";
-myName = 30;           // Can be reassigned
-myName = true;         // Can be reassigned
-myName = null;         // Can be reassigned
+myName = 30; // Can be reassigned
+myName = true; // Can be reassigned
+myName = null; // Can be reassigned
 ```
 
 **Characteristics:**
+
 - Function-scoped or globally-scoped
 - Not block-scoped (ignores `{}` blocks like if, for, while)
 - Can be reassigned and redeclared
@@ -49,6 +50,7 @@ myName = null;         // Can be reassigned
 #### `let` - Block-Scoped (Modern)
 
 **Characteristics:**
+
 - Block-scoped (accessible only within the nearest `{}`)
 - Can be reassigned, but NOT redeclared in the same scope
 - Hoisted but not initialized (Temporal Dead Zone)
@@ -57,34 +59,35 @@ myName = null;         // Can be reassigned
 ```javascript
 let x = 5;
 {
-  console.log(x);  // ReferenceError - cannot access x
-  let x;           // New block-scoped x
+  console.log(x); // ReferenceError - cannot access x
+  let x; // New block-scoped x
 }
 ```
 
 #### `const` - Block-Scoped (Immutable Reference)
 
 **Characteristics:**
+
 - Block-scoped (same rules as `let`)
 - Cannot be reassigned or redeclared
 - Must be initialized at declaration
 - For objects and arrays, the reference is immutable, but properties/elements can be modified
 
 ```javascript
-const user = { name: 'John' };
-user.name = 'Jane';  // ✅ Allowed - modifying property
-user = {};           // ❌ Error - cannot reassign reference
+const user = { name: "John" };
+user.name = "Jane"; // ✅ Allowed - modifying property
+user = {}; // ❌ Error - cannot reassign reference
 ```
 
 ### Comparison Table
 
-| Feature | `var` | `let` | `const` |
-|---------|-------|-------|---------|
-| **Scope** | Function/Global | Block | Block |
-| **Reassign** | ✅ Yes | ✅ Yes | ❌ No |
-| **Redeclare** | ✅ Yes | ❌ No | ❌ No |
-| **Hoisting** | Yes (initialized to `undefined`) | Yes (Temporal Dead Zone) | Yes (Temporal Dead Zone) |
-| **Best For** | Avoid in modern code | When reassignment needed | Default choice |
+| Feature       | `var`                            | `let`                    | `const`                  |
+| ------------- | -------------------------------- | ------------------------ | ------------------------ |
+| **Scope**     | Function/Global                  | Block                    | Block                    |
+| **Reassign**  | ✅ Yes                           | ✅ Yes                   | ❌ No                    |
+| **Redeclare** | ✅ Yes                           | ❌ No                    | ❌ No                    |
+| **Hoisting**  | Yes (initialized to `undefined`) | Yes (Temporal Dead Zone) | Yes (Temporal Dead Zone) |
+| **Best For**  | Avoid in modern code             | When reassignment needed | Default choice           |
 
 ### Best Practices
 
@@ -106,7 +109,7 @@ Represents text values enclosed in quotes.
 
 ```javascript
 const greeting = "Hello";
-const name = 'John';
+const name = "John";
 const template = `Hello ${name}`;
 ```
 
@@ -121,6 +124,7 @@ const negative = -10;
 ```
 
 **Special values:**
+
 - `Infinity` - represents positive infinity
 - `-Infinity` - represents negative infinity
 - `NaN` - represents "Not-a-Number" (result of invalid math)
@@ -131,7 +135,7 @@ Represents integers larger than `Number.MAX_SAFE_INTEGER` (2^53 - 1).
 
 ```javascript
 const largeNumber = 9007199254740991n;
-const bigIntAddition = 10n + 20n;  // 30n
+const bigIntAddition = 10n + 20n; // 30n
 ```
 
 ### 4. Boolean
@@ -149,7 +153,7 @@ A variable declared but not assigned a value.
 
 ```javascript
 let x;
-console.log(x);  // undefined
+console.log(x); // undefined
 ```
 
 ### 6. Null
@@ -157,7 +161,7 @@ console.log(x);  // undefined
 Represents the intentional absence of a value.
 
 ```javascript
-let user = null;  // Explicitly set to nothing
+let user = null; // Explicitly set to nothing
 ```
 
 ### 7. Symbol
@@ -167,7 +171,7 @@ Represents a unique and immutable identifier (rarely used).
 ```javascript
 const id = Symbol("id");
 const id2 = Symbol("id");
-console.log(id === id2);  // false - each Symbol is unique
+console.log(id === id2); // false - each Symbol is unique
 ```
 
 ### Important Notes
@@ -180,12 +184,12 @@ console.log(id === id2);  // false - each Symbol is unique
 // Inefficient - creates objects
 const x = new String("Andrew");
 const y = new String("Andrew");
-console.log(x === y);  // false - different objects
+console.log(x === y); // false - different objects
 
 // Efficient - primitives
 const a = "Andrew";
 const b = "Andrew";
-console.log(a === b);  // true - same value
+console.log(a === b); // true - same value
 ```
 
 ---
@@ -199,15 +203,15 @@ console.log(a === b);  // true - same value
 ```javascript
 const x = 10;
 const y = "20";
-console.log(x - y);         // -10 (y converted to number)
-console.log(x + y);         // "1020" (x converted to string)
+console.log(x - y); // -10 (y converted to number)
+console.log(x + y); // "1020" (x converted to string)
 
 const str = "menna";
 const str2 = "shata";
-console.log(str - str2);    // NaN (strings cannot be converted to valid numbers)
+console.log(str - str2); // NaN (strings cannot be converted to valid numbers)
 
-console.log(x + false);     // 11 (false converted to 0)
-console.log(x + true);      // 11 (true converted to 1)
+console.log(x + false); // 11 (false converted to 0)
+console.log(x + true); // 11 (true converted to 1)
 
 console.log(x + undefined); // NaN (undefined cannot be coerced to number)
 ```
@@ -222,13 +226,13 @@ console.log(x + undefined); // NaN (undefined cannot be coerced to number)
 ### typeof Operator
 
 ```javascript
-console.log(typeof 42);           // "number"
-console.log(typeof "hello");      // "string"
-console.log(typeof true);         // "boolean"
-console.log(typeof undefined);    // "undefined"
+console.log(typeof 42); // "number"
+console.log(typeof "hello"); // "string"
+console.log(typeof true); // "boolean"
+console.log(typeof undefined); // "undefined"
 console.log(typeof Symbol("id")); // "symbol"
-console.log(typeof null);         // "object" (historical bug)
-console.log(typeof NaN);          // "number" (NaN is a number type!)
+console.log(typeof null); // "object" (historical bug)
+console.log(typeof NaN); // "number" (NaN is a number type!)
 ```
 
 ---
@@ -242,18 +246,18 @@ console.log(typeof NaN);          // "number" (NaN is a number type!)
 `var` declarations are hoisted and initialized with `undefined`:
 
 ```javascript
-console.log(x);  // undefined (hoisted but not assigned)
+console.log(x); // undefined (hoisted but not assigned)
 var x = 50;
-console.log(x);  // 50
+console.log(x); // 50
 ```
 
 This is equivalent to:
 
 ```javascript
-var x;           // Declaration hoisted
-console.log(x);  // undefined
-x = 50;          // Assignment stays in place
-console.log(x);  // 50
+var x; // Declaration hoisted
+console.log(x); // undefined
+x = 50; // Assignment stays in place
+console.log(x); // 50
 ```
 
 ### let and const Hoisting
@@ -261,7 +265,7 @@ console.log(x);  // 50
 `let` and `const` are hoisted but NOT initialized (Temporal Dead Zone):
 
 ```javascript
-console.log(y);  // ReferenceError - cannot access before initialization
+console.log(y); // ReferenceError - cannot access before initialization
 let y = 30;
 ```
 
@@ -270,7 +274,7 @@ let y = 30;
 Function declarations are hoisted completely (both declaration and body):
 
 ```javascript
-myFunc(5, 3);    // Works! Outputs 8
+myFunc(5, 3); // Works! Outputs 8
 
 function myFunc(x, y) {
   return x + y;
@@ -280,9 +284,9 @@ function myFunc(x, y) {
 Function expressions are NOT hoisted:
 
 ```javascript
-myFunc();  // TypeError - myFunc is undefined
+myFunc(); // TypeError - myFunc is undefined
 
-const myFunc = function(x, y) {
+const myFunc = function (x, y) {
   return x + y;
 };
 ```
@@ -292,8 +296,8 @@ const myFunc = function(x, y) {
 Any variable assigned without declaration becomes a global variable:
 
 ```javascript
-zzz = 300;  // Global variable (bad practice!)
-console.log(window.zzz);  // 300
+zzz = 300; // Global variable (bad practice!)
+console.log(window.zzz); // 300
 ```
 
 ---
@@ -309,15 +313,15 @@ The scope determines where a variable is accessible.
 {
   var x = 10;
 }
-console.log(x);  // 10 (accessible outside block)
+console.log(x); // 10 (accessible outside block)
 
 // let and const ARE block-scoped
 {
   let y = 20;
   const z = 30;
 }
-console.log(y);  // ReferenceError
-console.log(z);  // ReferenceError
+console.log(y); // ReferenceError
+console.log(z); // ReferenceError
 ```
 
 ### Scope Chain
@@ -329,14 +333,14 @@ const global = "global";
 
 function outer() {
   const outerVar = "outer";
-  
+
   function inner() {
     const innerVar = "inner";
-    console.log(innerVar);  // "inner" - found in local scope
-    console.log(outerVar);  // "outer" - found in parent scope
-    console.log(global);    // "global" - found in global scope
+    console.log(innerVar); // "inner" - found in local scope
+    console.log(outerVar); // "outer" - found in parent scope
+    console.log(global); // "global" - found in global scope
   }
-  
+
   inner();
 }
 
@@ -353,16 +357,16 @@ outer();
 
 ```javascript
 const age = 30;
-console.log(age == "30");    // true (string converted to number)
-console.log(age != "30");    // false
+console.log(age == "30"); // true (string converted to number)
+console.log(age != "30"); // false
 ```
 
 **`===` (strict equality)** - compares values AND types, no coercion:
 
 ```javascript
 const age = 30;
-console.log(age === "30");   // false (different types)
-console.log(age === 30);     // true
+console.log(age === "30"); // false (different types)
+console.log(age === 30); // true
 ```
 
 **Best practice:** Always use `===` and `!==` to avoid unexpected type coercion bugs.
@@ -373,15 +377,15 @@ console.log(age === 30);     // true
 const x = 20;
 const age = 30;
 
-console.log(x > 5 && age < 40);    // true && true → true
-console.log(x > 30 && age < 40);   // false && true → false
-console.log(x > 30 || age < 40);   // false || true → true
+console.log(x > 5 && age < 40); // true && true → true
+console.log(x > 30 && age < 40); // false && true → false
+console.log(x > 30 || age < 40); // false || true → true
 ```
 
 ### Comparison Examples
 
 ```javascript
-console.log(3 < 2 < 1);  // (false < 1) → (0 < 1) → true
+console.log(3 < 2 < 1); // (false < 1) → (0 < 1) → true
 ```
 
 ---
@@ -390,34 +394,34 @@ console.log(3 < 2 < 1);  // (false < 1) → (0 < 1) → true
 
 In JavaScript, the following values are considered **falsey** and evaluate to `false` in boolean contexts:
 
-| Value | Description |
-|-------|-------------|
-| `false` | The boolean keyword false |
-| `0` | The number zero (including 0.0) |
-| `-0` | Negative zero |
-| `0n` | BigInt zero |
-| `""` | Empty string |
-| `null` | Intentional absence of value |
-| `undefined` | Variable not assigned a value |
-| `NaN` | Result of invalid mathematical operations |
+| Value       | Description                               |
+| ----------- | ----------------------------------------- |
+| `false`     | The boolean keyword false                 |
+| `0`         | The number zero (including 0.0)           |
+| `-0`        | Negative zero                             |
+| `0n`        | BigInt zero                               |
+| `""`        | Empty string                              |
+| `null`      | Intentional absence of value              |
+| `undefined` | Variable not assigned a value             |
+| `NaN`       | Result of invalid mathematical operations |
 
 ### All Other Values Are Truthy
 
 ```javascript
 if ("hello") {
-  console.log("Truthy!");  // Executes
+  console.log("Truthy!"); // Executes
 }
 
 if ([]) {
-  console.log("Arrays are truthy!");  // Executes (even empty arrays!)
+  console.log("Arrays are truthy!"); // Executes (even empty arrays!)
 }
 
 if ({}) {
-  console.log("Objects are truthy!");  // Executes
+  console.log("Objects are truthy!"); // Executes
 }
 
 if (0) {
-  console.log("This won't execute");  // Skipped
+  console.log("This won't execute"); // Skipped
 }
 ```
 
@@ -430,7 +434,7 @@ if (0) {
 Hoisted completely - can be called before declaration:
 
 ```javascript
-myFunc(5, 3);  // Works!
+myFunc(5, 3); // Works!
 
 function myFunc(x, y) {
   return x + y;
@@ -442,11 +446,11 @@ function myFunc(x, y) {
 Not hoisted - must be declared before use:
 
 ```javascript
-const greet = function(name) {
+const greet = function (name) {
   return "Hello " + name;
 };
 
-greet("John");  // "Hello John"
+greet("John"); // "Hello John"
 ```
 
 ### Arrow Functions (ES6)
@@ -463,7 +467,7 @@ const greet = (name) => {
 const greet = (name) => "Hello " + name;
 
 // Single parameter (parentheses optional)
-const square = x => x * x;
+const square = (x) => x * x;
 
 // Multiple parameters
 const add = (a, b) => a + b;
@@ -480,9 +484,9 @@ const user = {
   sayName() {
     // Arrow function inherits 'this' from parent scope
     setTimeout(() => {
-      console.log(this.name);  // "John" - works correctly
+      console.log(this.name); // "John" - works correctly
     }, 1000);
-  }
+  },
 };
 ```
 
@@ -491,11 +495,11 @@ const user = {
 Functions without names, typically used as callbacks:
 
 ```javascript
-setTimeout(function() {
+setTimeout(function () {
   console.log("Executed after 1 second");
 }, 1000);
 
-button.addEventListener('click', function(e) {
+button.addEventListener("click", function (e) {
   console.log("Button clicked!");
 });
 ```
@@ -505,13 +509,13 @@ button.addEventListener('click', function(e) {
 Executes immediately upon definition:
 
 ```javascript
-(function() {
+(function () {
   console.log("Runs immediately!");
-  const privateVar = "hidden";  // Private scope
+  const privateVar = "hidden"; // Private scope
 })();
 
 // With parameters
-(function(name) {
+(function (name) {
   console.log("Hello " + name);
 })("John");
 ```
@@ -530,8 +534,8 @@ const multiplier = (factor) => {
 };
 
 const double = multiplier(2);
-console.log(double(5));  // 10
-console.log(double(3));  // 6
+console.log(double(5)); // 10
+console.log(double(3)); // 6
 ```
 
 ### Async Functions
@@ -540,7 +544,7 @@ Enable clean handling of asynchronous operations (see [Asynchronous JavaScript](
 
 ```javascript
 async function fetchData() {
-  const data = await fetch('/api/data');
+  const data = await fetch("/api/data");
   return await data.json();
 }
 ```
@@ -548,11 +552,11 @@ async function fetchData() {
 ### Number Checkers
 
 ```javascript
-isNaN(value)           // Check if NOT a number (unreliable - uses coercion)
-Number.isNaN(value)    // More reliable (no coercion)
+isNaN(value); // Check if NOT a number (unreliable - uses coercion)
+Number.isNaN(value); // More reliable (no coercion)
 
-isFinite(value)        // Check if number (not NaN or Infinity)
-Number.isFinite(value) // More reliable
+isFinite(value); // Check if number (not NaN or Infinity)
+Number.isFinite(value); // More reliable
 ```
 
 **Note:** Use `Number.isNaN()` and `Number.isFinite()` for more reliable results, as the global versions perform type coercion first.
@@ -569,14 +573,14 @@ class User {
     this.name = name;
     this.age = age;
   }
-  
+
   displayInfo() {
     console.log(`${this.name} is ${this.age} years old`);
   }
 }
 
 const user = new User("John", 30);
-user.displayInfo();  // "John is 30 years old"
+user.displayInfo(); // "John is 30 years old"
 ```
 
 ### Constructor Method
@@ -592,8 +596,8 @@ class Car {
 }
 
 const myCar = new Car("Toyota", "red");
-console.log(myCar.brand);   // "Toyota"
-console.log(myCar.color);   // "red"
+console.log(myCar.brand); // "Toyota"
+console.log(myCar.color); // "red"
 ```
 
 ### Methods
@@ -605,18 +609,18 @@ class Calculator {
   constructor(num) {
     this.num = num;
   }
-  
+
   add(x) {
     return this.num + x;
   }
-  
+
   multiply(x) {
     return this.num * x;
   }
 }
 
 const calc = new Calculator(10);
-console.log(calc.add(5));      // 15
+console.log(calc.add(5)); // 15
 console.log(calc.multiply(2)); // 20
 ```
 
@@ -627,7 +631,7 @@ class Animal {
   constructor(name) {
     this.name = name;
   }
-  
+
   speak() {
     console.log(`${this.name} makes a sound`);
   }
@@ -640,8 +644,8 @@ class Dog extends Animal {
 }
 
 const dog = new Dog("Buddy");
-dog.speak();  // "Buddy makes a sound"
-dog.bark();   // "Buddy barks!"
+dog.speak(); // "Buddy makes a sound"
+dog.bark(); // "Buddy barks!"
 ```
 
 ### `super()` - Accessing Parent Methods
@@ -654,7 +658,7 @@ class Animal {
     this.name = name;
     this.type = type;
   }
-  
+
   info() {
     console.log(`${this.name} is a ${this.type}`);
   }
@@ -662,12 +666,12 @@ class Animal {
 
 class Dog extends Animal {
   constructor(name, type, breed) {
-    super(name, type);  // MUST call super() first
+    super(name, type); // MUST call super() first
     this.breed = breed;
   }
-  
+
   info() {
-    super.info();  // Call parent method
+    super.info(); // Call parent method
     console.log(`Breed: ${this.breed}`);
   }
 }
@@ -691,13 +695,14 @@ class Vehicle {
 }
 
 class Car extends Vehicle {
-  start() {  // Override parent method
+  start() {
+    // Override parent method
     console.log("Car engine starting...");
   }
 }
 
 const car = new Car();
-car.start();  // "Car engine starting..."
+car.start(); // "Car engine starting..."
 ```
 
 ### Abstract Classes
@@ -723,7 +728,7 @@ class Employee extends User {
 }
 
 // const user = new User("John", 30);  // Error!
-const emp = new Employee("Jane", 28, 5000);  // Works
+const emp = new Employee("Jane", 28, 5000); // Works
 ```
 
 ### toString() Method
@@ -736,15 +741,15 @@ class Person {
     this.name = name;
     this.age = age;
   }
-  
+
   toString() {
     return `${this.name} (${this.age} years old)`;
   }
 }
 
 const person = new Person("Alice", 28);
-console.log(person.toString());  // "Alice (28 years old)"
-console.log(person + "");        // toString() called automatically
+console.log(person.toString()); // "Alice (28 years old)"
+console.log(person + ""); // toString() called automatically
 ```
 
 ### Classes Are Objects
@@ -774,7 +779,7 @@ The **Document Object Model (DOM)** is a tree-like representation of the HTML pa
 Selects a single element by ID:
 
 ```javascript
-const element = document.getElementById('myId');
+const element = document.getElementById("myId");
 ```
 
 #### `querySelector()`
@@ -782,9 +787,9 @@ const element = document.getElementById('myId');
 Selects the first element matching a CSS selector:
 
 ```javascript
-const element = document.querySelector('.myClass');
-const element = document.querySelector('#myId');
-const element = document.querySelector('div p');
+const element = document.querySelector(".myClass");
+const element = document.querySelector("#myId");
+const element = document.querySelector("div p");
 ```
 
 #### `querySelectorAll()`
@@ -792,10 +797,10 @@ const element = document.querySelector('div p');
 Selects all elements matching a CSS selector (returns NodeList):
 
 ```javascript
-const elements = document.querySelectorAll('.myClass');
+const elements = document.querySelectorAll(".myClass");
 
 // Can be iterated like an array
-elements.forEach(el => {
+elements.forEach((el) => {
   console.log(el);
 });
 ```
@@ -805,7 +810,7 @@ elements.forEach(el => {
 Selects all elements with a class (returns HTMLCollection - live):
 
 ```javascript
-const elements = document.getElementsByClassName('myClass');
+const elements = document.getElementsByClassName("myClass");
 ```
 
 **Note:** `getElementsByClassName` returns a live HTMLCollection that updates automatically when elements are added dynamically.
@@ -815,7 +820,7 @@ const elements = document.getElementsByClassName('myClass');
 Selects all elements of a specific tag:
 
 ```javascript
-const divs = document.getElementsByTagName('div');
+const divs = document.getElementsByTagName("div");
 ```
 
 ### Modifying Content
@@ -825,7 +830,7 @@ const divs = document.getElementsByTagName('div');
 Gets or sets plain text (safer for user input):
 
 ```javascript
-const element = document.querySelector('div');
+const element = document.querySelector("div");
 element.textContent = "New text";
 const text = element.textContent;
 ```
@@ -851,8 +856,8 @@ Similar to `textContent` but respects CSS visibility.
 Sets an attribute:
 
 ```javascript
-element.setAttribute('data-id', '123');
-element.setAttribute('class', 'active');
+element.setAttribute("data-id", "123");
+element.setAttribute("class", "active");
 ```
 
 #### `getAttribute()`
@@ -860,7 +865,7 @@ element.setAttribute('class', 'active');
 Gets an attribute value:
 
 ```javascript
-const value = element.getAttribute('data-id');
+const value = element.getAttribute("data-id");
 ```
 
 #### `removeAttribute()`
@@ -868,7 +873,7 @@ const value = element.getAttribute('data-id');
 Removes an attribute:
 
 ```javascript
-element.removeAttribute('disabled');
+element.removeAttribute("disabled");
 ```
 
 #### Direct Property Access
@@ -876,9 +881,9 @@ element.removeAttribute('disabled');
 Some attributes can be accessed as properties:
 
 ```javascript
-element.id = 'newId';
-element.title = 'Hover text';
-element.href = 'https://example.com';
+element.id = "newId";
+element.title = "Hover text";
+element.href = "https://example.com";
 ```
 
 ### Modifying Classes
@@ -888,8 +893,8 @@ element.href = 'https://example.com';
 Adds one or more classes:
 
 ```javascript
-element.classList.add('active');
-element.classList.add('class1', 'class2');
+element.classList.add("active");
+element.classList.add("class1", "class2");
 ```
 
 #### `classList.remove()`
@@ -897,7 +902,7 @@ element.classList.add('class1', 'class2');
 Removes classes:
 
 ```javascript
-element.classList.remove('active');
+element.classList.remove("active");
 ```
 
 #### `classList.toggle()`
@@ -905,7 +910,7 @@ element.classList.remove('active');
 Adds the class if absent, removes if present:
 
 ```javascript
-element.classList.toggle('active');
+element.classList.toggle("active");
 ```
 
 #### `classList.contains()`
@@ -913,8 +918,8 @@ element.classList.toggle('active');
 Checks if element has a class:
 
 ```javascript
-if (element.classList.contains('active')) {
-  console.log('Element is active');
+if (element.classList.contains("active")) {
+  console.log("Element is active");
 }
 ```
 
@@ -923,9 +928,9 @@ if (element.classList.contains('active')) {
 #### Inline Styles
 
 ```javascript
-element.style.color = 'red';
-element.style.backgroundColor = 'blue';
-element.style.fontSize = '16px';
+element.style.color = "red";
+element.style.backgroundColor = "blue";
+element.style.fontSize = "16px";
 ```
 
 **Note:** Use camelCase for hyphenated CSS properties.
@@ -943,8 +948,8 @@ const color = window.getComputedStyle(element).color;
 Creates an element in memory:
 
 ```javascript
-const newDiv = document.createElement('div');
-newDiv.textContent = 'Hello';
+const newDiv = document.createElement("div");
+newDiv.textContent = "Hello";
 ```
 
 #### `appendChild()`
@@ -1002,7 +1007,7 @@ const prevSibling = element.previousElementSibling;
 ### Cloning Elements
 
 ```javascript
-const clone = original.cloneNode(true);  // true = deep clone (including children)
+const clone = original.cloneNode(true); // true = deep clone (including children)
 ```
 
 ### Best Practices
@@ -1023,25 +1028,26 @@ const clone = original.cloneNode(true);  // true = deep clone (including childre
 #### `addEventListener()` - Standard Method
 
 ```javascript
-const button = document.getElementById('myButton');
+const button = document.getElementById("myButton");
 
-button.addEventListener('click', function(event) {
-  console.log('Button clicked!');
+button.addEventListener("click", function (event) {
+  console.log("Button clicked!");
 });
 
 // With arrow function
-button.addEventListener('click', (event) => {
-  console.log('Button clicked!');
+button.addEventListener("click", (event) => {
+  console.log("Button clicked!");
 });
 
 // With named function
 function handleClick(event) {
-  console.log('Button clicked!');
+  console.log("Button clicked!");
 }
-button.addEventListener('click', handleClick);
+button.addEventListener("click", handleClick);
 ```
 
 **Pros:**
+
 - Can attach multiple handlers to the same event
 - Can remove listeners with `removeEventListener()`
 - Best practice for modern JavaScript
@@ -1049,12 +1055,13 @@ button.addEventListener('click', handleClick);
 #### DOM Property Event Handlers
 
 ```javascript
-button.onclick = function(event) {
-  console.log('Button clicked!');
+button.onclick = function (event) {
+  console.log("Button clicked!");
 };
 ```
 
 **Cons:**
+
 - Only one handler per event (overwrites previous)
 - Cannot easily remove handler
 
@@ -1071,14 +1078,15 @@ button.onclick = function(event) {
 Attach listener to parent instead of many children:
 
 ```javascript
-document.body.addEventListener('click', function(event) {
-  if (event.target.matches('.my-button')) {
-    console.log('Button clicked!');
+document.body.addEventListener("click", function (event) {
+  if (event.target.matches(".my-button")) {
+    console.log("Button clicked!");
   }
 });
 ```
 
 **Benefits:**
+
 - More efficient for many similar elements
 - Works with dynamically added elements
 - Single listener instead of many
@@ -1101,13 +1109,13 @@ document.body.addEventListener('click', function(event) {
 
 ```javascript
 function handleEvent(event) {
-  console.log(event.target);     // Element that triggered the event
-  console.log(event.key);         // Key pressed (for keyboard events)
-  console.log(event.code);        // Physical key position
-  console.log(event.type);        // Type of event
+  console.log(event.target); // Element that triggered the event
+  console.log(event.key); // Key pressed (for keyboard events)
+  console.log(event.code); // Physical key position
+  console.log(event.type); // Type of event
 }
 
-element.addEventListener('click', handleEvent);
+element.addEventListener("click", handleEvent);
 ```
 
 **Note:** For keyboard events, `e.key` gets the key value, while `e.code` gets the physical position.
@@ -1123,12 +1131,12 @@ Events propagate through the DOM in three phases:
 #### Bubbling (Default)
 
 ```javascript
-parent.addEventListener('click', () => {
-  console.log('Parent clicked');
+parent.addEventListener("click", () => {
+  console.log("Parent clicked");
 });
 
-child.addEventListener('click', () => {
-  console.log('Child clicked');
+child.addEventListener("click", () => {
+  console.log("Child clicked");
 });
 
 // Clicking child logs:
@@ -1139,13 +1147,21 @@ child.addEventListener('click', () => {
 #### Capturing
 
 ```javascript
-parent.addEventListener('click', () => {
-  console.log('Parent clicked');
-}, true);  // Note the 'true' parameter
+parent.addEventListener(
+  "click",
+  () => {
+    console.log("Parent clicked");
+  },
+  true,
+); // Note the 'true' parameter
 
-child.addEventListener('click', () => {
-  console.log('Child clicked');
-}, true);
+child.addEventListener(
+  "click",
+  () => {
+    console.log("Child clicked");
+  },
+  true,
+);
 
 // Clicking child logs:
 // "Parent clicked"
@@ -1155,9 +1171,9 @@ child.addEventListener('click', () => {
 #### Stopping Propagation
 
 ```javascript
-element.addEventListener('click', (e) => {
-  e.stopPropagation();             // Stops bubbling/capturing
-  e.stopImmediatePropagation();    // Also stops other handlers on same element
+element.addEventListener("click", (e) => {
+  e.stopPropagation(); // Stops bubbling/capturing
+  e.stopImmediatePropagation(); // Also stops other handlers on same element
 });
 ```
 
@@ -1171,9 +1187,13 @@ setTimeout(() => {
 }, 2000);
 
 // With parameters
-setTimeout((name) => {
-  console.log(`Hello ${name}`);
-}, 1000, "John");
+setTimeout(
+  (name) => {
+    console.log(`Hello ${name}`);
+  },
+  1000,
+  "John",
+);
 ```
 
 ### Event Object
@@ -1182,12 +1202,12 @@ setTimeout((name) => {
 const div = document.querySelector("div");
 
 function handleClick(e) {
-  console.log(e.target);      // Element that was clicked
-  console.log(e.currentTarget);  // Element that listener is on
-  console.log(e.type);        // "click"
+  console.log(e.target); // Element that was clicked
+  console.log(e.currentTarget); // Element that listener is on
+  console.log(e.type); // "click"
 }
 
-div.addEventListener('click', handleClick);
+div.addEventListener("click", handleClick);
 ```
 
 **Note:** In event handlers, `this === e.target` (when using regular functions, not arrow functions).
@@ -1201,10 +1221,10 @@ div.addEventListener('click', handleClick);
 Deeply nested callbacks make code hard to read and maintain:
 
 ```javascript
-getUser(1, function(user) {
-  getDepartment(user.deptId, function(dept) {
-    getProjects(dept.id, function(projects) {
-      console.log(projects);  // Deep nesting!
+getUser(1, function (user) {
+  getDepartment(user.deptId, function (dept) {
+    getProjects(dept.id, function (projects) {
+      console.log(projects); // Deep nesting!
     });
   });
 });
@@ -1227,9 +1247,9 @@ function getUser(userId) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (userId > 0) {
-        resolve({ id: userId, name: 'John' });
+        resolve({ id: userId, name: "John" });
       } else {
-        reject('Invalid user ID');
+        reject("Invalid user ID");
       }
     }, 1000);
   });
@@ -1238,21 +1258,21 @@ function getUser(userId) {
 // Using the promise
 getUser(1)
   .then((user) => {
-    console.log('User:', user);
-    return getDepartment(user.deptId);  // Return next promise
+    console.log("User:", user);
+    return getDepartment(user.deptId); // Return next promise
   })
   .then((dept) => {
-    console.log('Department:', dept);
+    console.log("Department:", dept);
     return getProjects(dept.id);
   })
   .then((projects) => {
-    console.log('Projects:', projects);
+    console.log("Projects:", projects);
   })
   .catch((error) => {
-    console.log('Error:', error);
+    console.log("Error:", error);
   })
   .finally(() => {
-    console.log('Operation completed');  // Runs regardless of success/failure
+    console.log("Operation completed"); // Runs regardless of success/failure
   });
 ```
 
@@ -1263,22 +1283,21 @@ Execute multiple promises and wait for all to complete:
 ```javascript
 Promise.all([getUser(1), getSettings(), getNotifications()])
   .then(([user, settings, notifications]) => {
-    console.log('User:', user);
-    console.log('Settings:', settings);
-    console.log('Notifications:', notifications);
+    console.log("User:", user);
+    console.log("Settings:", settings);
+    console.log("Notifications:", notifications);
   })
   .catch((error) => {
-    console.log('Error:', error);
+    console.log("Error:", error);
   });
 ```
 
 #### Promise.race() - First Completed Promise
 
 ```javascript
-Promise.race([getUser(1), getSettings()])
-  .then((result) => {
-    console.log('First completed:', result);
-  });
+Promise.race([getUser(1), getSettings()]).then((result) => {
+  console.log("First completed:", result);
+});
 ```
 
 ### Solution 2: Async/Await (Recommended)
@@ -1290,7 +1309,7 @@ Async/await is syntactic sugar over promises - looks synchronous but is asynchro
 ```javascript
 async function getUserInfo() {
   const user = await getUser(1);
-  console.log('User:', user);
+  console.log("User:", user);
 }
 
 getUserInfo();
@@ -1303,19 +1322,16 @@ async function fetchData(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    console.log('Data:', data);
+    console.log("Data:", data);
     return data;
-    
   } catch (error) {
-    console.log('Error:', error);
-  }
-  
-  finally {
-    console.log('Request completed');
+    console.log("Error:", error);
+  } finally {
+    console.log("Request completed");
   }
 }
 
-fetchData('/api/users');
+fetchData("/api/users");
 ```
 
 #### Sequential vs Parallel Operations
@@ -1325,16 +1341,16 @@ async function loadData() {
   // Sequential - one after another
   const user = await getUser(1);
   const dept = await getDepartment(user.deptId);
-  
+
   // Parallel - all at once using Promise.all()
   const [posts, comments, likes] = await Promise.all([
     getPosts(user.id),
     getComments(user.id),
-    getLikes(user.id)
+    getLikes(user.id),
   ]);
-  
-  console.log('User:', user);
-  console.log('Posts:', posts);
+
+  console.log("User:", user);
+  console.log("Posts:", posts);
 }
 
 loadData();
@@ -1344,17 +1360,17 @@ loadData();
 
 ```javascript
 async function getValue() {
-  return 42;  // Wrapped in a promise
+  return 42; // Wrapped in a promise
 }
 
 // Can use .then()
 getValue().then((value) => {
-  console.log(value);  // 42
+  console.log(value); // 42
 });
 
 // Or await it
 const value = await getValue();
-console.log(value);  // 42
+console.log(value); // 42
 ```
 
 #### Practical Example: Login with Async/Await
@@ -1362,30 +1378,29 @@ console.log(value);  // 42
 ```javascript
 async function login(email, password) {
   try {
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     });
-    
+
     const data = await response.json();
-    
+
     if (!response.ok) {
-      throw new Error(data.message || 'Login failed');
+      throw new Error(data.message || "Login failed");
     }
-    
-    localStorage.setItem('token', data.token);
+
+    localStorage.setItem("token", data.token);
     return data;
-    
   } catch (error) {
-    console.log('Login error:', error);
+    console.log("Login error:", error);
     throw error;
   }
 }
 
 async function getProfile(token) {
-  const response = await fetch('/api/profile', {
-    headers: { Authorization: `Bearer ${token}` }
+  const response = await fetch("/api/profile", {
+    headers: { Authorization: `Bearer ${token}` },
   });
   return await response.json();
 }
@@ -1394,20 +1409,20 @@ async function authenticateUser(email, password) {
   try {
     const loginData = await login(email, password);
     const profile = await getProfile(loginData.token);
-    console.log('Profile:', profile);
+    console.log("Profile:", profile);
   } catch (error) {
-    console.log('Authentication failed:', error);
+    console.log("Authentication failed:", error);
   }
 }
 ```
 
 ### Comparison
 
-| Approach | Readability | Error Handling | Best For |
-|----------|-------------|----------------|----------|
-| **Callbacks** | Poor | Messy | Single operations |
-| **Promises** | Good | `.catch()` blocks | Multiple operations |
-| **Async/Await** | Excellent | Try/catch | Modern applications |
+| Approach        | Readability | Error Handling    | Best For            |
+| --------------- | ----------- | ----------------- | ------------------- |
+| **Callbacks**   | Poor        | Messy             | Single operations   |
+| **Promises**    | Good        | `.catch()` blocks | Multiple operations |
+| **Async/Await** | Excellent   | Try/catch         | Modern applications |
 
 **Best Practice:** Use **async/await** for new code. It's the most readable and maintainable approach.
 
@@ -1435,20 +1450,20 @@ const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 ```javascript
 // Test if pattern matches
-const result = regexEmail.test("user@example.com");  // true
-const result2 = regexEmail.test("invalid-email");     // false
+const result = regexEmail.test("user@example.com"); // true
+const result2 = regexEmail.test("invalid-email"); // false
 
 // Find matches
-const matches = "abc123def456".match(/\d+/g);  // ["123", "456"]
+const matches = "abc123def456".match(/\d+/g); // ["123", "456"]
 
 // Replace
-const replaced = "hello world".replace(/world/, "universe");  // "hello universe"
+const replaced = "hello world".replace(/world/, "universe"); // "hello universe"
 ```
 
 ### Common Patterns
 
 - `\d` - Any digit (0-9)
-- `\w` - Any word character (a-z, A-Z, 0-9, _)
+- `\w` - Any word character (a-z, A-Z, 0-9, \_)
 - `\s` - Any whitespace
 - `^` - Start of string
 - `$` - End of string
@@ -1464,12 +1479,12 @@ const replaced = "hello world".replace(/world/, "universe");  // "hello universe
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const emails = [
-  "user@example.com",      // valid
-  "invalid-email",         // invalid
-  "test@domain.co.uk"     // valid
+  "user@example.com", // valid
+  "invalid-email", // invalid
+  "test@domain.co.uk", // valid
 ];
 
-emails.forEach(email => {
+emails.forEach((email) => {
   console.log(`${email}: ${emailRegex.test(email)}`);
 });
 ```
@@ -1483,15 +1498,15 @@ emails.forEach(email => {
 Static methods for mathematical operations:
 
 ```javascript
-Math.abs(-5);           // 5
-Math.max(1, 5, 3);      // 5
-Math.min(1, 5, 3);      // 1
-Math.round(4.7);        // 5
-Math.floor(4.7);        // 4
-Math.ceil(4.2);         // 5
-Math.pow(2, 3);         // 8
-Math.sqrt(9);           // 3
-Math.random();          // 0 to 1
+Math.abs(-5); // 5
+Math.max(1, 5, 3); // 5
+Math.min(1, 5, 3); // 1
+Math.round(4.7); // 5
+Math.floor(4.7); // 4
+Math.ceil(4.2); // 5
+Math.pow(2, 3); // 8
+Math.sqrt(9); // 3
+Math.random(); // 0 to 1
 ```
 
 ### Array Methods
@@ -1500,7 +1515,7 @@ Math.random();          // 0 to 1
 
 ```javascript
 const arr = [1, 2, "hello", true];
-const arr2 = new Array();  // Empty array (less efficient)
+const arr2 = new Array(); // Empty array (less efficient)
 ```
 
 **Note:** Arrays can contain any type, including functions and other arrays.
@@ -1511,10 +1526,10 @@ Creates a new array from array-like objects (shallow copy):
 
 ```javascript
 const arr = [1, 2, 3];
-const copy = Array.from(arr);  // [1, 2, 3]
+const copy = Array.from(arr); // [1, 2, 3]
 
 // Works with NodeList
-const nodeList = document.querySelectorAll('div');
+const nodeList = document.querySelectorAll("div");
 const array = Array.from(nodeList);
 ```
 
@@ -1524,8 +1539,8 @@ Supports negative indices:
 
 ```javascript
 const arr = [1, 2, 3, 4, 5];
-console.log(arr.at(-1));   // 5 (last element)
-console.log(arr.at(-2));   // 4 (second to last)
+console.log(arr.at(-1)); // 5 (last element)
+console.log(arr.at(-2)); // 4 (second to last)
 ```
 
 ### Date Object
@@ -1537,15 +1552,15 @@ console.log(arr.at(-2));   // 4 (second to last)
 const now = new Date();
 
 // Create specific date (year, month, day)
-const date = new Date(2024, 0, 15);  // January 15, 2024
+const date = new Date(2024, 0, 15); // January 15, 2024
 
 // Methods
-date.getFullYear();   // 2024
-date.getYear();       // 124 (years since 1900) - AVOID
-date.getMonth();      // 0 (January)
-date.getDate();       // 15
-date.getDay();        // 0-6 (0 = Sunday) - Note: week starts on Sunday!
-date.getTime();       // Milliseconds since January 1, 1970
+date.getFullYear(); // 2024
+date.getYear(); // 124 (years since 1900) - AVOID
+date.getMonth(); // 0 (January)
+date.getDate(); // 15
+date.getDay(); // 0-6 (0 = Sunday) - Note: week starts on Sunday!
+date.getTime(); // Milliseconds since January 1, 1970
 ```
 
 **Caution:** `getYear()` is deprecated and returns years since 1900. Always use `getFullYear()`.
@@ -1569,13 +1584,13 @@ const message = "Hello " + name + ", you are " + age + " years old";
 ### Type Checking
 
 ```javascript
-typeof 42              // "number"
-typeof "hello"         // "string"
-typeof true            // "boolean"
-typeof undefined       // "undefined"
-typeof null            // "object" (historical bug)
-typeof NaN             // "number" (NaN is a number!)
-typeof Symbol("id")    // "symbol"
+typeof 42; // "number"
+typeof "hello"; // "string"
+typeof true; // "boolean"
+typeof undefined; // "undefined"
+typeof null; // "object" (historical bug)
+typeof NaN; // "number" (NaN is a number!)
+typeof Symbol("id"); // "symbol"
 ```
 
 ---
@@ -1588,16 +1603,16 @@ Opens a new browser window or tab:
 
 ```javascript
 // Open in new tab
-const newTab = window.open('https://example.com', '_blank');
+const newTab = window.open("https://example.com", "_blank");
 
 // Open in same window
-window.open('https://example.com', '_self');
+window.open("https://example.com", "_self");
 
 // Open with specific size
 const popup = window.open(
-  'popup.html',
-  'popup',
-  'width=500,height=300,left=200,top=200'
+  "popup.html",
+  "popup",
+  "width=500,height=300,left=200,top=200",
 );
 ```
 
@@ -1619,8 +1634,8 @@ if (popup) {
 Opens the print dialog:
 
 ```javascript
-const printBtn = document.querySelector('#printBtn');
-printBtn.addEventListener('click', () => {
+const printBtn = document.querySelector("#printBtn");
+printBtn.addEventListener("click", () => {
   window.print();
 });
 ```
@@ -1640,7 +1655,7 @@ printBtn.addEventListener('click', () => {
 Goes back one page (back button):
 
 ```javascript
-document.querySelector('#backBtn').addEventListener('click', () => {
+document.querySelector("#backBtn").addEventListener("click", () => {
   history.back();
 });
 ```
@@ -1658,9 +1673,9 @@ history.forward();
 Goes to a specific page in history:
 
 ```javascript
-history.go(-2);   // Back 2 pages
-history.go(1);    // Forward 1 page
-history.go(0);    // Reload current page
+history.go(-2); // Back 2 pages
+history.go(1); // Forward 1 page
+history.go(0); // Reload current page
 ```
 
 ### location.href
@@ -1672,7 +1687,7 @@ Gets or sets the complete URL:
 const currentUrl = location.href;
 
 // Navigate to new page (saves in history)
-location.href = 'https://example.com';
+location.href = "https://example.com";
 ```
 
 ### location.replace()
@@ -1680,7 +1695,7 @@ location.href = 'https://example.com';
 Replaces current page (NOT saved in history - user can't go back):
 
 ```javascript
-location.replace('/login');  // User cannot go back to previous page
+location.replace("/login"); // User cannot go back to previous page
 ```
 
 ### location.pathname
@@ -1689,7 +1704,7 @@ Gets the path portion of URL:
 
 ```javascript
 // If URL is https://example.com/products/shoes
-console.log(location.pathname);  // /products/shoes
+console.log(location.pathname); // /products/shoes
 ```
 
 ### location.search
@@ -1698,12 +1713,12 @@ Gets the query string:
 
 ```javascript
 // If URL is https://example.com?id=123&name=alice
-console.log(location.search);  // ?id=123&name=alice
+console.log(location.search); // ?id=123&name=alice
 
 // Parse query parameters
 const params = new URLSearchParams(location.search);
-console.log(params.get('id'));    // 123
-console.log(params.get('name'));  // alice
+console.log(params.get("id")); // 123
+console.log(params.get("name")); // alice
 ```
 
 ### location.hash
@@ -1712,12 +1727,12 @@ Gets the fragment identifier:
 
 ```javascript
 // If URL is https://example.com#section2
-console.log(location.hash);  // #section2
+console.log(location.hash); // #section2
 
 // Listen for hash changes (single-page app routing)
-window.addEventListener('hashchange', () => {
+window.addEventListener("hashchange", () => {
   const hash = location.hash.slice(1);
-  if (hash === 'home') {
+  if (hash === "home") {
     showHome();
   }
 });
@@ -1728,10 +1743,10 @@ window.addEventListener('hashchange', () => {
 Gets the protocol:
 
 ```javascript
-console.log(location.protocol);  // "https:"
+console.log(location.protocol); // "https:"
 
-if (location.protocol === 'https:') {
-  console.log('Secure connection');
+if (location.protocol === "https:") {
+  console.log("Secure connection");
 }
 ```
 
@@ -1790,7 +1805,7 @@ if (name) {
 
 ```javascript
 const arr = [1, 2, 3];
-const arr2 = new Array(1, 2, 3);  // Same as above
+const arr2 = new Array(1, 2, 3); // Same as above
 ```
 
 ### Array.from()
@@ -1807,9 +1822,9 @@ const copy = Array.from(arr);
 Access elements with negative indices:
 
 ```javascript
-const arr = ['a', 'b', 'c'];
-arr.at(-1);  // 'c'
-arr.at(-2);  // 'b'
+const arr = ["a", "b", "c"];
+arr.at(-1); // 'c'
+arr.at(-2); // 'b'
 ```
 
 ### Array Methods with forEach
@@ -1828,7 +1843,7 @@ Creates new array by transforming each element:
 
 ```javascript
 const numbers = [1, 2, 3];
-const doubled = numbers.map(n => n * 2);  // [2, 4, 6]
+const doubled = numbers.map((n) => n * 2); // [2, 4, 6]
 ```
 
 ### array.filter()
@@ -1837,7 +1852,7 @@ Creates new array with elements that pass a test:
 
 ```javascript
 const numbers = [1, 2, 3, 4, 5];
-const evens = numbers.filter(n => n % 2 === 0);  // [2, 4]
+const evens = numbers.filter((n) => n % 2 === 0); // [2, 4]
 ```
 
 ---
@@ -1853,20 +1868,21 @@ Extract values from arrays or properties from objects:
 ```javascript
 const arr = [1, 2, 3];
 const [first, second] = arr;
-console.log(first, second);  // 1, 2
+console.log(first, second); // 1, 2
 
 // Swap values
-let a = 1, b = 2;
+let a = 1,
+  b = 2;
 [a, b] = [b, a];
-console.log(a, b);  // 2, 1
+console.log(a, b); // 2, 1
 ```
 
 #### Object Destructuring
 
 ```javascript
-const user = { name: 'John', age: 30 };
+const user = { name: "John", age: 30 };
 const { name, age } = user;
-console.log(name, age);  // "John", 30
+console.log(name, age); // "John", 30
 ```
 
 ### Spread Operator (...)
@@ -1874,11 +1890,31 @@ console.log(name, age);  // "John", 30
 Used for arrays and objects:
 
 ```javascript
+//merge arrays
 const arr = [1, 2, 3];
-const arr2 = [...arr, 4, 5];  // [1, 2, 3, 4, 5]
-
+const arr2 = [...arr, 4, 5]; // [1, 2, 3, 4, 5]
+//merge objects
 const obj = { a: 1, b: 2 };
-const obj2 = { ...obj, c: 3 };  // { a: 1, b: 2, c: 3 }
+const obj2 = { ...obj, c: 3 }; // { a: 1, b: 2, c: 3 }
+//override object properties
+const obj = { a: 1, b: 2 };
+const obj2 = { ...obj, b: 3 }; // { a: 1, b: 3 }
+
+//there is also rest parameters which are the oposite of the spread ast it condences the array or object to
+//a single element , if you want to use it with other prameters i must come last (x,y,...theArgs)
+function sum(...theArgs) {
+  let total = 0;
+  for (const arg of theArgs) {
+    total += arg;
+  }
+  return total;
+}
+
+console.log(sum(1, 2, 3));
+// Expected output: 6
+
+console.log(sum(1, 2, 3, 4));
+// Expected output: 10
 ```
 
 ### for...in vs for...of
@@ -1886,10 +1922,10 @@ const obj2 = { ...obj, c: 3 };  // { a: 1, b: 2, c: 3 }
 #### for...in - Iterates over Keys
 
 ```javascript
-const obj = { name: 'John', age: 30 };
+const obj = { name: "John", age: 30 };
 for (const key in obj) {
-  console.log(key);        // "name", "age"
-  console.log(obj[key]);   // "John", 30
+  console.log(key); // "name", "age"
+  console.log(obj[key]); // "John", 30
 }
 ```
 
@@ -1898,9 +1934,9 @@ for (const key in obj) {
 #### for...of - Iterates over Values
 
 ```javascript
-const arr = ['a', 'b', 'c'];
+const arr = ["a", "b", "c"];
 for (const value of arr) {
-  console.log(value);  // 'a', 'b', 'c'
+  console.log(value); // 'a', 'b', 'c'
 }
 ```
 
@@ -1934,13 +1970,13 @@ switch (day) {
 
 ```javascript
 var x = 10;
-var x = 20;  // Allowed - redeclaration
+var x = 20; // Allowed - redeclaration
 
 let y = 10;
-let y = 20;  // Error - cannot redeclare in same scope
+let y = 20; // Error - cannot redeclare in same scope
 
 // Assigning without declaration creates global variable (bad practice!)
-zzz = 300;   // Global variable
+zzz = 300; // Global variable
 ```
 
 ### String Concatenation vs Undefined
@@ -1948,7 +1984,7 @@ zzz = 300;   // Global variable
 ```javascript
 const str = "hello";
 const undef = undefined;
-console.log(str + undef);  // "helloundefined"
+console.log(str + undef); // "helloundefined"
 ```
 
 ### Module Scripts
@@ -1968,7 +2004,7 @@ export default class User {
     this.name = name;
     this.age = age;
   }
-  
+
   display() {
     console.log(`${this.name} is ${this.age} years old`);
   }
@@ -1977,10 +2013,10 @@ export default class User {
 
 ```javascript
 // Import default export (can use any name)
-import User from './User.js';
+import User from "./User.js";
 
-const user = new User('John', 25);
-user.display();  // "John is 25 years old"
+const user = new User("John", 25);
+user.display(); // "John is 25 years old"
 ```
 
 ### AJAX
@@ -1989,19 +2025,19 @@ user.display();  // "John is 25 years old"
 
 ```javascript
 // Using fetch (modern approach)
-fetch('/api/data')
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.log('Error:', error));
+fetch("/api/data")
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.log("Error:", error));
 
 // Using async/await
 async function fetchData() {
   try {
-    const response = await fetch('/api/data');
+    const response = await fetch("/api/data");
     const data = await response.json();
     console.log(data);
   } catch (error) {
-    console.log('Error:', error);
+    console.log("Error:", error);
   }
 }
 ```
@@ -2020,19 +2056,19 @@ async function fetchData() {
 
 ## Glossary
 
-| Term | Definition |
-|------|-----------|
-| **Hoisting** | JavaScript's behavior of moving declarations to the top of their scope |
-| **Coercion** | Automatic type conversion (implicit casting) |
-| **Closure** | Function that has access to variables from its parent scope |
-| **Callback** | Function passed as argument to another function |
-| **Promise** | Object representing eventual completion/failure of async operation |
-| **Async/Await** | Syntax for handling promises more cleanly |
-| **DOM** | Document Object Model - tree representation of HTML |
-| **Event Bubbling** | Event propagates upward through parent elements |
-| **Event Capturing** | Event propagates downward from root to target |
-| **Destructuring** | Extracting values from arrays or object properties |
-| **Spread Operator** | `...` operator for spreading array/object elements |
+| Term                | Definition                                                             |
+| ------------------- | ---------------------------------------------------------------------- |
+| **Hoisting**        | JavaScript's behavior of moving declarations to the top of their scope |
+| **Coercion**        | Automatic type conversion (implicit casting)                           |
+| **Closure**         | Function that has access to variables from its parent scope            |
+| **Callback**        | Function passed as argument to another function                        |
+| **Promise**         | Object representing eventual completion/failure of async operation     |
+| **Async/Await**     | Syntax for handling promises more cleanly                              |
+| **DOM**             | Document Object Model - tree representation of HTML                    |
+| **Event Bubbling**  | Event propagates upward through parent elements                        |
+| **Event Capturing** | Event propagates downward from root to target                          |
+| **Destructuring**   | Extracting values from arrays or object properties                     |
+| **Spread Operator** | `...` operator for spreading array/object elements                     |
 
 ---
 
@@ -2041,17 +2077,17 @@ async function fetchData() {
 ### Variable Declaration
 
 ```javascript
-const x = 5;        // Preferred - immutable reference
-let y = 10;        // Use when reassignment needed
-var z = 15;        // Avoid in modern code
+const x = 5; // Preferred - immutable reference
+let y = 10; // Use when reassignment needed
+var z = 15; // Avoid in modern code
 ```
 
 ### Arrow Functions
 
 ```javascript
 const add = (a, b) => a + b;
-const greet = name => `Hello ${name}`;
-const log = () => console.log('hi');
+const greet = (name) => `Hello ${name}`;
+const log = () => console.log("hi");
 ```
 
 ### Async/Await
@@ -2059,10 +2095,10 @@ const log = () => console.log('hi');
 ```javascript
 async function load() {
   try {
-    const data = await fetch('/api/data').then(r => r.json());
+    const data = await fetch("/api/data").then((r) => r.json());
     console.log(data);
   } catch (error) {
-    console.log('Error:', error);
+    console.log("Error:", error);
   }
 }
 ```
@@ -2070,23 +2106,23 @@ async function load() {
 ### Array Methods
 
 ```javascript
-[1, 2, 3].map(x => x * 2);           // [2, 4, 6]
-[1, 2, 3, 4].filter(x => x > 2);     // [3, 4]
-[1, 2, 3].forEach(x => console.log(x));
+[1, 2, 3].map((x) => x * 2); // [2, 4, 6]
+[1, 2, 3, 4].filter((x) => x > 2); // [3, 4]
+[1, 2, 3].forEach((x) => console.log(x));
 ```
 
 ### DOM Selection
 
 ```javascript
-document.getElementById('id');
-document.querySelector('.class');
-document.querySelectorAll('div');
+document.getElementById("id");
+document.querySelector(".class");
+document.querySelectorAll("div");
 ```
 
 ### Event Listening
 
 ```javascript
-element.addEventListener('click', (e) => {
+element.addEventListener("click", (e) => {
   console.log(e.target);
 });
 ```
