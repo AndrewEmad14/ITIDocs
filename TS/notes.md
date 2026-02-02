@@ -435,3 +435,36 @@ it merges interfaces with the same name
 
 console.log(Object.isFrozen(IceCream));//true
 
+# Narrowing
+  in the following example i want to implement differnt behavior in the padleft function:
+
+    function padLeft(padding: number | string, input: string): string {
+    return " ".repeat(padding) + input;
+    }
+
+  Argument of type 'string | number' is not assignable to parameter of type 'number'.
+    Type 'string' is not assignable to type 'number'.
+  
+  **as you can see here i cant pass a paramter of type x | y to a function that takes type x**
+
+  and here comes the use of typeof operator 
+
+    function padLeft(padding: number | string, input: string): string {
+      if (typeof padding === "number") {
+        return " ".repeat(padding) + input;
+      }
+      return padding + input;
+    }
+  
+  while this may see normal in javascript there is alot going under the convers here
+
+  Within our if check, TypeScript sees typeof padding === "number" and understands that as a special form of code called a **type guard**.
+
+  a quick note , null is considered an **object**
+
+  so somehting like
+
+  if(typeof arr === "object") //to check if it is an array
+
+  isnt entierly correct since null is an object
+
