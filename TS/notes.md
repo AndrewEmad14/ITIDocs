@@ -468,3 +468,66 @@ console.log(Object.isFrozen(IceCream));//true
 
   isnt entierly correct since null is an object
 
+# class vs interface
+In TypeScript, both `class` and `interface` are used to define object structures, but they serve different purposes and have different capabilities:
+
+**Interface**
+An interface is purely a compile-time construct used to define a contract or shape that objects should follow. It's erased during compilation and doesn't exist in the final JavaScript code. Interfaces can only describe the structure of data—they can't contain implementation logic.
+
+```typescript
+interface User {
+  name: string;
+  age: number;
+  greet(): void;
+}
+
+const user: User = {
+  name: "Alice",
+  age: 30,
+  greet() { console.log("Hi"); }
+};
+```
+
+**Class**
+A class is a blueprint for creating objects with both structure and behavior. Classes exist at runtime as actual JavaScript entities and can contain implementation logic, constructors, and methods with actual code.
+
+```typescript
+class User {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+
+  greet() {
+    console.log(`Hi, I'm ${this.name}`);
+  }
+}
+
+const user = new User("Alice", 30);
+user.greet();
+```
+
+**Key Differences**
+
+Interfaces are lightweight contracts that only exist during development and type-checking. They can't have implementations, constructors, or access modifiers (public/private). Classes are full-featured objects that generate JavaScript code, support inheritance, access modifiers, and actual method implementations.
+
+For runtime behavior, you need a class. For just type safety and contracts, an interface is sufficient. A class can also implement one or more interfaces, combining the benefits of both:
+
+```typescript
+interface Greeter {
+  greet(): void;
+}
+
+class User implements Greeter {
+  constructor(private name: string) {}
+
+  greet() {
+    console.log(`Hi, I'm ${this.name}`);
+  }
+}
+```
+
+In summary: use interfaces for defining shapes and contracts, use classes when you need actual implementation and runtime behavior.
