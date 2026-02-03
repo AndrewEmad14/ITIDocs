@@ -18,24 +18,24 @@ HTML code (technically, the DOM).
 
 # angular compiler
 
-    It handles compilation automatically: ng serve uses the Angular Compiler (ngc), which is built on top of tsc. It automatically converts your TypeScript into JavaScript every time you save a file.
-    In-Memory only: Unlike running tsc . manually, which generates physical .js files in your folders, ng serve compiles your code in-memory. It serves these virtual files to your browser so your project folder
-    stays clean.
+  It handles compilation automatically: ng serve uses the Angular Compiler (ngc), which is built on top of tsc. It automatically converts your TypeScript into JavaScript every time you save a file.
+  In-Memory only: Unlike running tsc . manually, which generates physical .js files in your folders, ng serve compiles your code in-memory. It serves these virtual files to your browser so your project folder
+  stays clean.
 
 # Setting up angular
 
 first you will need to install npm
 npm install -g npm //global directory
 
-    npm install -g @angular/cli //installs angular globally
+  npm install -g @angular/cli //installs angular globally
 
-    ng new your-app-name
-          --prefix someting , adds prefix to every generated component
-          note : it will create your root dir , Dont make the root folder
+  ng new your-app-name
+        --prefix someting , adds prefix to every generated component
+        note : it will create your root dir , Dont make the root folder
 
-    ng serve //runs in the browser
+  ng serve //runs in the browser
 
-    ng serve -o.     //live updates
+  ng serve -o.     //live updates
 
 # cloning form a repo
 
@@ -48,43 +48,43 @@ npm install bootstrap
 
 in angular.json
 
-      "styles": [
-      "node_modules/bootstrap/dist/css/bootstrap.min.css",
-      "src/styles.css"
-      ],"scripts": [
-        "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-      ]   // for interactive components
+  "styles": [
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+  "src/styles.css"
+  ],"scripts": [
+    "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+  ]   // for interactive components
 
 # folder structure
 
 ### package.json /pacakge-lock.json
 
-    where the dependencies of the application are defined
+  where the dependencies of the application are defined
 
 ##### difference between the two
 
-    package.json are eidtable and you can modify the versions as much as you like of the packages
+  package.json are eidtable and you can modify the versions as much as you like of the packages
 
-     package-lock.json are machine generated and lock the versions so that everyone that works on the repo is forced to work with those versions they are not meant to be editied
+  package-lock.json are machine generated and lock the versions so that everyone that works on the repo is forced to work with those versions they are not meant to be editied
 
 ##### popular packages
 
-    • rxjs, a really cool library for reactive programming. We have a dedicated chapter on this topic
-      and about RxJS in particular.
-    • zone.js, doing the heavy lifting for detecting the changes (we’ll dive into this later also).
+  • rxjs, a really cool library for reactive programming. We have a dedicated chapter on this topic
+    and about RxJS in particular.
+  • zone.js, doing the heavy lifting for detecting the changes (we’ll dive into this later also).
 
 ### tsconfig.json
 
-    linter for type script
+  linter for type script
 
 ### angular.json
 
-    configuration for angular cli
-    NOTE : you will find you can edit styles and scripts to match external libaries like bootstrap
+  configuration for angular cli
+  NOTE : you will find you can edit styles and scripts to match external libaries like bootstrap
 
 ## src/app
 
-    the main app comoponet
+  the main app comoponet
 
 # @Component
 
@@ -94,18 +94,18 @@ it expects a configuration object
 
 ## selector property
 
-    it will tell Angular what to look
-    for in our HTML pages. Every time Angular finds an element in our HTML which matches the
-    selector of the component, it will create an instance of the component, and replace the content of
-    the element by the template of the component.
+  it will tell Angular what to look
+  for in our HTML pages. Every time Angular finds an element in our HTML which matches the
+  selector of the component, it will create an instance of the component, and replace the content of
+  the element by the template of the component.
 
 ### naming conventions
 
-    prefix-component
+  prefix-component
 
 ## standalone : true
 
-    this is the default since angular v19 , this means that the component doesnt need to be declared in a module in order to be usable
+  this is the default since angular v19 , this means that the component doesnt need to be declared in a module in order to be usable
 
 ## imports:[]
 
@@ -237,99 +237,99 @@ the [property] allows you to acces a property that is form javascript like textC
     [src]= "your-image"
     [style] = "your-inline-style"
   ###### style property
-    [style.color] = "your-color-for-example"
-    [style.width.px]="numberExpression" //for specfic units
-    static styles and dynamic styles are merged automatically 
+  [style.color] = "your-color-for-example"
+  [style.width.px]="numberExpression" //for specfic units
+  static styles and dynamic styles are merged automatically 
   **Examples:**
 
-    @Component({
-    selector: 'ns-test1',
-    template: '<div style="background-color: white" [style]="dynamicStyles()">
-    Hello</div>'
-    })
-    class StyleBinding1 {
-    protected readonly dynamicStyles = signal('margin-top: 1rem; color: black');
-    }
-    @Component({
-    selector: 'ns-test2',
-    template: '<div style="background-color: white" [style]="dynamicStyles()">
-    Hello</div>'
-    })
-    class StyleBinding2 {
-    protected readonly dynamicStyles = signal({
-    'margin-top': '1rem',
-    color: 'black'
-    });
-    }
-    @Component({
-    selector: 'ns-test3',
-    template: '<div style="background-color: white" [style.margin-top]="margin()"
-    [style.color]="color()">Hello</div>'
-    })
-    class StyleBinding3 {
-    protected readonly margin = signal('1rem');
-    protected readonly color = signal('black');
-    }
-    @Component({
-    selector: 'ns-test4',
-    template: '<div style="background-color: white" [style.margin-top.rem]="margin()"
-    [style.color]="color()">Hello</div>'
-    })
-    class StyleBinding4 {
-    protected readonly margin = signal(1);
-    protected readonly color = signal('black');
-    }
+  @Component({
+  selector: 'ns-test1',
+  template: '<div style="background-color: white" [style]="dynamicStyles()">
+  Hello</div>'
+  })
+  class StyleBinding1 {
+  protected readonly dynamicStyles = signal('margin-top: 1rem; color: black');
+  }
+  @Component({
+  selector: 'ns-test2',
+  template: '<div style="background-color: white" [style]="dynamicStyles()">
+  Hello</div>'
+  })
+  class StyleBinding2 {
+  protected readonly dynamicStyles = signal({
+  'margin-top': '1rem',
+  color: 'black'
+  });
+  }
+  @Component({
+  selector: 'ns-test3',
+  template: '<div style="background-color: white" [style.margin-top]="margin()"
+  [style.color]="color()">Hello</div>'
+  })
+  class StyleBinding3 {
+  protected readonly margin = signal('1rem');
+  protected readonly color = signal('black');
+  }
+  @Component({
+  selector: 'ns-test4',
+  template: '<div style="background-color: white" [style.margin-top.rem]="margin()"
+  [style.color]="color()">Hello</div>'
+  })
+  class StyleBinding4 {
+  protected readonly margin = signal(1);
+  protected readonly color = signal('black');
+  }
 
 ###### Class property
 
-    [class]=`array of style classes
-            a single string of classes
-            an object where each class is an attributed with a value of true and false
-    [class.classname]="isClassName()";
+[class]=`array of style classes
+        a single string of classes
+        an object where each class is an attributed with a value of true and false
+[class.classname]="isClassName()";
 
 **Examples:**
 
-      @Component({
-      selector: 'ns-test1',
-      template: '<div class="card" [class]="dynamicClasses()">Hello</div>'
-      })
-      class ClassBinding1 {
-      protected readonly dynamicClasses = signal(['highlighted', 'big']);
-      }
-      @Component({
-      selector: 'ns-test2',
-      template: '<div class="card" [class]="dynamicClasses()">Hello</div>'
-      })
-      class ClassBinding2 {
-      protected readonly dynamicClasses = signal('highlighted big');
-      }
-      @Component({
-      selector: 'ns-test3',
-      template: '<div class="card" [class]="dynamicClasses()">Hello</div>'
-      })
-      class ClassBinding3 {
-      protected readonly dynamicClasses = signal({
-      highlighted: true,
-      big: true,
-      faded: false
-      });
-      }
-      @Component({
-      selector: 'ns-test4',
-      template:
-      '<div class="card" [class.highlighted]="isHighlighted()" [class.big]="isBig()"
-      [class.faded]="isFaded()">Hello</div>'
-      })
+  @Component({
+  selector: 'ns-test1',
+  template: '<div class="card" [class]="dynamicClasses()">Hello</div>'
+  })
+  class ClassBinding1 {
+  protected readonly dynamicClasses = signal(['highlighted', 'big']);
+  }
+  @Component({
+  selector: 'ns-test2',
+  template: '<div class="card" [class]="dynamicClasses()">Hello</div>'
+  })
+  class ClassBinding2 {
+  protected readonly dynamicClasses = signal('highlighted big');
+  }
+  @Component({
+  selector: 'ns-test3',
+  template: '<div class="card" [class]="dynamicClasses()">Hello</div>'
+  })
+  class ClassBinding3 {
+  protected readonly dynamicClasses = signal({
+  highlighted: true,
+  big: true,
+  faded: false
+  });
+  }
+  @Component({
+  selector: 'ns-test4',
+  template:
+  '<div class="card" [class.highlighted]="isHighlighted()" [class.big]="isBig()"
+  [class.faded]="isFaded()">Hello</div>'
+  })
 
-      class ClassBinding4 {
-      protected readonly isHighlighted = signal(true);
-      protected readonly isBig = signal(true);
-      protected readonly isFaded = signal(false);
-      }
+  class ClassBinding4 {
+  protected readonly isHighlighted = signal(true);
+  protected readonly isBig = signal(true);
+  protected readonly isFaded = signal(false);
+  }
 
 ### Event Binding
 
-    Event binding allows you to listen for and respond to user actions such as
+  Event binding allows you to listen for and respond to user actions such as
 
 keystrokes, mouse movements, clicks, and touches.
 Example : <button (click)="onSave()">Save</button>
@@ -350,7 +350,6 @@ One cool feature is that you can also easily handle keyboard events with:
 
 ### Two way Binding
 
-    Two way binding
 
 Two-way binding combines property binding with event binding for
 example to two way binding [(ngModel)]
@@ -429,32 +428,32 @@ there are two kind of Directives:
 
 ### Attribute
 
-    you can genrerate yor custom directive using
-    ng g d directive-name
+  you can genrerate yor custom directive using
+  ng g d directive-name
 
 **it will look something like this for example**
 this is a very simple directive that does nothing but gets activated if the attribute doNothing is on an element:
 
-    @Directive({
-    selector: '[doNothing]'
-    })
-    export class DoNothing {
-    constructor() {
-    console.log('Do nothing directive');
-    }
-    }
+  @Directive({
+  selector: '[doNothing]'
+  })
+  export class DoNothing {
+  constructor() {
+  console.log('Do nothing directive');
+  }
+  }
 
-    @Component({
-    selector: 'ns-test',
-    template: '<div doNothing>Click me</div>',
-    imports: [DoNothing]
-    })
-    export class Test {}
+  @Component({
+  selector: 'ns-test',
+  template: '<div doNothing>Click me</div>',
+  imports: [DoNothing]
+  })
+  export class Test {}
 
 ### Structural
 
 ##### the old deprecated directives: ngif, ngfor, ngswitch
-
+  ```html
     //ngif
 
     <div *ngIf="isLoggedIn">
@@ -493,7 +492,7 @@ this is a very simple directive that does nothing but gets activated if the attr
     </div>
 
   </div>
-
+```
 ##### the new syntax @if @for @switch @let
 
 **@if**
@@ -600,67 +599,67 @@ important note : In Angular, data flows into a component via properties, and flo
 
 ##### child component
 
-    import { Component, Input } from '@angular/core';
+  import { Component, Input } from '@angular/core';
 
-    @Component({
-      selector: 'app-child',
-      template: `<p>{{ message }}</p>`
-    })
-    export class ChildComponent {
-      @Input() message: string = '';
-    }
+  @Component({
+    selector: 'app-child',
+    template: `<p>{{ message }}</p>`
+  })
+  export class ChildComponent {
+    @Input() message: string = '';
+  }
 
 ##### parent component
 
-    import { Component } from '@angular/core';
-    import { Child } from './child/child'; // dont forget to import the child in
-                                              the parent
+  import { Component } from '@angular/core';
+  import { Child } from './child/child'; // dont forget to import the child in
+                                            the parent
 
-    @Component({
-      selector: 'app-parent',
-      template: `<app-child [message]="parentMessage"></app-child>`,
-      imports:[Child]
-    })
-    export class ParentComponent {
-      parentMessage = 'Hello from Parent!';
-    }
+  @Component({
+    selector: 'app-parent',
+    template: `<app-child [message]="parentMessage"></app-child>`,
+    imports:[Child]
+  })
+  export class ParentComponent {
+    parentMessage = 'Hello from Parent!';
+  }
 
 #### output
 
 ##### child component
 
-    import { Component, Output, EventEmitter } from '@angular/core';
+  import { Component, Output, EventEmitter } from '@angular/core';
 
-    @Component({
-      selector: 'app-child',
-      template: `<button (click)="sendMessage()">Click Me</button>`
-    })
-    export class ChildComponent {
-      @Output() messageEvent = new EventEmitter<string>();
+  @Component({
+    selector: 'app-child',
+    template: `<button (click)="sendMessage()">Click Me</button>`
+  })
+  export class ChildComponent {
+    @Output() messageEvent = new EventEmitter<string>();
 
-      sendMessage() {
-        this.messageEvent.emit('Hello from Child!');
-      }
+    sendMessage() {
+      this.messageEvent.emit('Hello from Child!');
     }
+  }
 
 ##### parent component
 
-    import { Component } from '@angular/core';
+  import { Component } from '@angular/core';
 
-    @Component({
-      selector: 'app-parent',
-      template: `
-        <app-child (messageEvent)="handleMessage($event)"></app-child>
-        <p>{{ receivedMessage }}</p>
-      `
-    })
-    export class ParentComponent {
-      receivedMessage = '';
+  @Component({
+    selector: 'app-parent',
+    template: `
+      <app-child (messageEvent)="handleMessage($event)"></app-child>
+      <p>{{ receivedMessage }}</p>
+    `
+  })
+  export class ParentComponent {
+    receivedMessage = '';
 
-      handleMessage(message: string) {
-        this.receivedMessage = message;
-      }
+    handleMessage(message: string) {
+      this.receivedMessage = message;
     }
+  }
 
 ## new way
 
@@ -668,61 +667,61 @@ important note : In Angular, data flows into a component via properties, and flo
 
 ##### child component
 
-    import { Component, input } from '@angular/core';
-    @Component({
-      selector: 'app-child',
-      template: `<p>{{ message() }}</p>`
-    })
-    export class ChildComponent {
-      message = input<string>('default value');
-    }
+  import { Component, input } from '@angular/core';
+  @Component({
+    selector: 'app-child',
+    template: `<p>{{ message() }}</p>`
+  })
+  export class ChildComponent {
+    message = input<string>('default value');
+  }
 
 ##### parent component
 
-    import { Component } from '@angular/core';
+  import { Component } from '@angular/core';
 
-    @Component({
-      selector: 'app-parent',
-      template: `<app-child [message]="parentMessage"></app-child>`
-    })
-    export class ParentComponent {
-      parentMessage = 'Hello from Parent!';
-    }
+  @Component({
+    selector: 'app-parent',
+    template: `<app-child [message]="parentMessage"></app-child>`
+  })
+  export class ParentComponent {
+    parentMessage = 'Hello from Parent!';
+  }
 
 ### output
 
 ##### child component
 
-    import { Component, output } from '@angular/core';
-    @Component({
-      selector: 'app-child',
-      template: `<button (click)="sendMessage()">Click Me</button>`
-    })
-    export class ChildComponent {
-      messageEvent = output<string>();
+  import { Component, output } from '@angular/core';
+  @Component({
+    selector: 'app-child',
+    template: `<button (click)="sendMessage()">Click Me</button>`
+  })
+  export class ChildComponent {
+    messageEvent = output<string>();
 
-      sendMessage() {
-        this.messageEvent.emit('Hello from Child!');
-      }
+    sendMessage() {
+      this.messageEvent.emit('Hello from Child!');
     }
+  }
 
 ##### parent component
 
-    import { Component } from '@angular/core';
-    @Component({
-      selector: 'app-parent',
-      template: `
-        <app-child (messageEvent)="handleMessage($event)"></app-child>
-        <p>{{ receivedMessage }}</p>
-      `
-    })
-    export class ParentComponent {
-      receivedMessage = '';
+  import { Component } from '@angular/core';
+  @Component({
+    selector: 'app-parent',
+    template: `
+      <app-child (messageEvent)="handleMessage($event)"></app-child>
+      <p>{{ receivedMessage }}</p>
+    `
+  })
+  export class ParentComponent {
+    receivedMessage = '';
 
-      handleMessage(message: string) {
-        this.receivedMessage = message;
-      }
+    handleMessage(message: string) {
+      this.receivedMessage = message;
     }
+  }
 
 # Component life cycle (HOOKS)
 
@@ -744,18 +743,17 @@ constructing it and thus calls the component class constructor.
 remeber to import what you choose to implement
 also ngOnChanges need SimpleChanges passed as a parameter and imported
 
-
 **One thing is very important to understand: inputs are passed after the componenthas been constructed. It’s thus forbidden to read inputs while the component is being constructed.**
 
 ###### Example
 
-    export class Pony {
-    readonly color = input.required<string>();
-    constructor() {
-    // ❌ Don't do this
-    console.log(`My initial color is ${this.color()}`);
-    }
-    }
+  export class Pony {
+  readonly color = input.required<string>();
+  constructor() {
+  // ❌ Don't do this
+  console.log(`My initial color is ${this.color()}`);
+  }
+  }
 
 With the signal inputs, trying to do that will lead to an exception being thrown by the InputSignal.
 With the legacy inputs, trying to do that will just give you the default value of the property, rather
@@ -763,49 +761,49 @@ than the one actually bound by the parent component.
 
 **ngOnInit**
 
-    export class Pony implements OnInit {
-    readonly color = input.required<string>();
-    ngOnInit() {
-    // ✅ Do this
-    console.log(`My initial color is ${this.color()}`);
-    }
-    }
+  export class Pony implements OnInit {
+  readonly color = input.required<string>();
+  ngOnInit() {
+  // ✅ Do this
+  console.log(`My initial color is ${this.color()}`);
+  }
+  }
 
 **ngOnChanges**
 
-    export class Pony implements OnChanges {
-      readonly color = input.required<string>();
-      ngOnChanges(changes: SimpleChanges<Pony>): void {
-      const ponyChange = changes.color;
-      if (ponyChange) {
-      console.log(`Color changed from ${ponyChange.previousValue}`);
-      console.log(`to ${ponyChange.currentValue}`);
-      console.log(`Is it the first change? ${ponyChange.isFirstChange()}`);
-    }
-    // but you can also access the new value by reading the input
-    console.log(`My new color is ${this.color()}`);
-    }
+  export class Pony implements OnChanges {
+    readonly color = input.required<string>();
+    ngOnChanges(changes: SimpleChanges<Pony>): void {
+    const ponyChange = changes.color;
+    if (ponyChange) {
+    console.log(`Color changed from ${ponyChange.previousValue}`);
+    console.log(`to ${ponyChange.currentValue}`);
+    console.log(`Is it the first change? ${ponyChange.isFirstChange()}`);
+  }
+  // but you can also access the new value by reading the input
+  console.log(`My new color is ${this.color()}`);
+  }
 
 **ngOnDestroy**
 
-The ngOnDestroy phase is designed to clean the component – for example, to cancel background
-tasks. Here, the Pony is logging "hello" every second when it is created. When the component is
-removed from the page, you want to stop the setInterval to avoid a memory leak:
+  The ngOnDestroy phase is designed to clean the component – for example, to cancel background
+  tasks. Here, the Pony is logging "hello" every second when it is created. When the component is
+  removed from the page, you want to stop the setInterval to avoid a memory leak:
 
-    export class Pony implements OnDestroy {
-    readonly color = input.required<string>();
-    private readonly interval: number;
-    101
-    constructor() {
-    this.interval = window.setInterval(() => console.log(`My color is ${this.color()}
-    `), 1000);
-    }
-    ngOnDestroy(): void {
-    window.clearInterval(this.interval);
-    }
-    }
+  export class Pony implements OnDestroy {
+  readonly color = input.required<string>();
+  private readonly interval: number;
+  101
+  constructor() {
+  this.interval = window.setInterval(() => console.log(`My color is ${this.color()}
+  `), 1000);
+  }
+  ngOnDestroy(): void {
+  window.clearInterval(this.interval);
+  }
+  }
 
-    If you don’t do this, JavaScript will keep the instance of the component in memory, and it will log every second forever.
+  If you don’t do this, JavaScript will keep the instance of the component in memory, and it will log every second forever.
 
 # events
 
@@ -816,22 +814,59 @@ target // the element that triggered the event
 button // the button which the mouse clicked
 
 # vanilla change detection
-  remeber in signals when we said that you shouldnt try to change the value but instead change the entire reference so that angular could detect the change here?
 
-  there is a similar case here ,to recreate what i had to go through:
-    1.you have an @input you wish to detect its changes
-    2.you will have to use ngonChange()
-    3.only update the values of the array or whichever datatype you chose
+remeber in signals when we said that you shouldnt try to change the value but instead change the entire reference so that angular could detect the change here?
 
-  Angular will not update the value! you will have to create a new array each time you update the variable so that the changes can be detected
+there is a similar case here ,to recreate what i had to go through:
+1.you have an @input you wish to detect its changes
+2.you will have to use ngonChanges() 3. update the values of the array or whichever datatype you chose
+
+ngOnChanges only triggers when the reference of the @Input property changes
 
 # side notes
 
-      @Component({
-      selector: 'ns-root',
-      template: '<h1>PonyRacer</h1>'
-      })
-      export class App {
-      // we use protected here to be able to use it inside the template
-      protected readonly numberOfUsers = 146;
-      }
+  @Component({
+  selector: 'ns-root',
+  template: '<h1>PonyRacer</h1>'
+  })
+  export class App {
+  // we use protected here to be able to use it inside the template
+  protected readonly numberOfUsers = 146;
+  }
+
+# routers (to be revised more accurately)
+
+### to setup routers:
+
+  1.in app.routes.ts fill in your routes
+      {path:'path-name',component:Component-name}
+  2.in your main page put the tag <route-outlet></route-outlet>
+    also import router outlet in the component you will use it in
+    this will tell angular to fill this part when its navigated to
+  3.in your nav bar for example or the place with the <a> tags place your path and import Router and RouterLink in you type script file
+
+  `<a routerLink="/hi">Go to hi</a>`
+
+
+  routerLinkActive="active" // hellps you specify which link is active
+
+  //this helps in styling your links
+  .navbar-brand.active, .btn.active {
+      font-weight: bold;
+      color: #17e898  !important;
+  }
+  { path: '**', component: PageNotFoundComponent } // this is a wild card like a 404 not found
+                                                  // beware that the orders matters , put it at the very bottom
+
+### dynamic routers steps
+
+  1. in app.routes.ts fill in your new dynamic route
+      {path:'path-name/:your-other-parm',component:Component-name}
+  2. in your app.config.ts inside the providers
+      provideRouter(routes,**withComponentInputBinding()**) angular does type conversion , this helps when your params isnt a string
+  3. in the your link specify your prams
+    [routerLink]="['/product-details',product.id]"
+  4. declare an input signal by your param inside the link you wish to route to
+    id = input.required<number>();
+
+    **Note: the name of the input must match the parmeter route exactly**
