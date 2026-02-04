@@ -732,6 +732,18 @@ Container for form elements.
   <!-- Form content -->
 </form>
 ```
+1. The GET Method (The Postcard)
+
+When a form uses GET, it attaches all the form data directly to the end of the URL. This is exactly what happened in your previous message.
+ example:
+  http://localhost:4200/login?userEmail=andrew@ss&userPassword=abc the input attached at the end
+
+best used for searching and filtiring
+2. The POST Method (The Sealed Envelope)
+
+When a form uses POST, it hides the data inside the HTTP Request Body.
+
+usually used in login and taking credit car info
 
 ### `<input>`
 **Display:** Inline-block  
