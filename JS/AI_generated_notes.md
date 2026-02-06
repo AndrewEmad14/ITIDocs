@@ -18,10 +18,16 @@
 12. [Asynchronous JavaScript](#asynchronous-javascript)
 13. [Regular Expressions](#regular-expressions)
 14. [Built-in Objects](#built-in-objects)
-15. [Window & Location Methods](#window--location-methods)
+15. [Window & Location Methods (BOM)](#window--location-methodsbom)
 16. [Dialog Boxes](#dialog-boxes)
 17. [Array Methods](#array-methods)
 18. [Advanced Concepts](#advanced-concepts)
+19. [The Call Stack](#the-call-stack)
+20. [Understanding Execution Context](#understanding-execution-context)
+21. [The Event Loop](#the-event-loop)
+22. [Web APIs and Callbacks](#web-apis-and-callbacks)
+23. [Microtasks vs Macrotasks](#microtasks-vs-macrotasks)
+24. [Practical Examples](#practical-examples)
 
 ---
 
@@ -269,6 +275,10 @@ console.log(y); // ReferenceError - cannot access before initialization
 let y = 30;
 ```
 
+### Temporal Dead Zone
+
+the Temporal Dead Zone (TDZ) is a specific period in the execution of a program where a variable exists but cannot be accessed. It’s the engine's way of saying.
+
 ### Function Hoisting
 
 Function declarations are hoisted completely (both declaration and body):
@@ -490,6 +500,15 @@ const user = {
 };
 ```
 
+```javascript
+button.addEventListener("click", (event) => {
+  // 'this' here refers to the Window object, not the button!
+  console.log(this); // Window { ... }
+
+  this.textContent = "Loading..."; // Error: Cannot set property of undefined
+});
+```
+
 ### Anonymous Functions
 
 Functions without names, typically used as callbacks:
@@ -682,6 +701,8 @@ dog.info();
 // "Max is a Dog"
 // "Breed: German Shepherd"
 ```
+
+This is because, in JavaScript, the parent class is responsible for "initializing" the object memory. The child class doesn't even have a this to work with until super() is called.
 
 ### Method Overriding
 
@@ -1016,7 +1037,7 @@ const clone = original.cloneNode(true); // true = deep clone (including children
 - Use `textContent` instead of `innerHTML` for plain text (more secure)
 - Cache DOM selections in variables if used multiple times
 - Use `classList` instead of directly modifying the `class` attribute
-- Use **event delegation** for dynamically added elements
+- Use [Event Delegation](#event-delegation) for dynamically added elements
 - Be cautious with `innerHTML` when handling user input
 
 ---
@@ -1077,10 +1098,28 @@ button.onclick = function (event) {
 
 Attach listener to parent instead of many children:
 
+```html
+<button class="toggle-button" data-index="0">Challenge 1</button>
+<button class="toggle-button" data-index="1">Challenge 2</button>
+```
+
 ```javascript
-document.body.addEventListener("click", function (event) {
-  if (event.target.matches(".my-button")) {
-    console.log("Button clicked!");
+const challengesDiv = document.getElementById("challenge-panel");
+
+challengesDiv.addEventListener("click", (event) => {
+  // Use .closest() to ensure we catch the button even if you add icons/spans inside it later
+  const button = event.target.closest(".toggle-button");
+
+  // Check if the click actually happened on a toggle button
+  if (button && challengesDiv.contains(button)) {
+    // Get the index from the data attribute
+    const index = parseInt(button.dataset.index);
+
+    // 1. Toggle the value in your array
+    challengesToggled[index] = !challengesToggled[index];
+
+    // 2. Update the UI
+    updateChallengeButtons();
   }
 });
 ```
@@ -1595,7 +1634,7 @@ typeof Symbol("id"); // "symbol"
 
 ---
 
-## Window & Location Methods
+## Window & Location Methods(BOM)
 
 ### window.open()
 
@@ -2042,6 +2081,644 @@ async function fetchData() {
 }
 ```
 
+# JavaScript Call Stack and Event Loop: A Deep Dive
+
+## The Call Stack
+
+The **call stack** is a data structure that JavaScript uses to track function execution. It follows the Last-In-First-Out (LIFO) principle, meaning the last function that gets pushed onto the stack is the first one to be executed and removed.
+
+### How the Call Stack Works
+
+When a function is called, it's added (pushed) to the top of the stack. When it returns, it's removed (popped) from the stack. This allows JavaScript to keep track of which function is currently executing and where to return control when a function finishes.
+
+### Call Stack Example 1: Simple Sequential Calls
+
+```javascript
+function greet(name) {
+  console.log(`Hello, ${name}`);
+}
+
+function welcome() {
+  greet("Alice");
+}
+
+function start() {
+  welcome();
+  console.log("Done");
+}
+
+start();
+```
+
+**Execution trace:**
+
+```
+1. start() is called → pushed to stack
+   Stack: [start]
+
+2. welcome() is called inside start() → pushed to stack
+   Stack: [start, welcome]
+
+3. greet('Alice') is called inside welcome() → pushed to stack
+   Stack: [start, welcome, greet]
+
+4. console.log('Hello, Alice') executes
+   Output: "Hello, Alice"
+
+5. greet() returns → popped from stack
+   Stack: [start, welcome]
+
+6. welcome() returns → popped from stack
+   Stack: [start]
+
+7. console.log('Done') executes
+   Output: "Done"
+
+8. start() returns → popped from stack
+   Stack: []
+```
+
+### Call Stack Example 2: Recursive Function
+
+```javascript
+function countdown(n) {
+  if (n === 0) {
+    console.log("Blastoff!");
+    return;
+  }
+  console.log(n);
+  countdown(n - 1);
+}
+
+countdown(3);
+```
+
+**Stack progression:**
+
+```
+countdown(3) called
+Stack: [countdown(3)]
+  → prints 3
+  → calls countdown(2)
+
+    Stack: [countdown(3), countdown(2)]
+      → prints 2
+      → calls countdown(1)
+
+      Stack: [countdown(3), countdown(2), countdown(1)]
+        → prints 1
+        → calls countdown(0)
+
+        Stack: [countdown(3), countdown(2), countdown(1), countdown(0)]
+          → prints 'Blastoff!'
+          → returns
+
+        Stack: [countdown(3), countdown(2), countdown(1)]
+        → returns
+
+      Stack: [countdown(3), countdown(2)]
+      → returns
+
+    Stack: [countdown(3)]
+    → returns
+
+Stack: []
+```
+
+### Stack Overflow
+
+When the call stack exceeds its maximum size (usually due to infinite recursion), you get a **stack overflow error**.
+
+```javascript
+function infiniteRecursion() {
+  infiniteRecursion(); // Calls itself forever
+}
+
+infiniteRecursion();
+// RangeError: Maximum call stack size exceeded
+```
+
+---
+
+## Understanding Execution Context
+
+Before diving deeper, it's important to understand that each function call creates an **execution context**. This context contains information about the variables, scope, and `this` value for that function.
+
+### Global Execution Context
+
+When JavaScript starts running, it creates a global execution context:
+
+```javascript
+console.log(this); // Window object (in browser) or global object (Node.js)
+
+var globalVar = "I am global";
+
+function myFunction() {
+  console.log(globalVar); // Can access global variables
+}
+
+myFunction();
+```
+
+---
+
+## The Event Loop
+
+JavaScript is **single-threaded**, meaning it can only execute one piece of code at a time. However, the browser provides additional features (APIs like `setTimeout`, `fetch`, etc.) that allow asynchronous operations. The **event loop** is the mechanism that manages this.
+
+### Components of the Event System
+
+The event loop coordinates between several components:
+
+1. **Call Stack**: Where synchronous code executes
+2. **Web APIs**: Provided by the browser (setTimeout, fetch, DOM events, etc.)
+3. **Callback Queue (Macrotask Queue)**: Holds callbacks from Web APIs
+4. **Microtask Queue**: Holds promises and mutation observers
+5. **Event Loop**: Monitors the call stack and queues
+
+### How the Event Loop Works
+
+The event loop continuously checks:
+
+1. Is the call stack empty?
+2. If yes, check the microtask queue
+3. If there are microtasks, execute them
+4. If microtask queue is empty, check the macrotask queue
+5. If there are macrotasks, execute one of them
+6. Repeat
+
+### Event Loop Example 1: setTimeout
+
+```javascript
+console.log("Script start");
+
+setTimeout(() => {
+  console.log("setTimeout callback");
+}, 0);
+
+console.log("Script end");
+```
+
+**Output:**
+
+```
+Script start
+Script end
+setTimeout callback
+```
+
+**Explanation:**
+
+```
+Timeline:
+┌─────────────────────────────────────────────┐
+│ Call Stack Execution:                       │
+├─────────────────────────────────────────────┤
+│ 1. console.log('Script start') executes     │
+│    → Output: "Script start"                 │
+│                                              │
+│ 2. setTimeout(..., 0) is encountered        │
+│    → Callback sent to Web API               │
+│    → setTimeout is popped from stack        │
+│    (Web API timer starts in background)     │
+│                                              │
+│ 3. console.log('Script end') executes       │
+│    → Output: "Script end"                   │
+│                                              │
+│ 4. Call Stack is now empty                  │
+│                                              │
+│ 5. Event Loop checks: Is call stack empty?  │
+│    → YES, check microtask queue → empty     │
+│    → Check macrotask queue → has callback   │
+│                                              │
+│ 6. Callback from setTimeout is moved to     │
+│    call stack                               │
+│                                              │
+│ 7. console.log('setTimeout callback')       │
+│    → Output: "setTimeout callback"          │
+│                                              │
+│ 8. Call Stack is empty again                │
+└─────────────────────────────────────────────┘
+```
+
+### Event Loop Example 2: Mixed Sync and Async
+
+```javascript
+console.log("1. Script start");
+
+setTimeout(() => {
+  console.log("2. setTimeout callback");
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log("3. Promise resolved");
+});
+
+console.log("4. Script end");
+```
+
+**Output:**
+
+```
+1. Script start
+4. Script end
+3. Promise resolved
+2. setTimeout callback
+```
+
+**Detailed execution flow:**
+
+```
+┌──────────────────────────────────────────────┐
+│ Phase 1: Synchronous Code Execution         │
+├──────────────────────────────────────────────┤
+│ - console.log('1. Script start')             │
+│   Output: "1. Script start"                  │
+│                                               │
+│ - setTimeout callback → sent to macrotask Q  │
+│                                               │
+│ - Promise.then() → sent to microtask Q       │
+│                                               │
+│ - console.log('4. Script end')               │
+│   Output: "4. Script end"                    │
+│                                               │
+│ Call Stack is now EMPTY                      │
+└──────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────┐
+│ Phase 2: Microtask Queue Processing          │
+├──────────────────────────────────────────────┤
+│ Event Loop checks: Is call stack empty?      │
+│ YES → Check microtask queue → HAS ITEM       │
+│                                               │
+│ - Promise callback executed                  │
+│   console.log('3. Promise resolved')         │
+│   Output: "3. Promise resolved"              │
+│                                               │
+│ Call Stack is empty again                    │
+└──────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────┐
+│ Phase 3: Macrotask Queue Processing          │
+├──────────────────────────────────────────────┤
+│ Event Loop checks: Is call stack empty?      │
+│ YES → Microtask Q empty → Macrotask Q has    │
+│                                               │
+│ - setTimeout callback executed               │
+│   console.log('2. setTimeout callback')      │
+│   Output: "2. setTimeout callback"           │
+│                                               │
+│ Done!                                        │
+└──────────────────────────────────────────────┘
+```
+
+---
+
+## Web APIs and Callbacks
+
+Web APIs are features provided by the browser that aren't part of JavaScript itself. They handle operations asynchronously and use the callback mechanism to return results.
+
+### Common Web APIs
+
+- **setTimeout / setInterval**: Delay code execution
+- **fetch**: Make HTTP requests
+- **DOM events**: Handle user interactions
+- **requestAnimationFrame**: Synchronize with browser rendering
+
+### Example: Fetch API
+
+```javascript
+console.log("Fetching user data...");
+
+fetch("https://api.example.com/user/1")
+  .then((response) => response.json())
+  .then((data) => {
+    console.log("User:", data);
+  })
+  .catch((error) => {
+    console.log("Error:", error);
+  });
+
+console.log("Request sent, waiting for response...");
+```
+
+**Execution order:**
+
+```
+1. console.log('Fetching user data...')
+   Output: "Fetching user data..."
+
+2. fetch() call → sent to Web API (network request)
+   → .then() callbacks stored in microtask queue
+
+3. console.log('Request sent...')
+   Output: "Request sent, waiting for response..."
+
+4. Call stack is empty → event loop checks microtask queue
+   (If response received) → Promise resolve callbacks execute
+
+5. console.log('User:', data)
+   Output: "User: {...}"
+```
+
+---
+
+## Microtasks vs Macrotasks
+
+Understanding the difference between microtasks and macrotasks is crucial for predicting JavaScript execution order.
+
+### Microtasks
+
+Microtasks have higher priority and execute before macrotasks. They include:
+
+- **Promise callbacks** (.then, .catch, .finally)
+- **MutationObserver**
+- **queueMicrotask()** API
+- **process.nextTick()** (Node.js only)
+
+### Macrotasks (Tasks)
+
+Macrotasks execute after all microtasks are complete:
+
+- **setTimeout**
+- **setInterval**
+- **setImmediate** (Node.js)
+- **I/O operations**
+- **UI rendering**
+- **Event listeners** (click, scroll, etc.)
+
+### Visual Hierarchy
+
+```
+Event Loop Iteration:
+├─ Execute all synchronous code in call stack
+├─ Call stack empty?
+│  └─ Execute ALL microtasks (completely empty microtask queue)
+│     ├─ Promise.then()
+│     ├─ MutationObserver
+│     └─ queueMicrotask()
+├─ Perform UI rendering if needed
+└─ Execute ONE macrotask
+   ├─ setTimeout
+   ├─ setInterval
+   ├─ setImmediate
+   └─ I/O
+   └─ Then loop back to microtasks
+```
+
+### Example: Microtasks vs Macrotasks
+
+```javascript
+console.log("Start");
+
+setTimeout(() => {
+  console.log("setTimeout 1");
+}, 0);
+
+Promise.resolve()
+  .then(() => {
+    console.log("Promise 1");
+  })
+  .then(() => {
+    console.log("Promise 2");
+  });
+
+setTimeout(() => {
+  console.log("setTimeout 2");
+}, 0);
+
+queueMicrotask(() => {
+  console.log("queueMicrotask");
+});
+
+console.log("End");
+```
+
+**Output:**
+
+```
+Start
+End
+Promise 1
+queueMicrotask
+Promise 2
+setTimeout 1
+setTimeout 2
+```
+
+**Explanation:**
+
+```
+1. Synchronous execution:
+   - console.log('Start') → "Start"
+   - setTimeout callback → macrotask queue
+   - Promise callback → microtask queue
+   - setTimeout callback → macrotask queue
+   - queueMicrotask → microtask queue
+   - console.log('End') → "End"
+   - Call stack now empty
+
+2. Process all microtasks:
+   - Promise 1 callback executes → "Promise 1"
+   - This promise resolves and queues another microtask
+   - queueMicrotask callback executes → "queueMicrotask"
+   - Promise 2 callback executes → "Promise 2"
+   - Microtask queue now empty
+
+3. Process one macrotask:
+   - First setTimeout callback executes → "setTimeout 1"
+   - Back to check microtasks (none)
+
+4. Process next macrotask:
+   - Second setTimeout callback executes → "setTimeout 2"
+```
+
+---
+
+## Practical Examples
+
+### Example 1: Complex Async Flow
+
+```javascript
+console.log("1");
+
+setTimeout(() => {
+  console.log("2");
+  Promise.resolve().then(() => console.log("3"));
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log("4");
+  setTimeout(() => {
+    console.log("5");
+  }, 0);
+});
+
+console.log("6");
+```
+
+**Output:**
+
+```
+1
+6
+4
+2
+3
+5
+```
+
+**Detailed trace:**
+
+```
+Time 0: Synchronous code
+├─ console.log('1') → "1"
+├─ setTimeout → macrotask queue [setTimeout callback 1]
+├─ Promise.then() → microtask queue [Promise callback]
+└─ console.log('6') → "6"
+   Call stack is empty
+
+Time 1: Process microtasks
+├─ Promise callback executes → "4"
+├─ setTimeout inside it → macrotask queue [setTimeout callback 1, setTimeout callback 2]
+   Microtask queue is empty
+
+Time 2: Process one macrotask
+├─ setTimeout callback 1 executes → "2"
+├─ Promise.then() → microtask queue [Promise callback 2]
+
+Time 3: Process microtasks
+├─ Promise callback 2 executes → "3"
+
+Time 4: Process next macrotask
+├─ setTimeout callback 2 executes → "5"
+```
+
+### Example 2: Real-world Scenario - Async Form Submission
+
+```javascript
+function handleSubmit(event) {
+  event.preventDefault();
+  console.log("Form submitted");
+
+  // Start loading state immediately
+  updateUI("loading");
+
+  // Make async request
+  fetch("/api/submit", { method: "POST", body: new FormData(this) })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data);
+      updateUI("success");
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+      updateUI("error");
+    });
+
+  // This executes before the fetch completes
+  console.log("Request sent");
+}
+
+document.querySelector("form").addEventListener("submit", handleSubmit);
+```
+
+**Execution order:**
+
+```
+User clicks submit button
+↓
+Event listener callback pushed to call stack
+↓
+Synchronous code executes:
+├─ Form submitted
+├─ updateUI('loading') called
+├─ fetch() called → Web API handles network request
+├─ Promise callbacks (.then, .catch) → microtask queue
+└─ Request sent
+
+Call stack empty
+↓
+Event loop checks microtask queue (empty, response not back yet)
+↓
+Browser may render UI changes
+↓
+[Wait for network response...]
+↓
+Response received → Promise resolution → microtask queue
+↓
+Event loop processes microtask:
+├─ Response transformed to JSON
+├─ Second .then() queued as new microtask
+├─ Success: {...}
+└─ updateUI('success') called
+
+All microtasks complete
+↓
+Next event loop iteration begins...
+```
+
+### Example 3: Event Listeners and Rendering
+
+```javascript
+button.addEventListener("click", () => {
+  console.log("Click handler");
+  element.style.background = "red";
+});
+
+Promise.resolve().then(() => {
+  console.log("Promise");
+  element.style.background = "blue";
+});
+
+setTimeout(() => {
+  console.log("setTimeout");
+  element.style.background = "green";
+}, 0);
+```
+
+**When you click the button:**
+
+```
+Click event → event listener callback (macrotask)
+↓
+Call stack: [click handler]
+├─ console.log('Click handler') → "Click handler"
+├─ element.style.background = 'red'
+└─ Call stack empty
+
+Process all microtasks:
+├─ Promise callback → "Promise"
+├─ element.style.background = 'blue'
+└─ Microtask queue empty
+
+Browser rendering happens here
+└─ Element is blue (promise's change is visible)
+
+Process next macrotask:
+├─ setTimeout callback → "setTimeout"
+├─ element.style.background = 'green'
+└─ Done
+
+Browser renders again
+└─ Element is green
+```
+
+Note: The red color is never visible because it gets overwritten by the microtask before the browser renders.
+
+---
+
+## Summary
+
+The call stack and event loop are fundamental to understanding JavaScript's execution model:
+
+- **Call Stack**: Manages synchronous code execution using a LIFO data structure
+- **Event Loop**: Coordinates the execution of asynchronous code by monitoring the call stack and queues
+- **Microtasks**: High priority, execute before rendering and macrotasks (Promises, queueMicrotask)
+- **Macrotasks**: Lower priority, execute one at a time between microtask batches (setTimeout, setInterval, events)
+
+---
+
 ### Code Organization Tips
 
 1. Plan and design your project before coding
@@ -2126,8 +2803,18 @@ element.addEventListener("click", (e) => {
   console.log(e.target);
 });
 ```
+# The "Four Rights" of First-Class Citizens
 
----
+To qualify for first-class status, an entity must be able to handle these four operations:
+
+    Be assigned to a variable: You can store it in a name (e.g., x = entity).
+
+    Be passed as an argument: You can send it into a function.
+
+    Be returned from a function: A function can hand it back to you as a result.
+
+    Be stored in data structures: You can put it inside an array, a list, or a dictionary.
+
 
 **Last Updated:** January 2026  
 **Note:** This guide covers JavaScript ES6+ (modern JavaScript). For older browser support, code may need to be transpiled using tools like Babel.

@@ -35,7 +35,7 @@ note : it will create your root dir , Dont make the root folder
 
 ng serve //runs in the browser
 
-ng serve -o. //live updates
+ng serve -o. //opens in default browser
 
 # cloning form a repo
 
