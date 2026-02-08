@@ -737,6 +737,8 @@ constructing it and thus calls the component class constructor.
 
 remeber to import what you choose to implement
 also ngOnChanges need SimpleChanges passed as a parameter and imported
+also as best practice dont forget to write class x implents y
+in the ngOninit case i didnt face any troubles not writing it but this is for clarity and for typscript to check if there is any spelling mistakes
 
 **One thing is very important to understand: inputs are passed after the componenthas been constructed. It’s thus forbidden to read inputs while the component is being constructed.**
 
@@ -810,7 +812,7 @@ button // the button which the mouse clicked
 
 # vanilla change detection
 
-remeber in signals when we said that you shouldnt try to change the value but instead change the entire reference so that angular could detect the change here?
+remember in signals when we said that you shouldnt try to change the value but instead change the entire reference so that angular could detect the change here?
 
 there is a similar case here ,to recreate what i had to go through:
 1.you have an @input you wish to detect its changes
@@ -932,3 +934,20 @@ https://angular.dev/guide/forms/template-driven-forms
 tldr: basically use ngModel , ngForm and ngSubmit to handle forms
 
 # reactive driven forms (to be added)
+
+# steps to enable the http client (to be added)
+
+# enviorment error i faced
+
+take care of your angular.json because its configurations
+"fileReplacements": [
+{
+"replace": "src/environments/environment.ts",
+"with": "src/environments/environment.development.ts"
+}
+]
+the angular will replace what you put from enviorment ts with dev ts when you ng serve
+ng serve (development) → loads environment.development.ts
+ng build --configuration production → loads environment.ts
+
+as a rule of thumb if files doesnt make sense check the angular.json
