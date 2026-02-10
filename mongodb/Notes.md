@@ -1,36 +1,31 @@
+# getting started
 each database needs a mock server to try things out
 127.0.0.1 default local host
 mongodb protocol tcp/ip
 
 mongo uses bson
-
-wild tiger
 robo3t
 27017 port number for mongo
 
-
-
-mongo setup 
+# mongo setup 
 
 download mongo commuinty server the desired version of your os
 
 for ubuntu
+download mongodb-org-server_8.2.3_amd64.deb
+sudo dpkg -i  mongodb-org-server_8.2.3_amd64.deb	//installs the pkg
+sudo systemctl status mongod.service //tells you the current service which
+              you will find inactive
+sudo systemctl start mongod.serivce //starts mongo server
 
-sudo dpk -i mongopkg
-
-sudo systemctl status mongod.service      //check the servic status
-
-sudo systemctl start mongod.service       //start service
-
-sudo systemctl killall mongod.service     //kills service
-
-
-next install mongosh and depackage it
-now run the mongodb and run the sh
+download monosh client
+sudo dpkg -i mongodb-mongosh_2.6.0_amd64.deb 
+mongosh
+will run the mongo shell
 
 show dbs;     //shows you the current data bases
 use mydb;       //creates a db
 //if you type show dbs you will not see your created db because it is empty
 
-
+# side notes
 remember that by default the _id is projected , if you dont want the _id you will have to specifiecly say _id:0
