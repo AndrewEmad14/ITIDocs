@@ -12,7 +12,7 @@ robo3t
 download mongo commuinty server the desired version of your os
 
 for ubuntu
-download mongodb-org-server_8.2.3_amd64.deb
+download mongodb-org-server_8.2.3_amd64.debP
 sudo dpkg -i  mongodb-org-server_8.2.3_amd64.deb	//installs the pkg
 sudo systemctl status mongod.service //tells you the current service which
               you will find inactive

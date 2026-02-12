@@ -32,3 +32,9 @@ interviewer
 think of the brute force first
 
 dont aim for the optimal soloution but the way of thinking that lead you to that solution
+
+
+Difficulty	Brainstorming (No Coding)	Total Time Before Checking Solution
+Easy	5–10 minutes	20 minutes
+Medium	15–20 minutes	45 minutes
+Hard	30 minutes	60–90 minute
