@@ -197,3 +197,73 @@ scripts are a helpful shorthand for commands in node
   ✅ <script src="/script.js"></script>
   ❌ Don't use ../style/home.css (relative paths don't work for HTTP)
   ❌ Don't use C:/Users/... (full file paths)
+
+# Http status codes
+1xx Informational — Request received, continuing process
+
+100 Continue
+101 Switching Protocols
+
+2xx Success — Request succeeded
+
+200 OK
+201 Created
+202 Accepted
+204 No Content
+206 Partial Content
+
+3xx Redirection — Further action needed to complete request
+
+300 Multiple Choices
+301 Moved Permanently
+302 Found
+304 Not Modified
+307 Temporary Redirect
+308 Permanent Redirect
+
+4xx Client Error — Request contains bad syntax or can't be fulfilled
+
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+405 Method Not Allowed
+408 Request Timeout
+409 Conflict
+410 Gone
+429 Too Many Requests
+
+5xx Server Error — Server failed to fulfill valid request
+
+500 Internal Server Error
+501 Not Implemented
+502 Bad Gateway
+503 Service Unavailable
+504 Gateway Timeout
+
+# handling POST requests
+  ```javascript
+  let body = '';
+    req.on('data',chunk =>{
+      body+= chunk.toString();
+    });
+    //handle your logic here
+    req.on('end',()=>{
+      console.log("haaai")
+      try{
+        const postData = JSON.parse(body);
+        res.writeHead(200,{'content-type': 'application/json'});
+        res.write(JSON.stringify(postData));
+        console.log(postData);
+        res.end();
+
+      }catch(error){
+        res.writeHead(400,{'content-type': 'application/json'});
+        res.write(JSON.stringify({error:error.message}));
+        res.end();
+      }
+    });
+  ```
+
+# side note
+  remeber to use the write stream once you finish all of your validations otherwise it will override the file
