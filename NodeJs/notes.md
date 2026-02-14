@@ -116,6 +116,174 @@ scripts are a helpful shorthand for commands in node
 
   **remeber to send the head first before writing anything or else you would get an error**
 
+# Server paths vs file system paths
+  something to consider you param condition
+  for example
+  if you wirte :if(param.at(1) === /home.html)
+  that means the expected url that will work in this case senario will be like this
+
+  https://localhost/home.html
+
+  now your file system might look like this
+  your-project
+    pages
+      home.html
+  
+  while your fileSystem has a subfolders , the url param you are asking for is only /home.html
+  so it will get it , later on inside the if condition you can give the actual path to work on
+
+  same principle when linking your html with css or with images
+
+  <link rel="stylesheet" href="/home.css">
+
+  and your file structure would look like this
+  your-project 
+    style
+      home.css
+
+  normaly if you run this html alone in the browser it wont work , the live server you used to open in the front end is sees the folder structure and navigates accordingly so you will have to specify the exact folder here
+
+  but now on the server side , the url is specifically asking for /home.css
+
+  same as before you can give the actual file path later on inside the condition
+
+# Express.static() vs Manual Routing: A Comparison
+Overview
+When serving static files in Express, you have two main approaches: using the built-in express.static() middleware or manually creating routes to serve files. Each has distinct advantages and disadvantages.
+
+Approach 1: Manual Routing
+Example Code
+```javascript
+app.get('/css/home.css', (req, res) => {
+  const filePath = path.join(__dirname, 'public/css/home.css');
+  getPage(filePath, res, types.CSS_PAGE);
+});
+
+app.get('/js/script.js', (req, res) => {
+  const filePath = path.join(__dirname, 'public/js/script.js');
+  getPage(filePath, res, types.JS_PAGE);
+});
+
+app.get('/images/logo.png', (req, res) => {
+  const filePath = path.join(__dirname, 'public/images/logo.png');
+  getPage(filePath, res, types.IMAGE_PAGE);
+});
+```
+### Pros
+
+Custom logic: You can add authentication, logging, or file transformation before serving
+Control: Decide exactly what gets served and under what conditions
+Flexible routing: Serve different files based on complex business logic
+Tracking: Easy to log which files are accessed and by whom
+
+### Cons
+
+Repetitive: Need a route for every file (or file pattern)
+No caching: Requires manual implementation of HTTP caching headers (ETags, Last-Modified, Cache-Control)
+Performance: Browser won't cache efficiently; full file re-sent on every request
+MIME types: Must manually set Content-Type for each file type
+No range requests: Can't support partial downloads (HTTP 206)
+Security risk: Vulnerable to directory traversal attacks if not carefully implemented
+Maintenance: Changes to file structure require code changes
+Scalability: Becomes unwieldy with hundreds of static assets
+
+
+Approach 2: Express.static()
+Example Code
+```javascript
+// Serve all files from 'public' directory
+app.use(express.static('public'));
+
+// Or with a route prefix
+app.use('/static', express.static('public'));
+
+// Or with options
+app.use(express.static('public', {
+  maxAge: '1h',
+  etag: true,
+  dotfiles: 'deny'
+}));
+```
+### Pros
+
+Automatic caching: Handles ETags and Last-Modified headers automatically
+Efficient: Browsers cache files; returns 304 "Not Modified" for unchanged files
+MIME types: Automatically detects and sets correct Content-Type headers
+Range requests: Supports HTTP 206 for resumable downloads
+Security: Built-in protections against directory traversal attacks
+Scalability: Single line handles all static assets
+Performance: Zero code overhead; highly optimized
+Maintenance: No code changes when file structure updates
+
+### Cons
+
+No custom logic: Can't easily add authentication or logging per file
+Less control: All files in directory are served (though dotfiles option helps)
+All or nothing: Harder to apply different rules to different file types
+
+
+### Performance Comparison
+
+##### Manual Routing Example
+```javascript
+// Request 1: Browser requests /css/home.css
+// Response: 200 OK + full file content (50KB)
+// 
+// Request 2: Browser requests /css/home.css again (same session)
+// Response: 200 OK + full file content (50KB) ← Wasted bandwidth!
+
+Total data transferred: 100KB
+```
+### Express.static() Example
+```javascript
+// Request 1: Browser requests /css/home.css
+// Response: 200 OK + ETag header + full file content (50KB)
+// Browser caches the file and ETag
+//
+// Request 2: Browser requests /css/home.css again
+// Sends: If-None-Match header with cached ETag
+// Response: 304 Not Modified (no body)
+
+Total data transferred: 50KB
+```
+
+### Real-World Scenarios
+
+##### Use Express.static() When:
+
+Serving public assets (CSS, JS, images, fonts)
+You don't need special handling per file
+Performance and caching are important
+You have many static files (dozens or more)
+
+```javascript
+app.use(express.static('public'));
+// That's it! Now /public/style.css is accessible at /style.css
+```
+
+##### Use Manual Routing When:
+
+Serving protected files (require authentication)
+Need to log file access for analytics
+Transforming files before serving
+Applying different rules to different files
+
+```javascript
+// Protect PDF downloads
+app.get('/download/:filename', authenticate, (req, res) => {
+  const filePath = path.join(__dirname, 'protected/files', req.params.filename);
+  res.download(filePath);
+});
+
+
+// Log image downloads
+app.get('/images/:filename', (req, res) => {
+  console.log(`Downloaded: ${req.params.filename}`);
+  res.sendFile(path.join(__dirname, 'public/images', req.params.filename));
+});
+```
+
+  
 
 # streams 
   instead of readSync you can open the stream and read from the file 
@@ -188,6 +356,23 @@ scripts are a helpful shorthand for commands in node
     font/woff - WOFF fonts
     font/woff2 - WOFF2 fonts
     application/font-sfnt - TrueType/OpenType fonts
+
+# http requests
+
+  GET: Fetch data without side effects
+  POST: Submit data that creates a resource
+  PUT: Send complete replacement of resource
+  PATCH: Send partial updates to resource
+  DELETE: Remove a resource
+  HEAD: Check resource without downloading body
+  OPTIONS: Get available methods for a resource
+
+  Idempotent: GET, PUT, DELETE, HEAD, OPTIONS
+  Not idempotent: POST, PATCH
+
+  **idempotent*: running the same command over and over gets the exact same results
+  for example if i put user 1 andrew to david. no matter how many times i run it is still the same
+  if i patch the quantity of an item to increase +1 , each time i run it gives a different result
 
 # in regards to file paths
   1. Use server-relative paths in HTML/CSS/JS
@@ -264,6 +449,81 @@ scripts are a helpful shorthand for commands in node
       }
     });
   ```
+# pipes
+  The pipe() allows you to pass data from one stream to another effciently 
+  **Examples**
+  copying a file
 
+  ``` javascript
+  const fs = require('fs');
+
+  const readStream = fs.createReadStream('source.txt');
+  const writeStream = fs.createWriteStream('destination.txt');
+
+  readStream.pipe(writeStream);
+
+  //This reads source.txt in chunks and writes to destination.txt without loading the entire file into memory.
+```
+  chaining pipes:
+  ```javascript
+    const fs = require('fs');
+    const zlib = require('zlib');
+
+    // Compress a file
+    fs.createReadStream('input.txt')
+      .pipe(zlib.createGzip())
+      .pipe(fs.createWriteStream('input.txt.gz'));
+  ```
+  serving a file via http using pipes:
+
+  ```javascript
+    const http = require('http');
+    const fs = require('fs');
+
+    const server = http.createServer((req, res) => {
+      const stream = fs.createReadStream('large-video.mp4');
+      
+      stream.pipe(res);
+      
+      stream.on('error', (err) => {
+        res.statusCode = 500;
+        res.end('Server error');
+      });
+    });
+
+    server.listen(3000);
+  ```
+  **NOTE: pipe() has a pitfall that it wont notify other streams if one of them failed resulting in a memoryleak**
+
+  use pipeline instead for better error handling:
+  ```javascript
+  const { pipeline } = require('stream');
+  const fs = require('fs');
+  const zlib = require('zlib');
+
+  pipeline(
+    fs.createReadStream('input.txt'),
+    zlib.createGzip(),
+    fs.createWriteStream('input.txt.gz'),
+    (err) => {
+      if (err) {
+        console.error('Pipeline failed:', err);
+      } else {
+        console.log('Pipeline successful');
+      }
+    }
+  );
+```
+
+
+# express
+  app.get()   //get requests
+  res.send()  //send response
+  res.set()   //set headers
+  res.status //set status
 # side note
   remeber to use the write stream once you finish all of your validations otherwise it will override the file
+  patch vs put : patch replaces a portion of the data
+  put replace the whole object
+
+  In Express, when you pass an argument to next(), Express assumes it's an error and skips all remaining regular middleware/routes to find the first Error-Handling Middleware (a function with 4 arguments: err, req, res, next).
