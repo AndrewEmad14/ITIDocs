@@ -417,6 +417,7 @@ app.get('/images/:filename', (req, res) => {
 409 Conflict
 410 Gone
 429 Too Many Requests
+422 Unprocessable Content
 
 5xx Server Error — Server failed to fulfill valid request
 
@@ -527,3 +528,23 @@ app.get('/images/:filename', (req, res) => {
   put replace the whole object
 
   In Express, when you pass an argument to next(), Express assumes it's an error and skips all remaining regular middleware/routes to find the first Error-Handling Middleware (a function with 4 arguments: err, req, res, next).
+
+
+  # mongoose 
+  npm install mongoose
+  
+  ```javascript
+    const mongoose = require('mongoose');
+    const routes = require('./routes');
+    mongoose.connect('mongodb://127.0.0.1:27017/inventory-system');
+  ```
+    unique: true, //Mongoose will build a unique index on this path when the model is compiled  
+Ensure Index Creation: When your application starts, Mongoose automatically calls createIndex for each index defined in your schema.
+
+    For Existing Data: If you are adding unique: true to an existing collection that already contains duplicate values, the index creation will fail. You must manually remove existing duplicate documents or drop the collection before restarting your application to build the unique index successfully.
+    In Production: It is recommended to disable Mongoose's automatic index creation in production (by setting autoIndex to false) and create indexes using the MongoDB shell for better performance and control.
+    Handle Errors Gracefully: The unique option is not a Mongoose validator; it's an index creation option that relies on MongoDB to enforce the constraint. When a save operation fails due to a duplicate key violation, MongoDB throws a driver-level E11000 error.
+    When Mongoose defines a field as
+    unique: true, it isn't performing a check in your application's code before sending the data. Instead, it instructs MongoDB to create a Unique Index. If you try to save a duplicate, the database itself rejects the operation and throws the E11000 error. 
+    Why this happens
+    Mongoose's built-in validators (like required or min) run before the data is sent to the database. Because uniqueness requires checking every other document in the collection, Mongoose offloads this to MongoDB's indexing engine for performance and to avoid "race conditions" where two identical documents might be saved at the exact same millisecond. 

@@ -1,7 +1,6 @@
 Daily cycle
 
 
-
 1. git clone [repo]
 
 2. git checkout release/vxx
@@ -43,7 +42,8 @@ fix/description             # Alternative to bugfix
 release/version             # Release preparation
 
 refactor/description        # Code refactoring
-
+## Versioning
+Major.Minor.Patch
 ## Branch naming rules(kebab)
 
 Use lowercase
