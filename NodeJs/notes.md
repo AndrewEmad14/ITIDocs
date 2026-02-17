@@ -548,3 +548,31 @@ Ensure Index Creation: When your application starts, Mongoose automatically call
     unique: true, it isn't performing a check in your application's code before sending the data. Instead, it instructs MongoDB to create a Unique Index. If you try to save a duplicate, the database itself rejects the operation and throws the E11000 error. 
     Why this happens
     Mongoose's built-in validators (like required or min) run before the data is sent to the database. Because uniqueness requires checking every other document in the collection, Mongoose offloads this to MongoDB's indexing engine for performance and to avoid "race conditions" where two identical documents might be saved at the exact same millisecond. 
+
+# JWT
+    you will singin in after checking the encripted password and the email
+  ```javascript
+    const token = jwt.sign({id: user._id}, 'your-secret-secret-key', {expiresIn: '1h'});
+  ```
+    this token then should be saved in cookies or what ever they will then come with the headers
+  ```javascript
+      const authMiddleware = async function (req, res, next) {
+      const {usertoken} = req.headers;
+
+      if (!usertoken) {
+        const error = {message: 'you are not logged in'};
+        next(error);
+      } else {
+        jwt.verify(usertoken, 'same secret key', (err, decodedToken) => {
+          if (err) {
+            next(err);
+          } else {
+            req.user = decodedToken;
+            next();
+          }
+        });
+      }
+    };
+```
+  with this we now know that someone is logged in and we have what ever info we put in in the decoded jwt , now we can check if the user have the authorization to change the item or not , this is called protecting your routes
+
