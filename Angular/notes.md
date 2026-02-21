@@ -937,6 +937,52 @@ tldr: basically use ngModel , ngForm and ngSubmit to handle forms
 
 # steps to enable the http client (to be added)
 
+  generate a service 
+  ng g s service-name
+
+  generate enviorment variables
+  ng generate enviroments
+
+  in your enviroments.development put
+  ```typescript
+  export const environment = {
+  apiUrl:'http://localhost:3000'
+  ;
+  ```
+
+  in your service
+  ```typescript
+  import { HttpClient } from '@angular/common/http';
+  import { inject, Injectable } from '@angular/core';
+  import { Observable } from 'rxjs';
+  import { environment } from '../../../environments/environment.development';
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class BookService {
+    apiUrl = environment.apiUrl;
+    private http = inject(HttpClient);
+    getProduct(): Observable<any> {
+      return this.http.get(this.apiUrl);
+    }
+  }
+```
+  in your app.config.ts
+  ```typescript
+    providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes,withComponentInputBinding()),
+    providePrimeNG({
+      theme: {
+        preset: Lara,
+      },
+    }),
+    provideHttpClient() //add this line
+    
+  ],
+  ```
+
 # enviorment error i faced
 
 take care of your angular.json because its configurations
@@ -951,3 +997,5 @@ ng serve (development) → loads environment.development.ts
 ng build --configuration production → loads environment.ts
 
 as a rule of thumb if files doesnt make sense check the angular.json
+
+

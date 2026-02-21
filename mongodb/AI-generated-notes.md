@@ -1250,3 +1250,6 @@ db.instructors.updateOne(
 | **Evolving data** | Use $jsonSchema with careful planning |
 
 ---
+
+
+using mongo atlas is better than local because it is managed and i can access the db without the server it is hosting , more reasearch on the subject
