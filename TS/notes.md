@@ -599,3 +599,58 @@ class User implements Greeter {
 ```
 
 In summary: use interfaces for defining shapes and contracts, use classes when you need actual implementation and runtime behavior.
+
+# TypeScript Utility Types
+
+## `Pick<T, K>` — keep only specified fields
+Creates a type with only the fields you want.
+```typescript
+type BookPreview = Pick<Book, 'id' | 'title' | 'price'>
+// { id: string, title: string, price: number }
+```
+
+---
+
+## `Omit<T, K>` — remove specified fields
+Opposite of Pick.
+```typescript
+type CreateBook = Omit<Book, 'id' | 'createdAt' | 'updatedAt'>
+// Book without those fields
+```
+
+---
+
+## `Partial<T>` — make all fields optional
+Every field becomes `?`.
+```typescript
+type UpdateBook = Partial<Book>
+// { id?: string, title?: string, price?: number ... }
+```
+
+---
+
+## `Required<T>` — make all fields required
+Strips all `?` from every field.
+```typescript
+type StrictBook = Required<Book>
+// { id: string, title: string, price: number ... } — no optionals
+```
+## HTTP Body in Angular
+
+**JSON — just pass the object directly**
+```typescript
+this.http.post('/api/books', { title: 'Dune', price: 20 })
+```
+Angular serializes it to JSON automatically. No `JSON.stringify` needed.
+
+---
+
+**Multipart (file upload) — use `FormData`**
+```typescript
+const formData = new FormData()
+formData.append('name', 'Dune')
+formData.append('coverImage', file) // File object from input
+this.http.post('/api/books', formData)
+```
+Don't set `Content-Type` manually — Angular lets the browser set it automatically with the correct boundary. Setting it yourself will break the request.
+

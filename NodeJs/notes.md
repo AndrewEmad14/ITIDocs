@@ -576,3 +576,8 @@ Ensure Index Creation: When your application starts, Mongoose automatically call
 ```
   with this we now know that someone is logged in and we have what ever info we put in in the decoded jwt , now we can check if the user have the authorization to change the item or not , this is called protecting your routes
 
+# quick note for mongoose and nodemon
+
+  when you drop a collection , remember to restart nodemon as the indexes wont be synced meaning that it will by pass the unique flag you put
+  
+  i dont know exactly why this happens but that is a valid observation

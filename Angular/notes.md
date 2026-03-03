@@ -685,7 +685,7 @@ parentMessage = 'Hello from Parent!';
 ### output
 
 ##### child component
-
+```typescript
 import { Component, output } from '@angular/core';
 @Component({
 selector: 'app-child',
@@ -717,7 +717,7 @@ receivedMessage = '';
     }
 
 }
-
+```
 # Component life cycle (HOOKS)
 
 Components and directives have a lifecycle. When Angular must display a component, it starts by
@@ -933,6 +933,8 @@ https://angular.dev/guide/forms/template-driven-forms
 
 tldr: basically use ngModel , ngForm and ngSubmit to handle forms
 
+remember that this is done in the html itself , and it is used for very simple validation stuff , to have more controle build a reactive driven form
+
 # reactive driven forms (to be added)
 
 # steps to enable the http client (to be added)
@@ -999,3 +1001,41 @@ ng build --configuration production → loads environment.ts
 as a rule of thumb if files doesnt make sense check the angular.json
 
 
+# IMPORTANT SIDE NOTE
+in forms import FormModule , doesnt matter if you use reactive or not
+
+# Computed signals
+```html
+Let’s say our pony component receives a PonyModel as input, containing (among other properties) a
+name and a color. And let’s say its template wants to display its identity as NAME (color) (for
+example "RAINBOW DASH (blue)").
+The first thing that comes to mind is to do it this way in the template:
+pony.html
+<div>{{ ponyModel().name.toUpperCase() }} ({{ ponyModel().color }})</div>
+This is absolutely fine. But if the application uses the "brute-force" change detection, this
+transformation will be done many times, even if the pony is the same as before. And if the template
+must display the identity several times, copy and pasting this is not the best idea.
+We might improve that by delegating to a method in the component:
+pony.html
+<div>{{ identity(ponyModel()) }}</div>
+This avoids the duplication, but it still invokes the identity() method many times unnecessarily.
+A better way would be to use ngOnChanges to compute the identity when the ponyModel changes, and
+store the result in another property:
+pony.ts
+readonly ponyModel = input.required<PonyModel>();
+protected readonly identity = signal<string>('');
+104
+ngOnChanges() {
+this.identity.set(`${this.ponyModel().name.toUpperCase()} (${this.ponyModel().color
+})`);
+}
+That is nice. But if we later introduce another input, we’ll recompute the identity whenever this
+unrelated input changes, unless we make our ngOnChanges method more complex. Also, note how
+we’re forced to initialize the identity signal with a fake default value. There got to be an even better
+way.
+The better way is to use a computed signal. A computed signal is a read-only signal, whose value is
+derived from another (or several other) signal(s):
+readonly ponyModel = input.required<PonyModel>();
+protected readonly identity = computed(() => `${this.ponyModel().name.toUpperCase()}
+(${this.ponyModel().color})`);
+```
