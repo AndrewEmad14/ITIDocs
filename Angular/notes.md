@@ -1039,3 +1039,4 @@ readonly ponyModel = input.required<PonyModel>();
 protected readonly identity = computed(() => `${this.ponyModel().name.toUpperCase()}
 (${this.ponyModel().color})`);
 ```
+
