@@ -771,3 +771,15 @@ docker build -t <image> .
 | `EXPOSE <port>` | Document which port the container listens on | [EXPOSE](https://docs.docker.com/reference/dockerfile/#expose) |
 | `ENV <key>=<value>` | Set environment variable at runtime | [ENV](https://docs.docker.com/reference/dockerfile/#env) |
 | `ARG <name>` | Set a build-time variable | [ARG](https://docs.docker.com/reference/dockerfile/#arg) |
+
+# vim clipboard enable
+
+quick one liner
+
+apt update && apt install -y vim-gtk3 && echo "set clipboard=unnamedplus" >> ~/.vimrc
+
+### Install Vim with clipboard support
+RUN apt-get update && apt-get install -y vim-gtk3
+
+### Create the config file automatically
+RUN echo "set clipboard=unnamedplus" > /root/.vimrc
