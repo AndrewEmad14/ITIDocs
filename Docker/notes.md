@@ -487,3 +487,287 @@ docker system df                      # show disk usage
 > [Docker CLI](https://docs.docker.com/reference/cli/docker/) ·
 > [Dockerfile Reference](https://docs.docker.com/reference/dockerfile/) ·
 > [Docker Security](https://docs.docker.com/engine/security/)
+
+
+
+
+# Common error
+if docker refuses to stop a process saying permission denied
+
+ systemctl start docker
+ systemctl stop docker.socket
+
+
+## Commands Used
+
+```bash
+# Build an image from a Dockerfile in current directory
+docker build -t <image-name> .
+
+# Build using a specific Dockerfile name
+docker build -t <image-name> -f DockerFile .
+
+# Run a container with port mapping
+docker run -p 4200:80 <image-name>
+
+# Run a container and auto-remove it after it exits
+docker run --rm <image-name> <command>
+
+# Run a container in the background (detached)
+docker run -d <image-name>
+
+# List running containers
+docker ps
+
+# List all containers including stopped
+docker ps -a
+
+# List all images
+docker images
+
+# Shell into a running container
+docker exec -it <container-id> bash
+docker exec -it <container-id> sh
+
+# Print a file inside a running container
+docker exec -it <container-id> cat /path/to/file
+
+# List files inside a running container
+docker exec -it <container-id> ls /path/to/dir
+
+# Force remove a running container
+docker rm -f <container-id>
+
+# Volume commands
+docker volume create <volume-name>
+docker volume ls
+docker volume inspect <volume-name>
+```
+
+---
+
+## Dockerfile Instructions Used
+
+```dockerfile
+# Base image to build from
+FROM node:20
+FROM nginx:latest
+FROM node:20 AS builder          # named stage for multi-stage builds
+
+# Set working directory inside container
+WORKDIR /app
+
+# Copy files from host into container
+COPY package*.json ./            # copy package files only (cache optimization)
+COPY . .                         # copy everything else
+
+# Copy files between stages (multi-stage)
+COPY --from=builder /app/dist/ecommerce-frontend/browser /usr/share/nginx/html
+
+# Run a shell command during build
+RUN npm install
+RUN npm run build
+RUN echo '...' > /etc/nginx/conf.d/default.conf
+
+# Document which port the container listens on (informational only)
+EXPOSE 80
+
+# Default command to run when container starts
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]
+```
+
+---
+
+## Key Concepts Learned
+
+### Layer Caching
+Every Dockerfile instruction creates a cached layer. Docker skips rebuilding a layer if its inputs haven't changed.
+
+```dockerfile
+# ✅ Optimized order — npm install only reruns if package.json changes
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# ❌ Unoptimized — npm install reruns on every code change
+COPY . .
+RUN npm install
+RUN npm run build
+```
+📖 Ref: [Layer caching](https://docs.docker.com/build/cache/)
+
+---
+
+### EXPOSE vs -p
+| | What it does |
+|---|---|
+| `EXPOSE 80` | Documentation only — marks intended port, opens nothing |
+| `-p 4200:80` | Actually binds host port 4200 to container port 80 |
+
+```bash
+docker run -p <host-port>:<container-port> <image>
+```
+📖 Ref: [Published ports](https://docs.docker.com/engine/network/#published-ports)
+
+---
+
+### --host 0.0.0.0
+`ng serve` binds to `localhost` by default — meaning it only accepts requests from inside the container itself. To make it reachable via `-p` port mapping:
+
+```dockerfile
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]
+```
+
+nginx does this by default — no flag needed.
+
+📖 Ref: [Docker networking](https://docs.docker.com/engine/network/)
+
+---
+
+### Multi-Stage Builds
+Use multiple `FROM` instructions to separate build and serve concerns. The final image only contains what's needed to run — not to build.
+
+```dockerfile
+# Stage 1 — Build
+FROM node:20 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Stage 2 — Serve
+FROM nginx:latest
+COPY --from=builder /app/dist/ecommerce-frontend/browser /usr/share/nginx/html
+EXPOSE 80
+```
+
+| Stage | Image | Size |
+|---|---|---|
+| Build | `node:20` | ~1GB (discarded) |
+| Serve | `nginx:latest` | ~50MB ✅ |
+
+📖 Ref: [Multi-stage builds](https://docs.docker.com/build/building/multi-stage/)
+
+---
+
+## Common Pitfalls & Issues Faced
+
+### 1. Dockerfile case sensitivity
+Docker looks for exactly `Dockerfile`. `DockerFile` will fail on Linux.
+```bash
+mv DockerFile Dockerfile
+```
+
+### 2. `ng` not found in container
+`ng` is not globally installed inside the container — it lives in `node_modules/.bin`.
+```dockerfile
+# ❌ Fails
+CMD ["ng", "serve"]
+
+# ✅ Works
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]
+# or
+CMD ["node_modules/.bin/ng", "serve", "--host", "0.0.0.0"]
+```
+
+### 3. Running old container after rebuilding image
+After `docker build`, always stop and remove the old container before running a new one. An old running container uses the old image — not the newly built one.
+```bash
+docker rm -f <old-container-id>
+docker run -p 4200:80 frontend:latest
+```
+
+### 4. Angular SSR overwrites index.html
+Angular SSR apps output two files:
+- `index.html` — SSR version (for Node.js server)
+- `index.csr.html` — CSR version (for browsers via nginx)
+
+Nginx's default config looks for `index.html` — which is the SSR file, not the browser file. Fix with a custom nginx config:
+
+```dockerfile
+RUN echo 'server {
+    listen 80;
+    location / {
+        root /usr/share/nginx/html;
+        index index.csr.html;
+        try_files $uri $uri/ /index.csr.html;
+    }
+}' > /etc/nginx/conf.d/default.conf
+```
+
+> `try_files` is also important for Angular routing — without it, refreshing on a route like `/products/123` returns 404.
+
+### 5. Browser caching
+After fixing container issues, the browser may still show old content from cache. Always test in a private/incognito window or hard refresh (`Cmd+Shift+R`).
+
+### 6. docker-credential-desktop error
+Happens when Docker Desktop was previously installed and left behind a broken credentials config.
+```bash
+# Edit ~/.docker/config.json
+# Change "credsStore": "desktop" to "credsStore": ""
+docker login
+docker build -t <image> .
+```
+
+---
+
+## References
+
+| Topic | Link |
+|---|---|
+| Dockerfile reference | [docs.docker.com/reference/dockerfile](https://docs.docker.com/reference/dockerfile/) |
+| Layer caching | [docs.docker.com/build/cache](https://docs.docker.com/build/cache/) |
+| Multi-stage builds | [docs.docker.com/build/building/multi-stage](https://docs.docker.com/build/building/multi-stage/) |
+| Storage overview | [docs.docker.com/engine/storage](https://docs.docker.com/engine/storage/) |
+| Volumes | [docs.docker.com/engine/storage/volumes](https://docs.docker.com/engine/storage/volumes/) |
+| Bind mounts | [docs.docker.com/engine/storage/bind-mounts](https://docs.docker.com/engine/storage/bind-mounts/) |
+| Networking overview | [docs.docker.com/engine/network](https://docs.docker.com/engine/network/) |
+| Published ports | [docs.docker.com/engine/network/#published-ports](https://docs.docker.com/engine/network/#published-ports) |
+| Docker CLI reference | [docs.docker.com/reference/cli/docker](https://docs.docker.com/reference/cli/docker/) |
+| node image (DockerHub) | [hub.docker.com/_/node](https://hub.docker.com/_/node) |
+| Angular compatibility table | [angular.dev/reference/releases](https://angular.dev/reference/releases#actively-supported-versions) |
+
+---
+
+## Summary
+
+### Commands Quick Reference
+
+| Command | What it does |
+|---|---|
+| `docker build -t <name> .` | Build an image from a Dockerfile in current directory |
+| `docker build -t <name> -f <file> .` | Build using a specific Dockerfile name |
+| `docker run -p <host>:<container> <image>` | Run a container with port mapping |
+| `docker run --rm <image> <cmd>` | Run a container and auto-remove it after it exits |
+| `docker run -d <image>` | Run a container in the background |
+| `docker ps` | List running containers |
+| `docker ps -a` | List all containers including stopped |
+| `docker images` | List all images |
+| `docker exec -it <id> bash` | Shell into a running container |
+| `docker exec -it <id> cat <file>` | Print a file inside a running container |
+| `docker exec -it <id> ls <dir>` | List files inside a running container |
+| `docker rm -f <id>` | Force remove a running container |
+| `docker volume create <name>` | Create a named volume |
+| `docker volume ls` | List all volumes |
+| `docker volume inspect <name>` | Inspect a volume |
+| `docker login` | Authenticate with DockerHub |
+
+---
+
+### Dockerfile Instructions Quick Reference
+
+| Instruction | What it does | Ref |
+|---|---|---|
+| `FROM <image>` | Set the base image | [FROM](https://docs.docker.com/reference/dockerfile/#from) |
+| `FROM <image> AS <name>` | Named stage for multi-stage builds | [Multi-stage](https://docs.docker.com/build/building/multi-stage/) |
+| `WORKDIR <path>` | Set working directory inside container | [WORKDIR](https://docs.docker.com/reference/dockerfile/#workdir) |
+| `COPY <src> <dest>` | Copy files from host into container | [COPY](https://docs.docker.com/reference/dockerfile/#copy) |
+| `COPY --from=<stage> <src> <dest>` | Copy files from a previous build stage | [COPY --from](https://docs.docker.com/build/building/multi-stage/#use-multi-stage-builds) |
+| `RUN <command>` | Execute a shell command during build | [RUN](https://docs.docker.com/reference/dockerfile/#run) |
+| `CMD ["exec", "args"]` | Default command when container starts (overridable) | [CMD](https://docs.docker.com/reference/dockerfile/#cmd) |
+| `ENTRYPOINT ["exec", "args"]` | Fixed command when container starts (not overridable) | [ENTRYPOINT](https://docs.docker.com/reference/dockerfile/#entrypoint) |
+| `EXPOSE <port>` | Document which port the container listens on | [EXPOSE](https://docs.docker.com/reference/dockerfile/#expose) |
+| `ENV <key>=<value>` | Set environment variable at runtime | [ENV](https://docs.docker.com/reference/dockerfile/#env) |
+| `ARG <name>` | Set a build-time variable | [ARG](https://docs.docker.com/reference/dockerfile/#arg) |
