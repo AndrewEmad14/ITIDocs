@@ -783,3 +783,140 @@ RUN apt-get update && apt-get install -y vim-gtk3
 
 ### Create the config file automatically
 RUN echo "set clipboard=unnamedplus" > /root/.vimrc
+
+
+
+# Docker Session Wrap-Up
+
+## What You Learned
+
+### 1. Container Lifecycle
+- `docker run`, `docker stop`, `docker rm`, `docker ps`
+- `--rm` flag auto-removes a container when it exits
+- Containers are ephemeral — data disappears unless you use volumes
+- 📖 [Container lifecycle](https://docs.docker.com/engine/reference/commandline/container/)
+
+### 2. RUN vs CMD vs ENTRYPOINT
+| Instruction | When it runs | Purpose |
+|---|---|---|
+| `RUN` | Build time | Install deps, set up the image layer |
+| `CMD` | Run time | Default command — fully replaceable |
+| `ENTRYPOINT` | Run time | Locked executable — only args change |
+
+- Only the **last** `CMD` or `ENTRYPOINT` in a Dockerfile is used
+- Combined pattern: `ENTRYPOINT ["sleep"]` + `CMD ["5"]` → default sleep 5, overridable
+- 📖 [RUN](https://docs.docker.com/reference/dockerfile/#run) | [CMD](https://docs.docker.com/reference/dockerfile/#cmd) | [ENTRYPOINT](https://docs.docker.com/reference/dockerfile/#entrypoint)
+
+### 3. Image Tagging & Pushing to Docker Hub
+- Docker Hub requires the format: `username/imagename:tag`
+- `docker tag` creates an alias — the original image stays untouched
+- 3-step push flow: `login` → `tag` → `push`
+- 📖 [docker push](https://docs.docker.com/reference/cli/docker/image/push/) | [docker tag](https://docs.docker.com/reference/cli/docker/image/tag/)
+
+### 4. Bridge Networking & Container DNS
+- Default bridge: containers can't find each other by name — must use IPs
+- User-defined bridge: containers get automatic DNS — use container names directly
+- `docker network create` sets up a custom network
+- 📖 [Bridge networking](https://docs.docker.com/engine/network/drivers/bridge/)
+
+### 5. Multi-Stage Builds
+- Separate build and runtime stages in one Dockerfile
+- Final image only contains what you `COPY --from=builder`
+- Dramatically reduces image size (no build tools in production)
+- 📖 [Multi-stage builds](https://docs.docker.com/build/building/multi-stage/)
+
+---
+
+## Common Pitfalls
+
+- **Only the last CMD/ENTRYPOINT wins** — multiple declarations silently discard all but the last
+- **CMD is fully replaceable** — `docker run myimage 30` replaces the entire CMD, not just the arg
+- **Default bridge has no DNS** — containers can't reach each other by name; use user-defined bridge
+- **`EXPOSE` is documentation only** — use `-p` to actually bind ports to your host
+- **Layer cache invalidation** — changing any line invalidates all layers below it; order matters
+- **Build context bloat** — everything in your directory is sent to the daemon; always use `.dockerignore`
+- **Root by default** — containers run as root unless you add a `USER` instruction
+- **Named volumes persist after `docker rm`** — must explicitly run `docker volume rm` to clean up
+
+---
+
+## Command Reference
+
+### Container Management
+```bash
+docker run -d --name <name> <image>        # Run container in background
+docker run --rm <image>                    # Run & auto-remove when done
+docker run -it <image> bash                # Run interactively
+docker ps                                  # List running containers
+docker ps -a                               # List all containers (inc. stopped)
+docker stop <container>                    # Stop a container
+docker rm <container>                      # Remove a container
+docker exec -it <container> sh             # Shell into running container
+docker logs -f <container>                 # Follow live logs
+docker inspect <container>                 # Full JSON metadata
+```
+
+### Image Management
+```bash
+docker build -t <name>:<tag> .             # Build image from Dockerfile
+docker images                              # List local images
+docker rmi <image>                         # Remove an image
+docker tag <source> <username/name:tag>    # Tag image for Docker Hub
+docker push <username/name:tag>            # Push to Docker Hub
+docker pull <image>                        # Pull from registry
+docker login                               # Authenticate with Docker Hub
+```
+
+### Volumes & Storage
+```bash
+docker volume create <name>                # Create a named volume
+docker volume ls                           # List volumes
+docker volume rm <name>                    # Remove a volume
+docker run -v <vol>:/path <image>          # Mount named volume
+docker run -v $(pwd):/path <image>         # Bind mount current directory
+```
+
+### Networking
+```bash
+docker network create <name>               # Create user-defined network
+docker network ls                          # List networks
+docker network inspect <name>              # Inspect network details
+docker run --network <name> <image>        # Attach container to network
+```
+
+### Cleanup
+```bash
+docker system prune                        # Remove all unused resources
+docker system df                           # Show disk usage
+docker rm $(docker ps -aq)                 # Remove all stopped containers
+```
+
+---
+
+## Dockerfile Reference
+
+```dockerfile
+FROM <image>:<tag>                         # Base image
+RUN <command>                              # Run at build time (creates a layer)
+COPY <src> <dest>                          # Copy files into image
+ADD <src> <dest>                           # Like COPY but supports URLs & tar
+WORKDIR /app                               # Set working directory
+ENV KEY=value                              # Set environment variable
+ARG NAME=default                           # Build-time variable
+EXPOSE <port>                              # Document which port app uses
+CMD ["executable", "arg"]                  # Default command (replaceable)
+ENTRYPOINT ["executable"]                  # Locked executable
+USER <username>                            # Run as non-root user
+HEALTHCHECK CMD <command>                  # Container health check
+```
+
+---
+
+## Key References
+- [Dockerfile Reference](https://docs.docker.com/reference/dockerfile/)
+- [Docker CLI Reference](https://docs.docker.com/reference/cli/docker/)
+- [Docker Storage Overview](https://docs.docker.com/engine/storage/)
+- [Docker Networking Overview](https://docs.docker.com/engine/network/)
+- [Multi-stage Builds](https://docs.docker.com/build/building/multi-stage/)
+- [Docker Security](https://docs.docker.com/engine/security/)
+- [Docker Hub](https://hub.docker.com)
