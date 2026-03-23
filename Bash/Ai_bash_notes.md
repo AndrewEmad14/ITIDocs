@@ -744,3 +744,11 @@ Tests ([ ] / [[ ]]):
   -eq / -ne / -lt / -le / -gt / -ge  numeric comparisons
   =  /  !=  string comparisons
 ```
+$var
+value of variable
+${...}
+value + logic
+$(...)
+value from command
+$((...))
+value from math
