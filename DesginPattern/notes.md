@@ -888,3 +888,24 @@ Animal → Dog     (Downcast) — zoom in, gain detail, verify first!
 ```
 
 buisness / presistance /presentatoin
+
+
+
+what does the pattern consist of
+
+name
+intent
+motivation 
+structure
+code examples
+
+
+assosaition = use in function
+
+compostion = only attribute
+
+aggreation = compostion + assosication
+
+
+if we dont abstract the decorator it will be misleading
+
