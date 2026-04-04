@@ -695,3 +695,13 @@ Department Table:
 - Can be NULL if relationship is optional
 
 ---
+
+
+
+readings , kind of databases and usecases
+
+enums are stored as indexes 
+
+cte
+
+view + distinct = not updatable
