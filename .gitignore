@@ -1,0 +1,16 @@
+.vscode
+# Hidden files and directories
+.*
+!.gitignore
+
+# Images
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.svg
+*.ico
+*.bmp
+*.tiff
+*.tif
