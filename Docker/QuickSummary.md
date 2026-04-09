@@ -28,6 +28,8 @@
 5. [Image Tagging & Docker Hub](#5-image-tagging--docker-hub)
 6. [Common Pitfalls](#6-common-pitfalls)
 7. [Quick Reference Cheatsheet](#7-quick-reference-cheatsheet)
+8. [Docker in development](#8-docker-in-development)
+
 
 ---
 
@@ -723,3 +725,97 @@ docker rm $(docker ps -aq)                 # remove all stopped containers
 | Docker Hub | [hub.docker.com](https://hub.docker.com) |
 | node image | [hub.docker.com/_/node](https://hub.docker.com/_/node) |
 | Docker Security | [docs.docker.com/engine/security](https://docs.docker.com/engine/security/) |
+
+```markdown
+
+
+## 8 Docker in development
+
+This document summarizes the core concepts and workflows for using Docker during the development phase, specifically focused on Python/Django and general full-stack environments.
+
+---
+
+## 1. Why Use Docker in Development?
+Even with `venv` and `requirements.txt`, Docker provides layers of consistency that virtual environments cannot.
+
+* **System Dependencies:** Manages non-Python software (PostgreSQL, Redis, C-libraries) that `venv` ignores.
+* **Environment Parity:** Eliminates "it works on my machine" bugs by ensuring the OS, libraries, and runtimes are identical for every team member.
+* **Isolation:** Allows you to run different versions of databases (e.g., Postgres 12 vs 16) for different projects simultaneously without conflict.
+* **Instant Onboarding:** New developers can start the entire stack with a single command.
+
+---
+
+## 2. Docker Compose vs. Multi-Stage Builds
+
+| Feature | Docker Compose | Multi-Stage Builds |
+| :--- | :--- | :--- |
+| **File Type** | `docker-compose.yml` | `Dockerfile` |
+| **Purpose** | Orchestrating multiple containers (App + DB) | Optimizing a single image for production |
+| **Workflow** | Connecting services via a shared network | Discarding build-tools to reduce image size |
+| **Primary Use** | Development / Integration Testing | CI/CD / Production Deployment |
+
+---
+
+## 3. Standard Django Development Workflow
+
+### A. The Structure
+```text
+project_root/
+├── Dockerfile           # Instructions for the Django container
+├── docker-compose.yml   # Links Django to the Database
+├── requirements.txt     # Python dependencies
+└── app/                 # Source code
+```
+
+### B. The Dockerfile (Development)
+```dockerfile
+FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+WORKDIR /code
+COPY requirements.txt /code/
+RUN pip install -r requirements.txt
+COPY . /code/
+```
+
+### C. The Docker Compose (The Orchestrator)
+```yaml
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=secret
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code          # Enables live-reloading (hot reload)
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+```
+
+---
+
+## 4. Essential CLI Cheat Sheet
+
+| Command | Result |
+| :--- | :--- |
+| `docker-compose up` | Build and start the entire stack. |
+| `docker-compose up -d` | Start services in the background. |
+| `docker-compose exec web <cmd>` | Run a command (like migrations) inside the container. |
+| `docker-compose logs -f` | View live logs from all services. |
+| `docker-compose down` | Stop and remove containers/networks (cleans up). |
+
+---
+
+## 5. Key Takeaway
+Use **Docker Compose** during development to manage your infrastructure and ensure live-reloading via **Volumes**. Use **Multi-stage builds** only when you are ready to ship the code to production to keep the final image slim and secure.
+```

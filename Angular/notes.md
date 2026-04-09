@@ -1040,3 +1040,233 @@ protected readonly identity = computed(() => `${this.ponyModel().name.toUpperCas
 (${this.ponyModel().color})`);
 ```
 
+
+
+
+# computed() — "What is the value?"
+Produces a new signal derived from others. Angular caches it and only recalculates when a dependency changes and someone reads it. The result is always a value you can bind to.
+# effect() — "What should happen?"
+Runs a side effect — logging, syncing to localStorage, calling an external API, updating a non-signal piece of state. It produces nothing. You can't read a value from it.
+
+
+
+# Angular Change Detection & Compilation — Chapter Summary
+> Source: *Angular — The Complete Guide*, Chapters 21 & 22
+
+---
+
+## What These Chapters Cover
+
+How Angular knows when to update the DOM (ZoneJS, change detection, inline caching), and how it turns your HTML templates into executable JavaScript — covering both the JIT and AOT compilation models.
+
+---
+
+## Key Concepts
+
+### 1. ZoneJS — The "Snitch" Library
+
+**What it is:** A library that monkey-patches browser APIs (`setTimeout`, `setInterval`, `addEventListener`, `Promise.then`, etc.) to intercept async callbacks.
+
+**Why it exists:** Angular has no native way to know when user code runs and potentially mutates state. ZoneJS acts as a notification layer — every time a patched callback fires, it tells Angular: *"something just happened, you may need to re-render."*
+
+**Simplified mental model:**
+```js
+// What ZoneJS does under the hood (conceptually):
+const originalSetTimeout = window.setTimeout;
+window.setTimeout = (callback, timeout) => {
+  const snitchingCallback = () => {
+    callback();
+    angular.notifyThatSomeCodeHasBeenExecuted(); // <-- the snitch
+  };
+  originalSetTimeout(snitchingCallback, timeout);
+};
+```
+
+> 💡 **Bridge to what you know:** Think of ZoneJS like Django's middleware pipeline — every request (async event) passes through it, giving the framework a hook to act. Except it's at the browser callback layer, not the HTTP layer.
+
+**Why this is a problem:**
+- Adds bundle size + startup cost (patching must complete before the app boots)
+- **Every** patched callback triggers change detection — even third-party library calls that change nothing in your app
+- Pollutes stack traces with zone-related frames, making debugging harder
+
+---
+
+### 2. Change Detection — The Tree Traversal
+
+**What it is:** The process Angular runs to find what changed and update the DOM accordingly.
+
+**How it works:**
+1. Starts at the **root component** and walks the entire component tree to the leaves
+2. At each component, evaluates all **template expressions**
+3. Compares each result to its **previous value**
+4. If a value changed → updates the DOM; if it's also an `@Input()` of a child → calls `ngOnChanges` on that child
+5. The traversal is a **single pass** — done only once per change detection cycle
+
+**Critical constraint — Unidirectional Data Flow:**
+> Mutating state of a parent or yourself *during* a child's change detection check = bug. Angular won't catch it in that cycle.
+
+During **development mode**, Angular runs the traversal **twice** to catch this. If the second pass detects new changes, it throws:
+```
+ExpressionChangedAfterItHasBeenCheckedError
+```
+This is Angular enforcing the unidirectional data flow principle. It only throws in dev — in production, the bug silently persists until the next cycle.
+
+---
+
+### 3. Inline Caching — Why Angular Compiles Templates
+
+**What it is:** A VM optimization technique (invented for Smalltalk ~40 years ago) where the JS engine caches how it accesses properties of objects it has seen before.
+
+**The three tiers:**
+| Cache State | What it means | Performance |
+|---|---|---|
+| **Monomorphic** | Function always called with same-shaped objects | ✅ Fastest |
+| **Polymorphic** | A few different shapes seen | 🟡 Slower |
+| **Megamorphic** | Too many shapes — cache dropped entirely | 🔴 Slowest |
+
+**Why Angular compiles templates into JS functions:**
+Instead of one generic expression evaluator (which would be megamorphic — called with all kinds of objects), the Angular compiler generates **per-component change detection functions**. Each function only ever deals with one component's shape → monomorphic → fast.
+
+> 💡 **Bridge to what you know:** This is similar to how PostgreSQL's query planner caches execution plans for prepared statements — same query shape = reuse the optimized plan. Angular's compiler does the equivalent at build time.
+
+---
+
+### 4. The Path Forward — Signals & Zoneless Angular
+
+**The problem ZoneJS can't solve:** It tells Angular *that* something ran, not *what* changed. So Angular still re-checks everything.
+
+**Signals** solve this at the root:
+- State changes are **tracked precisely** — Angular knows exactly which signals changed and which templates depend on them
+- No need for a full tree traversal
+- No need for ZoneJS at all → smaller bundles, cleaner stacks, zero wasted renders
+
+> ⚠️ As of this chapter, zoneless mode with Signals was still experimental. Worth tracking in the [Angular docs](https://angular.dev/guide/signals) for current stability status.
+
+---
+
+---
+
+## Chapter 22 — JIT vs AOT Compilation
+
+### 5. Code Generation — What Angular Actually Compiles Your Templates Into
+
+**What it is:** Angular never lets the browser read your HTML templates directly. At compile time, it parses each template into an **Abstract Syntax Tree (AST)**, then generates a JavaScript **component definition** — inlined as a static field on your component class.
+
+**The generated template function has two distinct phases:**
+
+```js
+template: (renderFlags, component) => {
+  if (renderFlags & RenderFlags.Create) {
+    // Runs ONCE — builds the initial DOM structure
+    domElementStart(0, 'figure');
+    domElement(1, 'img');
+    domElementStart(2, 'figcaption');
+    text(3);
+    domElementEnd();
+    domElementEnd();
+  }
+  if (renderFlags & RenderFlags.Update) {
+    // Runs on EVERY change detection cycle — diffs and patches
+    advance();
+    domProperty('src', component.ponyImageUrl()); // bind src
+    advance(2);
+    textInterpolate(component.ponyModel().name);  // bind text
+  }
+}
+```
+
+> 💡 **Bridge to what you know:** Think of `RenderFlags.Create` like a Django migration that runs once to set up the schema, and `RenderFlags.Update` like a view that runs on every request to produce fresh output from the current state.
+
+This is the **Ivy renderer** (introduced in Angular 8). It's the third iteration of Angular's rendering engine — previous versions were replaced in Angular 4.0 and 8.0 to improve performance and bundle size, all while maintaining backward-compatible template syntax.
+
+---
+
+### 6. JIT vs AOT — When Does Compilation Happen?
+
+| | **Just-in-Time (JIT)** | **Ahead-of-Time (AOT)** |
+|---|---|---|
+| **When** | At runtime, in the browser | At build time (`ng serve` / `ng build`) |
+| **What ships to users** | TypeScript→JS + HTML templates + Angular compiler | Pre-compiled JS only (no compiler) |
+| **Template errors caught** | At runtime (or not at all) | At build time — breaks the build |
+| **Startup speed** | Slower — compilation happens on load | Faster — compilation already done |
+| **Bundle size** | Smaller JS, but must include the compiler | Larger generated code, but no compiler shipped |
+| **Default since** | Legacy | Angular CLI v8.1+ |
+
+---
+
+### 7. AOT's Hidden Superpower — Template Type Checking
+
+Because AOT compiles templates to **TypeScript first** (before compiling to JS), the TypeScript compiler catches template mistakes as build errors:
+
+```html
+<!-- Typo: ponyImageUr() instead of ponyImageUrl() -->
+<img [src]="ponyImageUr()">
+```
+
+AOT generates:
+```ts
+domProperty('src', component.ponyImageUr()); // TS error here
+```
+
+Build output:
+```
+Property 'ponyImageUr' does not exist on type 'Pony'.
+```
+
+This means **renaming a method or property** in your component immediately breaks the build if the template still references the old name — no runtime surprises. This is something React/Vue don't give you out of the box without additional tooling.
+
+**A subtle AOT-only gotcha:** Marking a component `@Input()` as `private` works fine in JIT (JavaScript has no runtime concept of `private`), but **breaks in AOT** — the generated TypeScript of another component tries to access it and the TS compiler rejects it.
+
+---
+
+### 8. The Bundle Size Trade-off
+
+AOT is not a free lunch:
+
+- ✅ **Removes** the Angular compiler from the bundle (the compiler is large)
+- ❌ **Adds** the generated component definition code (larger than raw HTML templates)
+
+On small apps, removing the compiler wins. On medium/large apps, the generated code growth typically outweighs the compiler removal. The solution the chapter points to: **lazy loading** — splitting the app into chunks that load on demand, so users never download the full generated code upfront.
+
+> Doc: [angular.dev/guide/ngmodules/lazy-loading](https://angular.dev/guide/ngmodules/lazy-loading)
+
+---
+
+## 🔴 Things That Will Hurt You in Practice
+
+| Trap | Why it bites |
+|---|---|
+| Calling slow functions in templates | Every change detection cycle re-evaluates them — O(n) per cycle |
+| Mutating parent state inside `ngOnChanges` | Unidirectional flow violation — `ExpressionChangedAfterItHasBeenCheckedError` in dev, silent bug in prod |
+| Assuming ZoneJS only triggers on *your* code | Third-party libraries using `setTimeout` etc. trigger change detection too |
+| Relying on change detection catching mid-cycle mutations | Single-pass means late mutations are invisible until the next cycle |
+| Marking `@Input()` as `private` | Works in JIT, breaks in AOT — generated TS code can't access private members |
+| Template typos only caught at runtime | Only a problem if you've somehow disabled AOT; AOT turns these into build errors |
+| Ignoring bundle size growth with AOT | On large apps, lazy loading is required to actually benefit from AOT |
+
+---
+
+## What to Explore Next
+
+- **`ChangeDetectionStrategy.OnPush`** — opt specific components out of the default tree traversal; only re-check when inputs change or an event fires within the component
+- **Angular Signals** (`signal()`, `computed()`, `effect()`) — the reactive primitive replacing ZoneJS-triggered detection
+  - Docs: [angular.dev/guide/signals](https://angular.dev/guide/signals)
+- **Zoneless Angular** — running Angular without ZoneJS using `provideExperimentalZonelessChangeDetection()`
+  - Docs: [angular.dev/guide/experimental/zoneless](https://angular.dev/guide/experimental/zoneless)
+
+---
+
+## References
+
+| Topic | Link |
+|---|---|
+| Angular Change Detection (official) | [angular.dev/best-practices/runtime-performance](https://angular.dev/best-practices/runtime-performance) |
+| Angular Signals | [angular.dev/guide/signals](https://angular.dev/guide/signals) |
+| ZoneJS repo | [github.com/angular/zone.js](https://github.com/angular/zone.js) |
+| Zoneless Angular (experimental) | [angular.dev/guide/experimental/zoneless](https://angular.dev/guide/experimental/zoneless) |
+| `ChangeDetectionStrategy` API | [angular.dev/api/core/ChangeDetectionStrategy](https://angular.dev/api/core/ChangeDetectionStrategy) |
+| Inline Caching (V8 blog) | [v8.dev/blog/fast-properties](https://v8.dev/blog/fast-properties) |
+| AOT Compilation (official) | [angular.dev/tools/cli/aot-compiler](https://angular.dev/tools/cli/aot-compiler) |
+| Angular Ivy renderer | [angular.dev/guide/ivy](https://angular.dev/guide/ivy) |
+| Lazy Loading (bundle size) | [angular.dev/guide/ngmodules/lazy-loading](https://angular.dev/guide/ngmodules/lazy-loading) |
+| Template type checking | [angular.dev/tools/cli/template-typecheck](https://angular.dev/tools/cli/template-typecheck) |
