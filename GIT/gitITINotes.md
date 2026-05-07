@@ -272,3 +272,15 @@
         alias.<name>"<command>"
 
         or vi ~/.gitconfig
+
+
+## Create the file and add .DS_Store rules
+echo "# macOS metadata" >> ~/.gitignore_global
+echo ".DS_Store" >> ~/.gitignore_global
+echo "**/.DS_Store" >> ~/.gitignore_global
+
+# Tell Git to use it
+git config --global core.excludesfile ~/.gitignore_global
+
+
+find . -name .DS_Store -print0 | xargs -0 git rm --cached --ignore-unmatch

@@ -9,3 +9,9 @@ General guidelines for working in Teams
 7. file nameing(function,classes,variable names) , file structure
 8. deadlines
 9. use managment software for dividng tasks (trello , jira)
+
+
+distribution
+BACKEND DESGINER: endpoint desgin , backend project structure desgin , ERD, require packages,back plan
+FRONTEND DESGINER: Figma desgin , frontend project structure ,required packages,front plan
+DEVOPS DESGINER: setup git hub repos, establish containers, deployment ,Remote Database

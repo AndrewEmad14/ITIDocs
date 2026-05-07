@@ -920,3 +920,8 @@ HEALTHCHECK CMD <command>                  # Container health check
 - [Multi-stage Builds](https://docs.docker.com/build/building/multi-stage/)
 - [Docker Security](https://docs.docker.com/engine/security/)
 - [Docker Hub](https://hub.docker.com)
+
+
+
+
+docker compose run --entrypoint /bin/bash crowdfund-backend

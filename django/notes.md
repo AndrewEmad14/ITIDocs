@@ -27,7 +27,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", views.index, name="index"),ze
 ]
 
 python manage.py migrate
@@ -1058,3 +1058,708 @@ status.HTTP_400_BAD_REQUEST    # invalid data
 status.HTTP_401_UNAUTHORIZED   # not authenticated
 status.HTTP_404_NOT_FOUND      # resource not found
 ```
+
+
+
+steps for using drf
+1. create a model
+2. create a serilizer
+3. create a view set/class/function
+4. create a url
+5. put the url in the urls.py project file
+6. put your new app inside the installed apps in settings.py
+
+
+
+
+# Session Summary — 2026-04-16 — Django DRF Projects App
+
+## What We Covered
+
+We worked through the architecture and implementation of a Django + DRF crowdfunding backend. The session covered app structure decisions, model design, serializer patterns, URL routing, and Docker workflow. Every decision was driven by real constraints — a 4-day deadline and a team working in parallel.
+
+---
+
+## Key Concepts Learned
+
+### 1. Django App Structure & Merge Conflict Strategy
+- **What it is:** Django projects are split into apps. Each app owns its own `models.py`, `views.py`, `serializers.py`, `urls.py`.
+- **Why it matters:** Separate apps = separate files = isolated git diffs. Keeping `Tags` and `Categories` in separate apps means teammates never touch the same file simultaneously.
+- **Decision made:** Since DB was not empty and deadline was 4 days, we chose **not to refactor** the existing code. Ship it, extract after submission.
+- **Rule established:** Nobody touches `projects/models.py` without notifying the team first.
+- **Doc:** [Django Reusable Apps](https://docs.djangoproject.com/en/stable/intro/reusable-apps/)
+
+---
+
+### 2. Nested Apps & AppConfig
+- **What it is:** When apps live under an `apps/` directory, Django needs the full dotted path in `AppConfig.name`.
+- **Why it matters:** If left as just `"tags"`, Django won't locate the app correctly.
+- **Example:**
+```python
+# apps/tags/apps.py
+class TagsConfig(AppConfig):
+    name = "apps.tags"  # NOT just "tags"
+```
+- **INSTALLED_APPS entry:**
+```python
+"apps.tags.apps.TagsConfig"
+```
+- **Doc:** [AppConfig.name](https://docs.djangoproject.com/en/stable/ref/applications/#django.apps.AppConfig.name)
+
+---
+
+### 3. ForeignKey `on_delete` — PROTECT vs RESTRICT
+- **What it is:** Controls what happens to related objects when the referenced object is deleted.
+- **Why it matters:** Wrong `on_delete` = silent data corruption or unexpected deletions.
+- **Decision made:**
+  - `category` → `PROTECT` — blocks deletion of a category if any project references it
+  - `user` → `PROTECT` — users are never deleted, only deactivated via `is_activated=False`
+- **PROTECT vs RESTRICT:**
+  - `PROTECT` — blocks delete. Full stop. No exceptions.
+  - `RESTRICT` — blocks delete **unless** the referencing object is also being deleted in the same operation via a CASCADE chain.
+- **Example:**
+```python
+category = models.ForeignKey(
+    'categories.Category',
+    on_delete=models.PROTECT,
+    null=True
+)
+user = models.ForeignKey(
+    'profiles.User',
+    on_delete=models.PROTECT
+)
+```
+- **Doc:** [Django on_delete](https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey.on_delete)
+
+---
+
+### 4. FK Naming Convention — Avoid `_id` Suffix
+- **What it is:** Django automatically appends `_id` to FK fields at the DB column level.
+- **Why it matters:** Naming your FK `category_id` in Python causes Django to create a `category_id_id` column in the DB.
+- **Correct pattern:**
+```python
+# Wrong
+category_id = models.ForeignKey(Category, ...)  # creates category_id_id in DB
+
+# Correct
+category = models.ForeignKey(Category, ...)  # creates category_id in DB
+```
+- **Doc:** [Django ForeignKey DB representation](https://docs.djangoproject.com/en/stable/ref/models/fields/#database-representation)
+
+---
+
+### 5. Soft Delete Pattern
+- **What it is:** Instead of deleting a user record, you deactivate it by setting a boolean flag.
+- **Why it matters:** Preserves all relational data — donations, projects, ratings remain traceable. Hard deletes cascade problems across your schema.
+- **Implementation:** Use the existing `is_activated` field on `Users`:
+```python
+# Never do this
+user.delete()
+
+# Always do this
+user.is_activated = False
+user.save()
+```
+
+---
+
+### 6. TextChoices for Enum Fields
+- **What it is:** A Django built-in way to define enumerated field values with dot-access.
+- **Why it matters over raw tuples:** Type safety, IDE autocomplete, no raw string typos in filters.
+- **Tuple way (old):**
+```python
+STATUS = {("pending", "Pending"), ("banned", "Banned")}
+# Risk: Project.objects.filter(status="pendingg") — silent bug
+```
+- **TextChoices way (correct):**
+```python
+class Status(models.TextChoices):
+    BANNED = "banned", "Banned"
+    PENDING = "pending", "Pending"
+    FINISHED = "finished", "Finished"
+    CANCELED = "canceled", "Canceled"
+
+status = models.CharField(
+    max_length=20,
+    choices=Status.choices,
+    default=Status.PENDING
+)
+
+# Safe filtering
+Project.objects.filter(status=Project.Status.PENDING)
+```
+- **Doc:** [Django TextChoices](https://docs.djangoproject.com/en/stable/ref/models/fields/#enumeration-types)
+
+---
+
+### 7. ManyToManyField — No Junction Model Needed
+- **What it is:** Django handles junction tables automatically for M2M relationships.
+- **Why it matters:** You don't need to write a `Project_Tag` model — Django creates and manages that table for you.
+- **Example:**
+```python
+# No need for Project_Tag model
+tags = models.ManyToManyField('tags.Tag')
+```
+- **Doc:** [Django ManyToManyField](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield)
+
+---
+
+### 8. Computed Fields — avg_rate Should Not Be Stored
+- **What it is:** Fields derived from other tables should be computed at query time, not stored.
+- **Why it matters:** A stored `avg_rate` goes stale the moment a new `Rating` is inserted.
+- **Correct approach:** Use `annotate()` with `Avg` at the DB level — one SQL `AVG()` call, no extra memory overhead.
+- **Example:**
+```python
+from django.db.models import Avg
+
+Project.objects.annotate(avg_rate=Avg('ratings__rate'))
+```
+- **Doc:** [Django Aggregation](https://docs.djangoproject.com/en/stable/topics/db/aggregation/#avg)
+
+---
+
+### 9. SerializerMethodField
+- **What it is:** A DRF serializer field whose value comes from a method you define — not a model attribute.
+- **Why it matters:** Used for computed values, concatenated fields, or anything not directly on the model.
+- **Naming convention:** Method must be named `get_<field_name>` and receives `obj` (the model instance).
+- **Example:**
+```python
+class ProjectSerializer(serializers.ModelSerializer):
+    category = serializers.ReadOnlyField(source='category.name')
+    user_fullname = serializers.SerializerMethodField()
+    avg_rate = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+    def get_user_fullname(self, obj):
+        return f"{obj.user.first_name} {obj.user.last_name}"
+
+    def get_avg_rate(self, obj):
+        from django.db.models import Avg
+        result = obj.rating_set.aggregate(Avg("rate", default=0))
+        return result["rate__avg"]
+```
+- **Doc:** [DRF SerializerMethodField](https://www.django-rest-framework.org/api-guide/fields/#serializermethodfield)
+
+---
+
+### 10. DRF Router URL Doubling Bug
+- **What it is:** When your main `urls.py` prefixes with `api/projects/` and your router also registers `r"projects"`, the endpoint becomes `api/projects/projects/`.
+- **Why it matters:** Results in a 404 that's hard to spot without inspecting registered URLs.
+- **How we caught it:**
+```bash
+python manage.py show_urls | grep projects
+```
+- **Fix — register router with empty prefix:**
+```python
+router.register(r"", ProjectViewSet)  # not r"projects"
+```
+- **Doc:** [DRF Routers](https://www.django-rest-framework.org/api-guide/routers/)
+
+---
+
+### 11. Debugging URLs with django-extensions
+- **What it is:** A third-party package that adds `show_urls` management command among other utilities.
+- **Why it matters:** Lets you inspect every registered URL, its view, and its name — essential for debugging 404s.
+- **Installation:**
+```bash
+pip install django-extensions
+# Add to INSTALLED_APPS
+"django_extensions"
+```
+- **Usage:**
+```bash
+python manage.py show_urls
+python manage.py show_urls | grep projects  # filter by app
+```
+- **Doc:** [django-extensions](https://django-extensions.readthedocs.io/en/latest/)
+
+---
+
+### 12. Docker — Installing New Packages
+- **What it is:** Since your local directory is volume-mounted into the container, package changes require a rebuild.
+- **Why it matters:** Code changes reflect instantly via the volume, but new packages need to be baked into the image layer.
+- **Workflow:**
+```bash
+# Option A — locally with venv
+pip install django-extensions
+pip freeze > requirements.txt
+docker compose up --build
+
+# Option B — directly in running container
+docker compose exec backend pip install django-extensions
+docker compose exec backend pip freeze > requirements.txt
+docker compose up --build
+```
+- **Doc:** [Docker Compose exec](https://docs.docker.com/engine/reference/commandline/compose_exec/)
+
+---
+
+### 13. Docker — Cleaning Dangling Images
+- **What it is:** Every `--build` can leave behind untagged image layers that consume disk space.
+- **Commands:**
+```bash
+# Safe — removes only dangling (untagged, unreferenced) images
+docker image prune
+
+# Aggressive — removes all unused images (containers must be running to protect them)
+docker image prune -a
+```
+- **Doc:** [Docker image prune](https://docs.docker.com/engine/reference/commandline/image_prune/)
+
+---
+
+### 14. pip freeze Limitations
+- **What it is:** `pip freeze` dumps every installed package including transitive dependencies you never explicitly chose.
+- **Why it matters:** Pollutes `requirements.txt` with packages you don't own, at pinned versions you didn't vet.
+- **Better approach (post-deadline):** Use `pip-tools` — maintain a clean `requirements.in` and let it generate the full `requirements.txt`.
+```
+# requirements.in
+django
+djangorestframework
+django-extensions
+```
+```bash
+pip-compile requirements.in  # generates requirements.txt
+```
+- **Doc:** [pip-tools](https://pip-tools.readthedocs.io/en/latest/)
+
+---
+
+## Problems We Worked Through
+
+| Problem | Root Cause | Resolution |
+|---|---|---|
+| 404 on `/api/projects/` | Router registered `r"projects"` on top of `api/projects/` prefix | Changed to `router.register(r"", ProjectViewSet)` |
+| `category_id_id` DB column risk | FK named `category_id` in Python | Renamed to `category` — Django appends `_id` automatically |
+| `avg_rate` staleness | Stored as a field on `Project` | Moved to `SerializerMethodField` using `Avg` aggregation |
+| Can't install packages in Docker | Volume mount shadows container `/app` | Install locally or via `exec`, then `--build` |
+| `SerilazerMethodField` typo | Misspelling | `SerializerMethodField` |
+| Missing `return` in serializer method | Python silent None return | Added explicit `return` statement |
+| `Rating.filter()` invalid | Missing `.objects` manager | `Rating.objects.filter()` |
+
+---
+
+## Code Patterns Introduced
+
+### Complete Project Model
+```python
+class Project(models.Model):
+    class Status(models.TextChoices):
+        BANNED = "banned", "Banned"
+        PENDING = "pending", "Pending"
+        FINISHED = "finished", "Finished"
+        CANCELED = "canceled", "Canceled"
+
+    title = models.CharField(max_length=255)
+    details = models.TextField()
+    target = models.FloatField()
+    current_money = models.FloatField(null=True)
+    startdate = models.DateField()
+    enddate = models.DateField()
+    is_featured = models.BooleanField(default=False)
+
+    # FK named without _id — Django creates category_id column automatically
+    category = models.ForeignKey(
+        'categories.Category',
+        on_delete=models.PROTECT,  # blocks deletion if projects reference this category
+        null=True
+    )
+    user = models.ForeignKey(
+        'profiles.User',
+        on_delete=models.PROTECT  # users are soft-deleted, never hard-deleted
+    )
+    tags = models.ManyToManyField('tags.Tag')  # Django manages junction table automatically
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING
+    )
+    # avg_rate NOT stored here — derived field, computed in serializer via Avg aggregation
+    created_at = models.DateTimeField(auto_now_add=True)
+```
+
+### Complete ProjectSerializer
+```python
+from rest_framework import serializers
+from django.db.models import Avg
+from .models import Project
+
+class ProjectSerializer(serializers.ModelSerializer):
+    # Flatten FK — source traverses the relation to get category name
+    category = serializers.ReadOnlyField(source='category.name')
+
+    # Computed fields — not on model, value comes from methods below
+    user_fullname = serializers.SerializerMethodField()
+    avg_rate = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+    def get_user_fullname(self, obj):
+        # obj is the Project instance — traverse to related User
+        return f"{obj.user.first_name} {obj.user.last_name}"
+
+    def get_avg_rate(self, obj):
+        # aggregate() returns a dict: {"rate__avg": 4.2}
+        result = obj.rating_set.aggregate(Avg("rate", default=0))
+        return result["rate__avg"]
+```
+
+### URL Configuration Pattern
+```python
+# main urls.py
+urlpatterns = [
+    path('api/projects/', include('apps.projects.urls')),
+]
+
+# apps/projects/urls.py
+router = DefaultRouter()
+router.register(r"", ProjectViewSet)        # empty prefix — avoids api/projects/projects/
+router.register(r"categories", CategoryViewSet)
+router.register(r"tags", TagViewSet)
+
+urlpatterns = [
+    path("", include(router.urls)),
+    path("home/", HomepageView.as_view(), name="homepage"),
+    path("search/", ProjectSearchView.as_view(), name="project-search"),
+    path("<int:pk>/similar/", SimilarProjectsView.as_view(), name="similar-projects"),
+]
+```
+
+---
+
+## References
+
+| Topic | Link |
+|---|---|
+| Django Reusable Apps | https://docs.djangoproject.com/en/stable/intro/reusable-apps/ |
+| AppConfig.name | https://docs.djangoproject.com/en/stable/ref/applications/#django.apps.AppConfig.name |
+| Django on_delete | https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey.on_delete |
+| Django RESTRICT | https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.RESTRICT |
+| FK DB representation | https://docs.djangoproject.com/en/stable/ref/models/fields/#database-representation |
+| Django TextChoices | https://docs.djangoproject.com/en/stable/ref/models/fields/#enumeration-types |
+| Django ManyToManyField | https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield |
+| Django Aggregation | https://docs.djangoproject.com/en/stable/topics/db/aggregation/#avg |
+| DRF SerializerMethodField | https://www.django-rest-framework.org/api-guide/fields/#serializermethodfield |
+| DRF Routers | https://www.django-rest-framework.org/api-guide/routers/ |
+| django-extensions | https://django-extensions.readthedocs.io/en/latest/ |
+| Docker image prune | https://docs.docker.com/engine/reference/commandline/image_prune/ |
+| Docker Compose exec | https://docs.docker.com/engine/reference/commandline/compose_exec/ |
+| pip-tools | https://pip-tools.readthedocs.io/en/latest/ |
+| Django migrations | https://docs.djangoproject.com/en/stable/topics/migrations/ |
+
+
+
+prefetch related many to many releation ship to prevent N+1 querey
+
+For many-to-many relationships set() accepts a list of either model instances or field values, normally primary keys, as the objs argument.
+
+
+# Django Rest Framework: Project Images API Guide
+
+## 1. Architectural Shift: Nested Resources
+Moving images to a separate endpoint (`/projects/:id/images/`) is superior to a monolithic serializer because it provides granular control over individual files without re-uploading the entire set.
+
+### Recommended URL Structure
+```python
+path('projects/<int:project_id>/images/', ProjectImageListView.as_view(), name='project-image-list'),
+path('projects/<int:project_id>/images/<int:pk>/', ProjectImageDetailView.as_view(), name='project-image-detail'),
+```
+
+---
+
+## 2. Key Pitfalls & Solutions
+
+### Pitfall: Using `bulk_create` for Files
+* **The Bug:** `Image.objects.bulk_create()` skips the model's `.save()` method and Django signals.
+* **The Result:** Files are never sent to Cloudinary/S3; the database saves a path to a file that doesn't exist on the server.
+* **The Fix:** Use a standard loop with `.create()` to trigger the storage backend.
+
+### Pitfall: Reverse Relationship Lookups
+* **The Bug:** `Project` does not have an `images` field; the `Image` model has the `ForeignKey`.
+* **The Result:** `source='images'` in a serializer will fail.
+* **The Fix:** Use `source='image_set'` (Django default) or define `related_name='images'` on the `Image` model ForeignKey.
+
+### Pitfall: Security in Deletion
+* **The Bug:** Deleting by `pk` alone allows users to delete images from other projects by guessing IDs.
+* **The Fix:** Override `get_queryset` to filter by the `project_id` from the URL.
+
+---
+
+## 3. Implementation Reference
+
+### The List/Create View
+We override `create` specifically to support multiple file uploads (`getlist`) in a single request, which the default Generic view does not support.
+
+```python
+class ProjectImageListView(generics.ListCreateAPIView):
+    serializer_class = ImageSerializer
+
+    def get_queryset(self):
+        return Image.objects.filter(project_id=self.kwargs['project_id'])
+
+    def create(self, request, *args, **kwargs):
+        files = request.FILES.getlist('path') # 'path' must match frontend key
+        project = generics.get_object_or_404(Project, id=self.kwargs['project_id'])
+        
+        created_instances = []
+        for f in files:
+            # .create() ensures the file is actually uploaded to Cloudinary
+            obj = Image.objects.create(project=project, path=f)
+            created_instances.append(obj)
+        
+        serializer = self.get_serializer(created_instances, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+```
+
+### The Delete View
+Using `DestroyAPIView` is preferred over `APIView` for single-instance deletion as it handles the logic automatically.
+
+```python
+class ProjectImageDetailView(generics.DestroyAPIView):
+    serializer_class = ImageSerializer
+
+    def get_queryset(self):
+        # Enforces that the image must belong to the project in the URL
+        return Image.objects.filter(project_id=self.kwargs['project_id'])
+```
+
+---
+
+## 4. Glossary of Concepts
+* **`generics`**: DRF's toolkit of pre-built views (templates) for standard CRUD actions.
+* **`get_object_or_404`**: A safety fetch. It returns the object if found, otherwise it sends a clean JSON 404 response to the client.
+* **`request.FILES.getlist(key)`**: Essential for multiple file uploads; it retrieves all files associated with a single key as a Python list.
+
+# Session Summary — 2026-04-17 — Django DRF Serializers & M2M Relationships
+
+## What We Covered
+Built out a `ProjectSerializer` in Django REST Framework covering `create` and `update` methods, handling ManyToMany relationships for tags, multiple image uploads via Cloudinary, and debugged several real errors along the way. Finished with an architectural discussion on dedicated image endpoints.
+
+---
+
+## Key Concepts Learned
+
+- **List Comprehensions**
+  - What it is: Python's syntax for transforming an iterable into a list in one line — equivalent to `.map()` in JavaScript
+  - Why it matters: Cleaner, more Pythonic than a for loop when building lists
+  - Doc: [Python List Comprehensions](https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions)
+
+- **ListField (DRF)**
+  - What it is: A DRF serializer field that validates a list of items, each validated against a `child` field type
+  - Why it matters: Lets you accept arrays of simple values (strings, ints) in API input without touching the DB
+  - Doc: [DRF ListField](https://www.django-rest-framework.org/api-guide/fields/#listfield)
+
+- **ListField vs PrimaryKeyRelatedField**
+  - `ListField` — validates shape/type only, no DB queries
+  - `PrimaryKeyRelatedField(many=True)` — validates PKs exist in the DB, talks to the DB
+  - Doc: [PrimaryKeyRelatedField](https://www.django-rest-framework.org/api-guide/relations/#primarykeyrelatedfield)
+
+- **bulk_create limitations**
+  - What it is: A Django ORM method for inserting multiple records in a single SQL query
+  - Why it matters: Does **not** work with ManyToMany relationships — it bypasses the M2M junction table
+  - Doc: [bulk_create](https://docs.djangoproject.com/en/5.2/ref/models/querysets/#bulk-create)
+
+- **get_or_create**
+  - What it is: Fetches an object matching the given kwargs, or creates it if it doesn't exist. Returns a `(object, created)` tuple
+  - Why it matters: Prevents duplicate DB entries and handles M2M tag creation gracefully
+  - Doc: [get_or_create](https://docs.djangoproject.com/en/5.2/ref/models/querysets/#get-or-create)
+
+- **RelatedManager.set()**
+  - What it is: Replaces the entire set of M2M related objects in one call — removes old, adds new
+  - Why it matters: Cleanest way to do a full replace on a M2M relationship
+  - Doc: [RelatedManager.set()](https://docs.djangoproject.com/en/5.2/ref/models/relations/#django.db.models.fields.related.RelatedManager.set)
+
+- **setattr() for dynamic updates**
+  - What it is: Python built-in that sets an attribute on an object dynamically by name
+  - Why it matters: Lets you loop over `validated_data` and update all plain fields without hardcoding each one
+  - Doc: [setattr](https://docs.python.org/3/library/functions.html#setattr)
+
+- **extra_kwargs scoping**
+  - What it is: `extra_kwargs` in `Meta` only applies to fields Django auto-generates from the model
+  - Why it matters: If you declare a field explicitly on the serializer, `extra_kwargs` for that field is silently ignored — you must configure it directly on the field declaration
+  - Doc: [DRF ModelSerializer extra_kwargs](https://www.django-rest-framework.org/api-guide/serializers/#additional-keyword-arguments)
+
+- **FieldFile.delete()**
+  - What it is: Deletes the actual file from storage (Cloudinary in this case)
+  - Why it matters: Deleting a DB record does not delete the file from storage — you must do both explicitly
+  - Doc: [FieldFile.delete()](https://docs.djangoproject.com/en/5.2/ref/models/fields/#django.db.models.fields.files.FieldFile.delete)
+
+- **PUT vs PATCH in DRF**
+  - `PUT` — full replace, all fields expected
+  - `PATCH` — partial update, sets `partial=True` on the serializer, missing fields are skipped
+  - Doc: [Partial Updates](https://www.django-rest-framework.org/api-guide/serializers/#partial-updates)
+
+---
+
+## Problems We Worked Through
+
+1. **`ManyRelatedManager` not iterable (first occurrence)**
+   - Cause: `bulk_create` does not work with M2M relationships
+   - Fix: Replaced `bulk_create` + `.set()` with `get_or_create` per tag + `.add()`
+
+2. **`add() got unexpected keyword argument 'bulk'`**
+   - Cause: `bulk` argument does not exist on M2M `add()` — only on reverse FK managers
+   - Fix: Removed `bulk=True` from `.add()` call
+
+3. **`ManyRelatedManager` not iterable (second occurrence)**
+   - Cause: `extra_kwargs` `write_only=True` was being ignored because `tags` was explicitly declared on the serializer. DRF was trying to serialize `tags` as a `ListField` against a M2M manager on the response
+   - Fix: Moved `write_only=True` and `required=False` directly into the `ListField` declaration, removed from `extra_kwargs`
+
+4. **`value too long for type character varying(100)`**
+   - Cause: `ImageField` defaults to `max_length=100`, Cloudinary URLs exceed this
+   - Fix: Added explicit `max_length` to the `path` field on the `Image` model
+
+---
+
+## Code Patterns Introduced
+
+### create() with M2M and file uploads
+```python
+def create(self, validated_data):
+    images_data = validated_data.pop('images', [])
+    tags_data = validated_data.pop('tags', [])
+    
+    project = Project.objects.create(**validated_data)
+    
+    if tags_data:
+        # get_or_create prevents duplicate tags, [0] unpacks the (object, created) tuple
+        tag_instances = [Tag.objects.get_or_create(name=tag)[0] for tag in tags_data]
+        project.tags.add(*tag_instances)  # no bulk= for M2M
+    
+    if images_data:
+        image_instances = [Image(path=img, project=project) for img in images_data]
+        Image.objects.bulk_create(image_instances)  # fine here — no M2M involved
+    
+    return project
+```
+
+### update() with dynamic setattr loop
+```python
+def update(self, instance, validated_data):
+    images_data = validated_data.pop('images', None)
+    tags_data = validated_data.pop('tags', None)
+
+    # pop M2M/relational fields first — setattr can't handle them
+    for key, data in validated_data.items():
+        setattr(instance, key, data)
+    instance.save()
+
+    if tags_data:
+        tag_instances = [Tag.objects.get_or_create(name=tag)[0] for tag in tags_data]
+        instance.tags.set(tag_instances)  # replaces entire tag set
+
+    if images_data:
+        # delete files from Cloudinary first, then delete DB records
+        existing_images = instance.image_set.all()
+        for img in existing_images:
+            img.path.delete()
+        existing_images.delete()
+        image_instances = [Image(path=img, project=instance) for img in images_data]
+        Image.objects.bulk_create(image_instances)
+
+    return instance
+```
+
+### Explicit field declaration overrides extra_kwargs
+```python
+# WRONG — extra_kwargs ignored because tags is explicitly declared
+tags = serializers.ListField(child=serializers.CharField(max_length=255))
+extra_kwargs = { "tags": {"write_only": True} }  # silently ignored
+
+# CORRECT — configure directly on the field
+tags = serializers.ListField(
+    child=serializers.CharField(max_length=255),
+    write_only=True,
+    required=False
+)
+```
+
+---
+
+## Architecture Note
+
+Image add/delete operations should be handled via **dedicated endpoints** rather than embedded in the project update:
+- `POST /api/projects/{id}/images/` — add images
+- `DELETE /api/projects/{id}/images/{image_id}/` — delete a specific image
+
+This avoids mixed input types (URLs vs files) and follows REST conventions.
+
+Doc: [DRF Routers](https://www.django-rest-framework.org/api-guide/routers/)
+
+---
+
+## References
+
+- [Python List Comprehensions](https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions)
+- [PEP 8 — Programming Recommendations](https://peps.python.org/pep-0008/#programming-recommendations)
+- [DRF ListField](https://www.django-rest-framework.org/api-guide/fields/#listfield)
+- [DRF Core field arguments — required](https://www.django-rest-framework.org/api-guide/fields/#required)
+- [DRF PrimaryKeyRelatedField](https://www.django-rest-framework.org/api-guide/relations/#primarykeyrelatedfield)
+- [DRF ModelSerializer extra_kwargs](https://www.django-rest-framework.org/api-guide/serializers/#additional-keyword-arguments)
+- [DRF Partial Updates](https://www.django-rest-framework.org/api-guide/serializers/#partial-updates)
+- [DRF Routers](https://www.django-rest-framework.org/api-guide/routers/)
+- [Django bulk_create](https://docs.djangoproject.com/en/5.2/ref/models/querysets/#bulk-create)
+- [Django get_or_create](https://docs.djangoproject.com/en/5.2/ref/models/querysets/#get-or-create)
+- [Django RelatedManager.set()](https://docs.djangoproject.com/en/5.2/ref/models/relations/#django.db.models.fields.related.RelatedManager.set)
+- [Django RelatedManager.add()](https://docs.djangoproject.com/en/5.2/ref/models/relations/#django.db.models.fields.related.RelatedManager.add)
+- [Django FieldFile.delete()](https://docs.djangoproject.com/en/5.2/ref/models/fields/#django.db.models.fields.files.FieldFile.delete)
+- [Django ImageField](https://docs.djangoproject.com/en/5.2/ref/models/fields/#imagefield)
+- [setattr — Python built-ins](https://docs.python.org/3/library/functions.html#setattr)
+
+
+## Session Wrap-Up: Django Optimization & Serializer Logic
+
+In this session, we optimized the **WyrmHole** bookstore API by implementing advanced queryset techniques and resolving serialization errors. Below is the summary of the key concepts and fixes we implemented.
+
+---
+
+### 1. Database Optimization
+We focused on moving heavy calculations and relationship lookups from the Serializer (Python) to the ViewSet (Database) to avoid the **N+1 problem**.
+
+* **`select_related`**: Used for **Single-Value** relationships (Foreign Key to User/Category). It uses a SQL `JOIN` to fetch data in one query.
+* **`prefetch_related`**: Used for **Multi-Value** relationships (Tags, Images). It runs a separate query and maps the results in memory to avoid redundant data.
+* **`annotate`**: Used to calculate values like `avg_rate` at the database level using `Avg()`.
+* **`__` (Double Underscore)**: Acts as a **path connector** to reach fields in related tables (e.g., `ratings__stars`).
+
+### 2. ViewSet Architecture
+We addressed the requirements for `ModelViewSet` to ensure proper routing and efficiency.
+
+* **`get_queryset()` vs `queryset`**:
+    * Using the `queryset` variable is clean for static optimizations.
+    * Overriding `get_queryset()` is necessary for dynamic logic (like filtering by `request.user`).
+* **The `basename` Requirement**: If the `queryset` attribute is removed, you must specify a `basename` in your `urls.py` router registration to help DRF name the URL patterns.
+
+### 3. Debugging & Error Resolution
+We walked through several common Django errors encountered during the implementation:
+
+* **`NoneType` has no len()**: Occurs when `get_queryset()` lacks a `return` statement.
+* **`ImproperlyConfigured` (Invalid Field)**: Happens when a Serializer tries to include an annotated field (like `avg_rate`) that isn't explicitly defined in the Serializer class. 
+    * *Fix:* Define `avg_rate = serializers.FloatField(read_only=True)`.
+* **`FieldError` (Cannot resolve keyword)**: Occurs when the string passed to `Avg()` or `filter()` doesn't match the model's field name or `related_name`.
+
+### 4. Final Implementation Patterns
+For a clean, "no-fluff" response, we established the following pattern for your `Project` models:
+
+**The ViewSet Logic:**
+```python
+def get_queryset(self):
+    return Project.objects.annotate(
+        avg_rate=Coalesce(Avg('ratings__stars'), Value(0.0))
+    ).select_related('user', 'category'
+    ).prefetch_related('tags', 'image_set')
+```
+
+**The Serializer Logic:**
+```python
+class ProjectSerializer(serializers.ModelSerializer):
+    avg_rate = serializers.FloatField(read_only=True)
+    images_urls = ImageSerializer(many=True, read_only=True, source='image_set')
+    # ... other fields
+```
+
